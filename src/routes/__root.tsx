@@ -1,4 +1,4 @@
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools/production'
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
 import {
   Link,
   Outlet,
@@ -6,57 +6,95 @@ import {
   useRouterState,
   HeadContent,
   Scripts,
-} from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import * as React from 'react'
-import { Toaster } from 'react-hot-toast'
-import type { QueryClient } from '@tanstack/react-query'
-import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
-import { IconLink } from '~/components/IconLink'
-import { NotFound } from '~/components/NotFound'
-import appCss from '~/styles/app.css?url'
-import { seo } from '~/utils/seo'
-import { Loader } from '~/components/Loader'
+  useRouteContext,
+  redirect,
+} from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import * as React from "react";
+import { Toaster } from "react-hot-toast";
+import type { QueryClient } from "@tanstack/react-query";
+import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
+import { IconLink } from "~/components/IconLink";
+import { NotFound } from "~/components/NotFound";
+import appCss from "~/styles/app.css?url";
+import { seo } from "~/utils/seo";
+import { Loader } from "~/components/Loader";
+import { ClerkProvider, useAuth } from "@clerk/tanstack-react-start";
+import { ConvexProviderWithClerk } from "convex/react-clerk";
+import { ConvexReactClient } from "convex/react";
+import { ConvexQueryClient } from "@convex-dev/react-query";
+import { createServerFn } from "@tanstack/react-start";
+import { getAuth } from "@clerk/tanstack-react-start/server";
+import { getWebRequest } from "@tanstack/react-start/server";
+// import { getWebRequest } from "vinxi/http";
+
+const fetchClerkAuth = createServerFn({ method: "GET" }).handler(async () => {
+  const request = getWebRequest();
+
+  // const sk = import.meta.env.CLERK_SECRET_KEY;
+  // const pk = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+  // console.log(sk);
+  // console.log(pk);
+  if (!request) throw new Error("No request found");
+  const auth = await getAuth(request);
+
+  // if (!auth.userId) {
+  //   // This will error because you're redirecting to a path that doesn't exist yet
+  //   // You can create a sign-in route to handle this
+  //   // See https://clerk.com/docs/references/tanstack-start/custom-sign-in-or-up-page
+  //   throw redirect({
+  //     to: "/sign-in/$",
+  //   });
+  // }
+  const token = await auth.getToken({ template: "convex" });
+
+  return {
+    userId: auth.userId,
+    token,
+  };
+});
 
 export const Route = createRootRouteWithContext<{
-  queryClient: QueryClient
+  queryClient: QueryClient;
+  convexClient: ConvexReactClient;
+  convexQueryClient: ConvexQueryClient;
 }>()({
   head: () => ({
     meta: [
       {
-        charSet: 'utf-8',
+        charSet: "utf-8",
       },
       {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
+        name: "viewport",
+        content: "width=device-width, initial-scale=1",
       },
       ...seo({
         title:
-          'TanStack Start | Type-Safe, Client-First, Full-Stack React Framework',
+          "TanStack Start | Type-Safe, Client-First, Full-Stack React Framework",
         description: `TanStack Start is a type-safe, client-first, full-stack React framework. `,
       }),
     ],
     links: [
-      { rel: 'stylesheet', href: appCss },
+      { rel: "stylesheet", href: appCss },
       {
-        rel: 'apple-touch-icon',
-        sizes: '180x180',
-        href: '/apple-touch-icon.png',
+        rel: "apple-touch-icon",
+        sizes: "180x180",
+        href: "/apple-touch-icon.png",
       },
       {
-        rel: 'icon',
-        type: 'image/png',
-        sizes: '32x32',
-        href: '/favicon-32x32.png',
+        rel: "icon",
+        type: "image/png",
+        sizes: "32x32",
+        href: "/favicon-32x32.png",
       },
       {
-        rel: 'icon',
-        type: 'image/png',
-        sizes: '16x16',
-        href: '/favicon-16x16.png',
+        rel: "icon",
+        type: "image/png",
+        sizes: "16x16",
+        href: "/favicon-16x16.png",
       },
-      { rel: 'manifest', href: '/site.webmanifest', color: '#fffff' },
-      { rel: 'icon', href: '/favicon.ico' },
+      { rel: "manifest", href: "/site.webmanifest", color: "#fffff" },
+      { rel: "icon", href: "/favicon.ico" },
     ],
   }),
   errorComponent: (props) => {
@@ -64,18 +102,39 @@ export const Route = createRootRouteWithContext<{
       <RootDocument>
         <DefaultCatchBoundary {...props} />
       </RootDocument>
-    )
+    );
+  },
+  beforeLoad: async (ctx) => {
+    const auth = await fetchClerkAuth();
+    const { userId, token } = auth;
+
+    // During SSR only (the only time serverHttpClient exists),
+    // set the Clerk auth token to make HTTP queries with.
+    if (token) {
+      ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
+    }
+
+    return {
+      userId,
+      token,
+    };
   },
   notFoundComponent: () => <NotFound />,
   component: RootComponent,
-})
+});
 
 function RootComponent() {
+  const context = useRouteContext({ from: Route.id });
+  // const routerContext = Route.useRouteContext()
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
-  )
+    <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY!}>
+      <ConvexProviderWithClerk useAuth={useAuth} client={context.convexClient}>
+        <RootDocument>
+          <Outlet />
+        </RootDocument>
+      </ConvexProviderWithClerk>
+    </ClerkProvider>
+  );
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
@@ -133,16 +192,16 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <Toaster />
           </div>
         </div>
-        <ReactQueryDevtools />
-        <TanStackRouterDevtools position="bottom-right" />
+        <ReactQueryDevtools position="bottom" />
+        <TanStackRouterDevtools position="bottom-left" />
         <Scripts />
       </body>
     </html>
-  )
+  );
 }
 
 function LoadingIndicator() {
-  const isLoading = useRouterState({ select: (s) => s.isLoading })
+  const isLoading = useRouterState({ select: (s) => s.isLoading });
   return (
     <div
       className={`h-12 transition-all duration-300 ${
@@ -151,5 +210,5 @@ function LoadingIndicator() {
     >
       <Loader />
     </div>
-  )
+  );
 }
