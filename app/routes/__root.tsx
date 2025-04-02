@@ -19,13 +19,19 @@ import { NotFound } from "@/components/NotFound";
 import { seo } from "@/utils/seo";
 import appCss from "@/styles/app.css?url";
 import { Loader } from "@/components/Loader";
-import { ClerkProvider, useAuth } from "@clerk/tanstack-react-start";
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  useAuth,
+} from "@clerk/tanstack-react-start";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { ConvexReactClient } from "convex/react";
+import { ConvexReactClient, Unauthenticated } from "convex/react";
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { getAuth } from "@clerk/tanstack-react-start/server";
 import { getWebRequest } from "@tanstack/react-start/server";
+import { Button } from "@/components/ui/button";
 // import { getWebRequest } from "vinxi/http";
 
 const fetchClerkAuth = createServerFn({ method: "GET" }).handler(async () => {
@@ -188,6 +194,18 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 icon="/tanstack.png"
                 label="TanStack"
               />
+
+              <Unauthenticated>
+                <div className="flex items-center justify-center gap-4">
+                  <SignInButton>
+                    <Button variant={"outline"}>Sign In</Button>
+                  </SignInButton>
+
+                  <SignUpButton>
+                    <Button>Register</Button>
+                  </SignUpButton>
+                </div>
+              </Unauthenticated>
             </div>
           </div>
 

@@ -1,0 +1,69 @@
+import type { WebhookEvent } from "@clerk/backend";
+import { Webhook } from "svix";
+
+import { Hono, HonoRequest } from "hono";
+import { HonoWithConvex, HttpRouterWithHono } from "convex-helpers/server/hono";
+import { ActionCtx } from "./_generated/server";
+import { internal } from "./_generated/api";
+
+const app: HonoWithConvex<ActionCtx> = new Hono();
+
+const HonoConvexHttp = new HttpRouterWithHono(app);
+
+app.post("/clerk-users-webhook", async (c) => {
+  try {
+    const request = c.req;
+    const event = await validateRequest(request);
+    console.log(event);
+    if (!event) {
+      return new Response("Error occured", { status: 400 });
+    }
+
+    switch (event.type) {
+      case "user.created": // intentional fallthrough
+      case "user.updated":
+        await c.env.runMutation(internal.users.upsertFromClerk, {
+          data: event.data,
+        });
+        break;
+
+        // handle sessions
+        // case ""
+
+      case "user.deleted": {
+        const clerkUserId = event.data.id!;
+        await c.env.runMutation(internal.users.deleteFromClerk, {
+          clerkUserId,
+        });
+        break;
+      }
+      default:
+        console.log("Ignored Clerk webhook event", event.type);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return c.body(null, 200);
+});
+
+async function validateRequest(
+  request: HonoRequest
+): Promise<WebhookEvent | null> {
+  const payloadString = await request.text();
+  const svixHeaders = {
+    "svix-id": request.header("svix-id")!,
+    "svix-timestamp": request.header("svix-timestamp")!,
+    "svix-signature": request.header("svix-signature")!,
+  } as const;
+
+  const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET!);
+  try {
+    return wh.verify(payloadString, svixHeaders) as unknown as WebhookEvent;
+  } catch (error) {
+    console.error("Error verifying webhook event", error);
+    return null;
+  }
+}
+
+export default HonoConvexHttp;

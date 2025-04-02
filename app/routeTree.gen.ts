@@ -18,6 +18,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as UsersUserIdImport } from './routes/users_.$userId'
 import { Route as PostsPostIdImport } from './routes/posts.$postId'
 import { Route as BoardsBoardIdImport } from './routes/boards_.$boardId'
+import { Route as AuthSignUpSplatImport } from './routes/_auth.sign-up.$'
 import { Route as AuthSignInSplatImport } from './routes/_auth.sign-in.$'
 
 // Create/Update Routes
@@ -61,6 +62,12 @@ const BoardsBoardIdRoute = BoardsBoardIdImport.update({
   id: '/boards_/$boardId',
   path: '/boards/$boardId',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AuthSignUpSplatRoute = AuthSignUpSplatImport.update({
+  id: '/sign-up/$',
+  path: '/sign-up/$',
+  getParentRoute: () => AuthRoute,
 } as any)
 
 const AuthSignInSplatRoute = AuthSignInSplatImport.update({
@@ -129,6 +136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignInSplatImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/sign-up/$': {
+      id: '/_auth/sign-up/$'
+      path: '/sign-up/$'
+      fullPath: '/sign-up/$'
+      preLoaderRoute: typeof AuthSignUpSplatImport
+      parentRoute: typeof AuthImport
+    }
   }
 }
 
@@ -136,10 +150,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteChildren {
   AuthSignInSplatRoute: typeof AuthSignInSplatRoute
+  AuthSignUpSplatRoute: typeof AuthSignUpSplatRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthSignInSplatRoute: AuthSignInSplatRoute,
+  AuthSignUpSplatRoute: AuthSignUpSplatRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
@@ -153,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/posts/$postId': typeof PostsPostIdRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/sign-in/$': typeof AuthSignInSplatRoute
+  '/sign-up/$': typeof AuthSignUpSplatRoute
 }
 
 export interface FileRoutesByTo {
@@ -164,6 +181,7 @@ export interface FileRoutesByTo {
   '/posts/$postId': typeof PostsPostIdRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/sign-in/$': typeof AuthSignInSplatRoute
+  '/sign-up/$': typeof AuthSignUpSplatRoute
 }
 
 export interface FileRoutesById {
@@ -176,6 +194,7 @@ export interface FileRoutesById {
   '/posts/$postId': typeof PostsPostIdRoute
   '/users_/$userId': typeof UsersUserIdRoute
   '/_auth/sign-in/$': typeof AuthSignInSplatRoute
+  '/_auth/sign-up/$': typeof AuthSignUpSplatRoute
 }
 
 export interface FileRouteTypes {
@@ -189,6 +208,7 @@ export interface FileRouteTypes {
     | '/posts/$postId'
     | '/users/$userId'
     | '/sign-in/$'
+    | '/sign-up/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -199,6 +219,7 @@ export interface FileRouteTypes {
     | '/posts/$postId'
     | '/users/$userId'
     | '/sign-in/$'
+    | '/sign-up/$'
   id:
     | '__root__'
     | '/'
@@ -209,6 +230,7 @@ export interface FileRouteTypes {
     | '/posts/$postId'
     | '/users_/$userId'
     | '/_auth/sign-in/$'
+    | '/_auth/sign-up/$'
   fileRoutesById: FileRoutesById
 }
 
@@ -257,7 +279,8 @@ export const routeTree = rootRoute
     "/_auth": {
       "filePath": "_auth.tsx",
       "children": [
-        "/_auth/sign-in/$"
+        "/_auth/sign-in/$",
+        "/_auth/sign-up/$"
       ]
     },
     "/boards": {
@@ -277,6 +300,10 @@ export const routeTree = rootRoute
     },
     "/_auth/sign-in/$": {
       "filePath": "_auth.sign-in.$.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/sign-up/$": {
+      "filePath": "_auth.sign-up.$.tsx",
       "parent": "/_auth"
     }
   }

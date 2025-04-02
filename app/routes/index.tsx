@@ -13,7 +13,17 @@ import {
   SignUpButton,
   UserButton,
   UserProfile,
+  useReverification,
 } from "@clerk/tanstack-react-start";
+import {
+  isReverificationCancelledError,
+  isClerkAPIResponseError,
+} from "@clerk/tanstack-react-start/errors";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+
+import { GoogleOneTap } from "@clerk/tanstack-react-start";
+// import { useReverification, useUser } from '@clerk/clerk-react'
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -33,8 +43,37 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   // const userId = Route.useLoaderData().userId;
-
+  // conost {} = useReverification()
   // console.log(userId);
+
+  const confirmConsoleLog = useReverification(
+    async (emailAddressId: string) => {
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          console.log(emailAddressId);
+          resolve(emailAddressId);
+        }, 1000);
+      });
+    }
+  );
+
+  const handleClick = async (emailAddressId: string) => {
+    try {
+      await confirmConsoleLog(emailAddressId);
+    } catch (e) {
+      // Handle if user cancels the reverification process
+      if (isClerkAPIResponseError(e) && isReverificationCancelledError(e)) {
+        toast.error("User cancelled reverification");
+        console.error("User cancelled reverification", e);
+      }
+
+      // Handle other errors
+      // See https://clerk.com/docs/custom-flows/error-handling
+      // for more info on error handling
+      console.error(JSON.stringify(e, null, 2));
+    }
+  };
+
   return (
     <div className="p-8 space-y-2">
       <Authenticated>
@@ -44,21 +83,28 @@ function Home() {
           <UserButton />
           <SignOutButton>Log Out</SignOutButton>
         </div>
-      </Authenticated>
 
+        <Button variant={"secondary"} onClick={() => handleClick("test")}>
+          Confirm Console Log
+        </Button>
+      </Authenticated>
       <Unauthenticated>
         <div className="flex items-center justify-center gap-4">
           <SignInButton>Sign In</SignInButton>
           <SignUpButton>Register</SignUpButton>
         </div>
       </Unauthenticated>
-
       <h1 className="text-2xl font-black">Boards</h1>
       <ul className="flex flex-wrap list-disc">
         <Suspense fallback={<Loader />}>
           <BoardList />
         </Suspense>
       </ul>
+      <Button variant={"secondary"} onClick={() => handleClick("test")}>
+        Confirm Console Log
+      </Button>
+      Google One Tap
+      <GoogleOneTap />
     </div>
   );
 }
