@@ -18,10 +18,13 @@ export const upsertFromClerk = internalMutation({
       await ctx.db.insert("users", {
         id: data.id,
         name: data.username!,
+        email: data.email_addresses[0].email_address,
+        profilePicture: data.image_url,
       });
     } else {
       await ctx.db.patch(user._id, {
         name: data.username!,
+        profilePicture: data.image_url,
       });
     }
   },
@@ -53,7 +56,7 @@ export async function getCurrentUser(ctx: QueryCtx) {
   if (identity === null) {
     return null;
   }
-  return await userByExternalId(ctx, identity.subject);
+  return await userByExternalId(ctx, identity.tokenIdentifier);
 }
 
 async function userByExternalId(ctx: QueryCtx, externalId: string) {

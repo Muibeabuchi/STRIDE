@@ -16,7 +16,14 @@ import type {
 import type * as board from "../board.js";
 import type * as crons from "../crons.js";
 import type * as http from "../http.js";
+import type * as members from "../members.js";
+import type * as middleware from "../middleware.js";
+import type * as projects from "../projects.js";
+import type * as tasks from "../tasks.js";
+import type * as upload from "../upload.js";
 import type * as users from "../users.js";
+import type * as utils_index from "../utils/index.js";
+import type * as workspaces from "../workspaces.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -30,7 +37,14 @@ declare const fullApi: ApiFromModules<{
   board: typeof board;
   crons: typeof crons;
   http: typeof http;
+  members: typeof members;
+  middleware: typeof middleware;
+  projects: typeof projects;
+  tasks: typeof tasks;
+  upload: typeof upload;
   users: typeof users;
+  "utils/index": typeof utils_index;
+  workspaces: typeof workspaces;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
