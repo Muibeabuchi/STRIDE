@@ -1,4 +1,3 @@
-import { fetchClerkAuth } from "@/utils/auth";
 import {
   createFileRoute,
   Link,
@@ -8,24 +7,12 @@ import {
 } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth")({
-  beforeLoad: async (ctx) => {
-    const auth = await fetchClerkAuth();
-    const { userId, token } = auth;
-
-    if (token) {
-      ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
-    }
-
+  beforeLoad: async ({ context: { userId } }) => {
     if (userId) {
       throw redirect({
         to: "/",
       });
     }
-
-    // return {
-    //   userId,
-    //   token,
-    // };
   },
   component: RouteComponent,
 });

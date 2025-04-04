@@ -2,11 +2,10 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
 import {
   Outlet,
   createRootRouteWithContext,
-  useRouterState,
   HeadContent,
   Scripts,
   useRouteContext,
-  // redirect,
+  redirect,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import * as React from "react";
@@ -16,11 +15,11 @@ import { DefaultCatchBoundary } from "@/components/DefaultCatchBoundary";
 import { NotFound } from "@/components/NotFound";
 import { seo } from "@/utils/seo";
 import appCss from "@/styles/app.css?url";
-import { Loader } from "@/components/Loader";
 import { ClerkProvider, useAuth } from "@clerk/tanstack-react-start";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { ConvexReactClient } from "convex/react";
 import { ConvexQueryClient } from "@convex-dev/react-query";
+import { fetchClerkAuth } from "@/utils/auth";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -65,6 +64,20 @@ export const Route = createRootRouteWithContext<{
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),
+  beforeLoad: async (ctx) => {
+    const auth = await fetchClerkAuth();
+    const { userId, token } = auth;
+
+    if (token) {
+      ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
+    }
+
+    return {
+      userId,
+      token,
+    };
+  },
+
   errorComponent: (props) => {
     return (
       <RootDocument>
@@ -72,28 +85,12 @@ export const Route = createRootRouteWithContext<{
       </RootDocument>
     );
   },
-  // beforeLoad: async (ctx) => {
-  //   const auth = await fetchClerkAuth();
-  //   const { userId, token } = auth;
-
-  //   // During SSR only (the only time serverHttpClient exists),
-  //   // set the Clerk auth token to make HTTP queries with.
-  //   if (token) {
-  //     ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
-  //   }
-
-  //   return {
-  //     userId,
-  //     token,
-  //   };
-  // },
   notFoundComponent: () => <NotFound />,
   component: RootComponent,
 });
 
 function RootComponent() {
   const context = useRouteContext({ from: Route.id });
-  // const routerContext = Route.useRouteContext()
 
   const pk = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
   return (
@@ -125,18 +122,5 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-  );
-}
-
-function LoadingIndicator() {
-  const isLoading = useRouterState({ select: (s) => s.isLoading });
-  return (
-    <div
-      className={`h-12 transition-all duration-300 ${
-        isLoading ? `opacity-100 delay-300` : `opacity-0 delay-0`
-      }`}
-    >
-      <Loader />
-    </div>
   );
 }

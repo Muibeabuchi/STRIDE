@@ -14,15 +14,6 @@ export const fetchClerkAuth = createServerFn({ method: "GET" }).handler(
     const auth = await getAuth(request, {
       secretKey: sk,
     });
-
-    // if (!auth.userId) {
-    //   // This will error because you're redirecting to a path that doesn't exist yet
-    //   // You can create a sign-in route to handle this
-    //   // See https://clerk.com/docs/references/tanstack-start/custom-sign-in-or-up-page
-    //   throw redirect({
-    //     to: "/sign-in/$",
-    //   });
-    // }
     const token = await auth.getToken({ template: "convex" });
 
     return {
