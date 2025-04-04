@@ -4,7 +4,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { api } from "convex/_generated/api";
 import { Loader } from "@/components/Loader";
 import { Suspense } from "react";
-import { boardQueries } from "@/queries";
+// import { boardQueries } from "@/queries";
 import { Authenticated, Unauthenticated } from "convex/react";
 import {
   SignIn,
