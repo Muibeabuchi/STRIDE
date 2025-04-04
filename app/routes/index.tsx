@@ -33,7 +33,7 @@ export const Route = createFileRoute("/")({
       // userId
     },
   }) => {
-    await queryClient.ensureQueryData(boardQueries.list());
+    // await queryClient.ensureQueryData(boardQueries.list());
     // return {
     //   userId,
     // };
@@ -96,9 +96,9 @@ function Home() {
       </Unauthenticated>
       <h1 className="text-2xl font-black">Boards</h1>
       <ul className="flex flex-wrap list-disc">
-        <Suspense fallback={<Loader />}>
+        {/* <Suspense fallback={<Loader />}>
           <BoardList />
-        </Suspense>
+        </Suspense> */}
       </ul>
       <Button variant={"secondary"} onClick={() => handleClick("test")}>
         Confirm Console Log
@@ -109,24 +109,24 @@ function Home() {
   );
 }
 
-function BoardList() {
-  const boardsQuery = useSuspenseQuery(convexQuery(api.board.getBoards, {}));
+// function BoardList() {
+//   const boardsQuery = useSuspenseQuery(convexQuery(api.board.getBoards, {}));
 
-  return (
-    <ul className="flex flex-wrap list-disc">
-      {boardsQuery.data.map((board) => (
-        <li key={board.id} className="ml-4">
-          <Link
-            to="/boards/$boardId"
-            params={{
-              boardId: board.id,
-            }}
-            className="font-bold text-blue-500"
-          >
-            {board.name}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
-}
+//   return (
+//     <ul className="flex flex-wrap list-disc">
+//       {boardsQuery.data.map((board) => (
+//         <li key={board.id} className="ml-4">
+//           <Link
+//             to="/boards/$boardId"
+//             params={{
+//               boardId: board.id,
+//             }}
+//             className="font-bold text-blue-500"
+//           >
+//             {board.name}
+//           </Link>
+//         </li>
+//       ))}
+//     </ul>
+//   );
+// }

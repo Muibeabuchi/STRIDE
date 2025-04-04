@@ -12,12 +12,9 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as UsersImport } from './routes/users'
-import { Route as BoardsImport } from './routes/boards'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as UsersUserIdImport } from './routes/users_.$userId'
-import { Route as PostsPostIdImport } from './routes/posts.$postId'
-import { Route as BoardsBoardIdImport } from './routes/boards_.$boardId'
 import { Route as AuthSignUpSplatImport } from './routes/_auth.sign-up.$'
 import { Route as AuthSignInSplatImport } from './routes/_auth.sign-in.$'
 
@@ -26,12 +23,6 @@ import { Route as AuthSignInSplatImport } from './routes/_auth.sign-in.$'
 const UsersRoute = UsersImport.update({
   id: '/users',
   path: '/users',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const BoardsRoute = BoardsImport.update({
-  id: '/boards',
-  path: '/boards',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -49,18 +40,6 @@ const IndexRoute = IndexImport.update({
 const UsersUserIdRoute = UsersUserIdImport.update({
   id: '/users_/$userId',
   path: '/users/$userId',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const PostsPostIdRoute = PostsPostIdImport.update({
-  id: '/posts/$postId',
-  path: '/posts/$postId',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const BoardsBoardIdRoute = BoardsBoardIdImport.update({
-  id: '/boards_/$boardId',
-  path: '/boards/$boardId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -94,32 +73,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
-    '/boards': {
-      id: '/boards'
-      path: '/boards'
-      fullPath: '/boards'
-      preLoaderRoute: typeof BoardsImport
-      parentRoute: typeof rootRoute
-    }
     '/users': {
       id: '/users'
       path: '/users'
       fullPath: '/users'
       preLoaderRoute: typeof UsersImport
-      parentRoute: typeof rootRoute
-    }
-    '/boards_/$boardId': {
-      id: '/boards_/$boardId'
-      path: '/boards/$boardId'
-      fullPath: '/boards/$boardId'
-      preLoaderRoute: typeof BoardsBoardIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/posts/$postId': {
-      id: '/posts/$postId'
-      path: '/posts/$postId'
-      fullPath: '/posts/$postId'
-      preLoaderRoute: typeof PostsPostIdImport
       parentRoute: typeof rootRoute
     }
     '/users_/$userId': {
@@ -163,10 +121,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthRouteWithChildren
-  '/boards': typeof BoardsRoute
   '/users': typeof UsersRoute
-  '/boards/$boardId': typeof BoardsBoardIdRoute
-  '/posts/$postId': typeof PostsPostIdRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/sign-in/$': typeof AuthSignInSplatRoute
   '/sign-up/$': typeof AuthSignUpSplatRoute
@@ -175,10 +130,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthRouteWithChildren
-  '/boards': typeof BoardsRoute
   '/users': typeof UsersRoute
-  '/boards/$boardId': typeof BoardsBoardIdRoute
-  '/posts/$postId': typeof PostsPostIdRoute
   '/users/$userId': typeof UsersUserIdRoute
   '/sign-in/$': typeof AuthSignInSplatRoute
   '/sign-up/$': typeof AuthSignUpSplatRoute
@@ -188,10 +140,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
-  '/boards': typeof BoardsRoute
   '/users': typeof UsersRoute
-  '/boards_/$boardId': typeof BoardsBoardIdRoute
-  '/posts/$postId': typeof PostsPostIdRoute
   '/users_/$userId': typeof UsersUserIdRoute
   '/_auth/sign-in/$': typeof AuthSignInSplatRoute
   '/_auth/sign-up/$': typeof AuthSignUpSplatRoute
@@ -202,32 +151,17 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | ''
-    | '/boards'
     | '/users'
-    | '/boards/$boardId'
-    | '/posts/$postId'
     | '/users/$userId'
     | '/sign-in/$'
     | '/sign-up/$'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | ''
-    | '/boards'
-    | '/users'
-    | '/boards/$boardId'
-    | '/posts/$postId'
-    | '/users/$userId'
-    | '/sign-in/$'
-    | '/sign-up/$'
+  to: '/' | '' | '/users' | '/users/$userId' | '/sign-in/$' | '/sign-up/$'
   id:
     | '__root__'
     | '/'
     | '/_auth'
-    | '/boards'
     | '/users'
-    | '/boards_/$boardId'
-    | '/posts/$postId'
     | '/users_/$userId'
     | '/_auth/sign-in/$'
     | '/_auth/sign-up/$'
@@ -237,20 +171,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
-  BoardsRoute: typeof BoardsRoute
   UsersRoute: typeof UsersRoute
-  BoardsBoardIdRoute: typeof BoardsBoardIdRoute
-  PostsPostIdRoute: typeof PostsPostIdRoute
   UsersUserIdRoute: typeof UsersUserIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
-  BoardsRoute: BoardsRoute,
   UsersRoute: UsersRoute,
-  BoardsBoardIdRoute: BoardsBoardIdRoute,
-  PostsPostIdRoute: PostsPostIdRoute,
   UsersUserIdRoute: UsersUserIdRoute,
 }
 
@@ -266,10 +194,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/_auth",
-        "/boards",
         "/users",
-        "/boards_/$boardId",
-        "/posts/$postId",
         "/users_/$userId"
       ]
     },
@@ -283,17 +208,8 @@ export const routeTree = rootRoute
         "/_auth/sign-up/$"
       ]
     },
-    "/boards": {
-      "filePath": "boards.tsx"
-    },
     "/users": {
       "filePath": "users.tsx"
-    },
-    "/boards_/$boardId": {
-      "filePath": "boards_.$boardId.tsx"
-    },
-    "/posts/$postId": {
-      "filePath": "posts.$postId.tsx"
     },
     "/users_/$userId": {
       "filePath": "users_.$userId.tsx"
