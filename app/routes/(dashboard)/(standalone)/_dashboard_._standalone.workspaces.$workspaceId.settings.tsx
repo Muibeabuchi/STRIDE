@@ -4,6 +4,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
+import useGetWorkSpaceById from "@/features/workspaces/api/use-get-workspace-by-id";
 
 export const Route = createFileRoute(
   "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings"
@@ -17,6 +18,13 @@ export const Route = createFileRoute(
       </div>
     );
   },
+  params: {
+    parse: (params) => {
+      return {
+        workspaceId: params.workspaceId as Id<"workspaces">,
+      };
+    },
+  },
   component: RouteComponent,
   loader: async ({ context, params }) => {
     await context.queryClient.ensureQueryData(
@@ -29,12 +37,7 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { workspaceId } = Route.useParams();
-
-  const { data: workspace } = useSuspenseQuery(
-    convexQuery(api.workspaces.getWorkspaceById, {
-      workspaceId: workspaceId as Id<"workspaces">,
-    })
-  );
+  const { data: workspace } = useGetWorkSpaceById(workspaceId);
   return (
     <div className="w-full lg:max-w-xl">
       <UpdateWorkspaceForm

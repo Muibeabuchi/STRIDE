@@ -25,11 +25,7 @@ export const MembersList = ({
 }: {
   workspaceId: Id<"workspaces">;
 }) => {
-  const {
-    data: members,
-    isPending: isLoadingMembers,
-    isError,
-  } = useGetUserWorkspaceIdMembers(workspaceId);
+  const { data: members } = useGetUserWorkspaceIdMembers(workspaceId);
 
   const { mutate: removeMember, isPending: isRemovingMember } =
     useDeleteMember();

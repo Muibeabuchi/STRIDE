@@ -1,12 +1,18 @@
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
-// import { Sidebar } from "@/components/ui/sidebar";
 import { CreateWorkspaceModal } from "@/features/workspaces/components/create-workspace-modal";
+import { convexQuery } from "@convex-dev/react-query";
 import { Outlet } from "@tanstack/react-router";
+import { api } from "convex/_generated/api";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(dashboard)/_dashboard")({
   component: DashboardLayout,
+  loader: async ({ context }) => {
+    context.queryClient.prefetchQuery(
+      convexQuery(api.workspaces.getUserWorkspaces, {})
+    );
+  },
 });
 
 function DashboardLayout() {

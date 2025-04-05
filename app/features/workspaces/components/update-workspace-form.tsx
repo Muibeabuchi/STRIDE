@@ -54,6 +54,9 @@ export const UpdateWorkspaceForm = ({
     useResetWorkspaceLink();
   const { mutate: removeWorkspace, isPending: removingWorkspace } =
     useRemoveWorkspace();
+
+  const isLoading =
+    removingWorkspace || resettingWorkspaceLink || isUpdatingWorkspace;
   const { handleSendImage } = useGenerateUploadUrl();
   const [confirm, ConfirmationModal] = useConfirm({
     title: "Delete Workspace",
@@ -96,9 +99,6 @@ export const UpdateWorkspaceForm = ({
               params: { workspaceId },
             });
           },
-          onSettled() {
-            navigate({ to: "/" });
-          },
         }
       );
     } catch (error) {
@@ -137,8 +137,10 @@ export const UpdateWorkspaceForm = ({
       { workspaceId },
       {
         onSuccess() {
-          navigate({ to: "/" }); // redirect to the workspace homepage after successfully resetting workspace link
-          // router.push(`/workspaces/${initialValues._id}`);
+          navigate({
+            to: "/workspaces/$workspaceId",
+            params: { workspaceId },
+          }); // redirect to the workspace homepage after successfully resetting workspace link
         },
       }
     );
@@ -196,6 +198,7 @@ export const UpdateWorkspaceForm = ({
                           <Input
                             placeholder="Enter Workspace Name"
                             {...field}
+                            disabled={isLoading}
                           />
                         </FormControl>
                         <FormMessage />
@@ -242,12 +245,15 @@ export const UpdateWorkspaceForm = ({
                               ref={inputRef}
                               // disabled={isCreatingWorkspace}
                               onChange={handleImageChange}
+                              disabled={isLoading}
                               // {...field}
                             />
                             {field?.value ? (
                               <Button
                                 type="button"
-                                disabled={form.formState.isSubmitting}
+                                disabled={
+                                  form.formState.isSubmitting || isLoading
+                                }
                                 variant="destructive"
                                 size="xs"
                                 className="w-fit mt-2"
@@ -268,7 +274,9 @@ export const UpdateWorkspaceForm = ({
                             ) : (
                               <Button
                                 type="button"
-                                disabled={form.formState.isSubmitting}
+                                disabled={
+                                  form.formState.isSubmitting || isLoading
+                                }
                                 variant="territory"
                                 size="xs"
                                 className="w-fit mt-2"
@@ -291,13 +299,13 @@ export const UpdateWorkspaceForm = ({
                   size="lg"
                   variant="secondary"
                   onClick={onCancel}
-                  disabled={form.formState.isSubmitting}
+                  disabled={form.formState.isSubmitting || isLoading}
                   className={cn(!!onCancel ? "visible" : "invisible")}
                 >
                   Cancel
                 </Button>
                 <Button
-                  disabled={form.formState.isSubmitting}
+                  disabled={form.formState.isSubmitting || isLoading}
                   type="submit"
                   size="lg"
                 >
@@ -336,7 +344,9 @@ export const UpdateWorkspaceForm = ({
               size="sm"
               className="mt-6 w-fit ml-auto"
               variant="destructive"
-              disabled={resettingWorkspaceLink || isUpdatingWorkspace}
+              disabled={
+                resettingWorkspaceLink || isUpdatingWorkspace || isLoading
+              }
               onClick={handleResetWorkspaceLink}
             >
               Reset invite link
@@ -359,7 +369,7 @@ export const UpdateWorkspaceForm = ({
               size="sm"
               className="mt-6 w-fit ml-auto"
               variant="destructive"
-              disabled={removingWorkspace || isUpdatingWorkspace}
+              disabled={removingWorkspace || isUpdatingWorkspace || isLoading}
               onClick={handleRemoveWorkspace}
             >
               Delete Workspace

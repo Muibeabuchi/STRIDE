@@ -15,7 +15,7 @@ function Navigation() {
   const location = useLocation().href;
   console.log(location);
   return (
-    <ul className="flex flex-col ">
+    <ul className="flex flex-col gap-y-2">
       {Routes.map(({ FilledIcon, Icon, label, to }) => {
         const fullHref = `/workspaces/${workspaceId}${to}`;
         console.log(fullHref);
