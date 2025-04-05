@@ -27,4 +27,4 @@ export const Routes = [
     FilledIcon: UsersIcon,
     Icon: UsersIcon,
   },
-];
+] as const;

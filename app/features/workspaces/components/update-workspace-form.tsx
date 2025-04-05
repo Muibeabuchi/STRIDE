@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { useCopyToClipboard } from "@uidotdev/usehooks";
-import { Doc } from "convex/_generated/dataModel";
+import { Doc, Id } from "convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DottedSeparator } from "@/components/doted-separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,7 +25,6 @@ import { cn } from "@/lib/utils";
 import { updateWorkspaceSchema } from "../schema";
 import { useUpdateWorkspace } from "../api/use-update-workspace";
 import { useGenerateUploadUrl } from "@/hooks/use-generate-image-upload-url";
-import { useWorkspaceId } from "../hooks/use-workspace-id";
 import { useRemoveWorkspace } from "../api/use-remove-workspace";
 import { useResetWorkspaceLink } from "../api/use-reset-workspace-link";
 import { useConfirm } from "@/hooks/use-confirm";
@@ -37,15 +36,17 @@ interface updateWorkspaceFormProps {
   initialValues: Omit<Doc<"workspaces">, "workspaceAvatar"> & {
     workspaceImage: string;
   };
+  workspaceId: Id<"workspaces">;
 }
 
 export const UpdateWorkspaceForm = ({
   onCancel,
   initialValues,
+  workspaceId,
 }: updateWorkspaceFormProps) => {
   const navigate = useNavigate();
   const workspaceImageRef = useRef<HTMLImageElement>(null);
-  const workspaceId = useWorkspaceId();
+
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { mutate: updateWorkspace, isPending: isUpdatingWorkspace } =
     useUpdateWorkspace();

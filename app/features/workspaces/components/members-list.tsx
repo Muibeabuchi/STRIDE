@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, MoreVerticalIcon } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { getRouteApi, Link } from "@tanstack/react-router";
 import { DottedSeparator } from "@/components/doted-separator";
 import { useGetUserWorkspaceIdMembers } from "@/features/members/api/use-get-members";
 import { Fragment } from "react";
@@ -18,10 +18,13 @@ import { useDeleteMember } from "@/features/members/api/use-delete-member";
 import { Id } from "convex/_generated/dataModel";
 import { useUpdateMember } from "@/features/members/api/use-update-member";
 import { useConfirm } from "@/hooks/use-confirm";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export const MembersList = () => {
-  // const navigate = useNavigate();
-  const workspaceId = useWorkspaceId();
+export const MembersList = ({
+  workspaceId,
+}: {
+  workspaceId: Id<"workspaces">;
+}) => {
   const {
     data: members,
     isPending: isLoadingMembers,
@@ -56,14 +59,6 @@ export const MembersList = () => {
     });
   };
 
-  if (isLoadingMembers) {
-    return <p>Loading...</p>;
-  }
-
-  if (isError) {
-    return <p>There was error whiles loading the members data</p>;
-  }
-
   if (!members) {
     return <p>No members found for this workspace</p>;
   }
@@ -74,7 +69,14 @@ export const MembersList = () => {
       <Card className={"w-full h-full border-none shadow-none"}>
         <CardHeader className=" flex flex-row  gap-x-4 space-y-0 p-7 items-center ">
           <Button size={"sm"} variant={"secondary"} asChild>
-            <Link to={"/"}>
+            <Link
+              to="/"
+              // className={`px-2 py-1 bg-gray-600 dark:bg-gray-700 rounded text-white uppercase font-extrabold`}
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.back();
+              }}
+            >
               <ArrowLeftIcon className={"size-4 mr-2"} />
               Back
             </Link>
@@ -85,7 +87,7 @@ export const MembersList = () => {
           <DottedSeparator />
         </div>
         <CardContent className={"p-7"}>
-          {/* {members.map((member, index) => (
+          {members.map((member, index) => (
             <Fragment key={member._id}>
               <div className={"flex items-center gap-2"}>
                 <MemberAvatar
@@ -146,9 +148,41 @@ export const MembersList = () => {
               </div>
               {index < members.length - 1 && <Separator className={"my-2.5"} />}
             </Fragment>
-          ))} */}
+          ))}
         </CardContent>
       </Card>
     </>
+  );
+};
+
+export const MemberListSkeleton = () => {
+  return (
+    <Card className={"w-full h-full border-none shadow-none"}>
+      <CardHeader className="flex flex-row gap-x-4 space-y-0 p-7 items-center">
+        <Button size={"sm"} variant={"secondary"} disabled>
+          <ArrowLeftIcon className={"size-4 mr-2"} />
+          Back
+        </Button>
+        <Skeleton className="h-6 w-32" />
+      </CardHeader>
+      <div className={"px-7"}>
+        <DottedSeparator />
+      </div>
+      <CardContent className={"p-7"}>
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Fragment key={index}>
+            <div className={"flex items-center gap-2"}>
+              <Skeleton className="size-10 rounded-full" />
+              <div className={"flex flex-col gap-2"}>
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-40" />
+              </div>
+              <Skeleton className="ml-auto size-8 rounded-full" />
+            </div>
+            {index < 4 && <Separator className={"my-2.5"} />}
+          </Fragment>
+        ))}
+      </CardContent>
+    </Card>
   );
 };

@@ -113,8 +113,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <div className="h-screen flex flex-col min-h-0">
-          <div className="flex-grow min-h-0 h-full flex flex-col">
+        <div className="h-full flex flex-col">
+          <div className="flex-grow  h-full flex flex-col">
             {loading && (
               <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
                 <div className="animate-spin h-8 w-8 border-[3px] border-primary border-dashed rounded-full"></div>

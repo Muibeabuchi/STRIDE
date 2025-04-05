@@ -64,7 +64,8 @@ export const getWorkspaceById = authorizedWorkspaceQuery({
     // Is this user a member of this workspace
 
     const workspace = await ctx.db.get(ctx.member.workspaceId);
-    if (!workspace) return null;
+    // it should be impossible for an authenticated user to not have a workspace
+    if (!workspace) throw new ConvexError("Workspace not found");
     if (!workspace.workspaceAvatar)
       return {
         ...workspace,

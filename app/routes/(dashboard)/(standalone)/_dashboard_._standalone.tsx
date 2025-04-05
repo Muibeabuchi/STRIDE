@@ -7,7 +7,9 @@ import {
   Outlet,
 } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/(dashboard)/(standalone)/_dashboard_/_standalone")({
+export const Route = createFileRoute(
+  "/(dashboard)/(standalone)/_dashboard_/_standalone"
+)({
   component: StandaloneLayout,
   errorComponent: ErrorComponent,
   pendingComponent: PendingComponent,
@@ -23,7 +25,7 @@ function StandaloneLayout() {
           </Link>
           <UserButton />
         </nav>
-        <div className="flex py-4 flex-col justify-center items-center">
+        <div className="flex py-4 flex-col justify-center h-full items-center">
           <Outlet />
         </div>
       </div>

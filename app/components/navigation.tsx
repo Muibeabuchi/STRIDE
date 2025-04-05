@@ -1,7 +1,7 @@
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { Routes } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { useRouterState } from "@tanstack/react-router";
 
 function Navigation() {
@@ -12,13 +12,15 @@ function Navigation() {
   // console.log(matches);
   // console.log(resolvedLocation);
   // console.log(location);
+  const location = useLocation().href;
+  console.log(location);
   return (
     <ul className="flex flex-col ">
       {Routes.map(({ FilledIcon, Icon, label, to }) => {
         const fullHref = `/workspaces/${workspaceId}${to}`;
         console.log(fullHref);
         return (
-          <Link key={label} to={fullHref} activeOptions={{ exact: true }}>
+          <Link key={label} to={fullHref}>
             {({ isActive }) => {
               return (
                 <div
