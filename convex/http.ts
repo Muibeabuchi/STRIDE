@@ -4,7 +4,8 @@ import { Webhook } from "svix";
 import { Hono, HonoRequest } from "hono";
 import { HonoWithConvex, HttpRouterWithHono } from "convex-helpers/server/hono";
 import { ActionCtx } from "./_generated/server";
-import { internal } from "./_generated/api";
+import { api, internal } from "./_generated/api";
+import { Id } from "./_generated/dataModel";
 
 const app: HonoWithConvex<ActionCtx> = new Hono();
 
@@ -54,6 +55,17 @@ app.post("/clerk-users-webhook", async (c) => {
   }
 
   return c.body(null, 200);
+});
+
+app.get("/workspace/:workspaceId/get-info", async (c) => {
+  const workspaceId = c.req.param("workspaceId");
+  const workspace = await c.env.runQuery(api.workspaces.getWorkspaceById, {
+    workspaceId: workspaceId as Id<"workspaces">,
+  });
+  if (!workspace) {
+    return c.json({ error: "Workspace not found" }, 404);
+  }
+  return c.json(workspace);
 });
 
 async function validateRequest(

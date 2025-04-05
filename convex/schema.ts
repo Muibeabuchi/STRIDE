@@ -10,33 +10,6 @@ export const taskStatusValidator = v.union(
 );
 
 const schema = defineSchema({
-  // boards: defineTable({
-  //   id: v.string(),
-  //   name: v.string(),
-  //   color: v.string(),
-  // }).index("id", ["id"]),
-
-  // columns: defineTable({
-  //   id: v.string(),
-  //   boardId: v.string(),
-  //   name: v.string(),
-  //   order: v.number(),
-  // })
-  //   .index("id", ["id"])
-  //   .index("board", ["boardId"]),
-
-  // items: defineTable({
-  //   id: v.string(),
-  //   title: v.string(),
-  //   content: v.optional(v.string()),
-  //   order: v.number(),
-  //   columnId: v.string(),
-  //   boardId: v.string(),
-  // })
-  //   .index("id", ["id"])
-  //   .index("column", ["columnId"])
-  //   .index("board", ["boardId"]),
-
   users: defineTable({
     // Clerk user Id
     id: v.string(),

@@ -7,9 +7,6 @@ export const fetchClerkAuth = createServerFn({ method: "GET" }).handler(
     const request = getWebRequest();
 
     const sk = import.meta.env.CLERK_SECRET_KEY;
-    const pk = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-    console.log(sk);
-    console.log(pk);
     if (!request) throw new Error("No request found");
     const auth = await getAuth(request, {
       secretKey: sk,

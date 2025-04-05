@@ -56,7 +56,8 @@ export async function getCurrentUser(ctx: QueryCtx) {
   if (identity === null) {
     return null;
   }
-  return await userByExternalId(ctx, identity.tokenIdentifier);
+  const user = await userByExternalId(ctx, identity.subject);
+  return user;
 }
 
 async function userByExternalId(ctx: QueryCtx, externalId: string) {

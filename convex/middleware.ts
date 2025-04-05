@@ -4,7 +4,6 @@ import {
   customQuery,
 } from "convex-helpers/server/customFunctions";
 import { mutation, query } from "./_generated/server";
-//   import { getAuthUserId } from "@convex-dev/auth/server";
 import { ConvexError, v } from "convex/values";
 import { getCurrentUser } from "./users";
 
@@ -13,12 +12,8 @@ import { getCurrentUser } from "./users";
 export const authenticatedUserQuery = customQuery(
   query,
   customCtx(async (ctx) => {
-    //   const userId = await getAuthUserId(ctx);
-    // await ctx.auth.getUserIdentity();
     const user = await getCurrentUser(ctx);
 
-    // if (userId === null) throw new ConvexError("Unauthorized");
-    // const user = await ctx.db.get(userId);
     if (!user) throw new ConvexError("Unauthorized");
     return { user };
   })
@@ -27,10 +22,7 @@ export const authenticatedUserQuery = customQuery(
 export const authorizedWorkspaceQuery = customQuery(query, {
   args: { workspaceId: v.id("workspaces") },
   input: async (ctx, args) => {
-    //   const userId = await getAuthUserId(ctx);
-    // if (userId === null) throw new ConvexError("Unauthorized");
-    // const user = await ctx.db.get(userId);
-    // if (!user) throw new ConvexError("Unauthorized");
+    // get the user
     const user = await getCurrentUser(ctx);
 
     if (!user) throw new ConvexError("Unauthorized");
@@ -53,15 +45,6 @@ export const authorizedWorkspaceMutation = customMutation(mutation, {
     workspaceId: v.id("workspaces"),
   },
   async input(ctx, args) {
-    //   const userId = await getAuthUserId(ctx);
-    // if (userId === null) throw new ConvexError("Unauthorized");
-    // const user = await ctx.db.get(userId);
-    // if (!user) throw new ConvexError("Unauthorized");
-
-    // grab the workspace
-    // const workspace = await ctx.db.get(args.workspaceId);
-    // if (!workspace) throw new ConvexError("Workspace does not exist!");
-
     const user = await getCurrentUser(ctx);
 
     if (!user) throw new ConvexError("Unauthorized");

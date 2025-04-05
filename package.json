@@ -78,9 +78,11 @@
     "tailwind-merge": "^2.6.0",
     "tiny-invariant": "^1.3.3",
     "tw-animate-css": "^1.2.5",
+    "usehooks-ts": "^3.1.1",
     "vaul": "^1.1.2",
     "vinxi": "0.5.3",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@types/react": "^19.0.8",

@@ -34,7 +34,7 @@ export const getUserWorkspaces = authenticatedUserQuery({
         const avatarUrl = await ctx.storage.getUrl(workspace.workspaceAvatar);
         return {
           ...workspace,
-          workspaceAvatar: avatarUrl,
+          workspaceAvatar: avatarUrl ?? "",
         };
       })
     );

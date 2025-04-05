@@ -8,25 +8,42 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AuthImport } from './routes/_auth'
-import { Route as DashboardRouteImport } from './routes/dashboard/route'
 import { Route as IndexImport } from './routes/index'
-import { Route as AuthSignUpSplatImport } from './routes/_auth.sign-up.$'
-import { Route as AuthSignInSplatImport } from './routes/_auth.sign-in.$'
+import { Route as dashboardDashboardImport } from './routes/(dashboard)/_dashboard'
+import { Route as authAuthImport } from './routes/(auth)/_auth'
+import { Route as dashboardDashboardWorkspacesWorkspaceIdImport } from './routes/(dashboard)/_dashboard.workspaces.$workspaceId'
+import { Route as dashboardstandaloneDashboardstandaloneImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone'
+import { Route as authAuthSignUpSplatImport } from './routes/(auth)/_auth.sign-up.$'
+import { Route as authAuthSignInSplatImport } from './routes/(auth)/_auth.sign-in.$'
+import { Route as dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdImport } from './routes/(dashboard)/_dashboard.workspaces.$workspaceId.projects.$projectId'
+import { Route as dashboardstandaloneDashboardstandaloneWorkspacesCreateImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone.workspaces.create'
+import { Route as dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsImport } from './routes/(dashboard)/_dashboard.workspaces.$workspaceId.projects.$projectId.settings'
+import { Route as dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.settings'
+import { Route as dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.members'
+import { Route as dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.join.$joinCode'
+
+// Create Virtual Routes
+
+const dashboardImport = createFileRoute('/(dashboard)')()
+const authImport = createFileRoute('/(auth)')()
+const dashboardstandaloneDashboardImport = createFileRoute(
+  '/(dashboard)/(standalone)/_dashboard_',
+)()
 
 // Create/Update Routes
 
-const AuthRoute = AuthImport.update({
-  id: '/_auth',
+const dashboardRoute = dashboardImport.update({
+  id: '/(dashboard)',
   getParentRoute: () => rootRoute,
 } as any)
 
-const DashboardRouteRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const authRoute = authImport.update({
+  id: '/(auth)',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -36,17 +53,97 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthSignUpSplatRoute = AuthSignUpSplatImport.update({
-  id: '/sign-up/$',
-  path: '/sign-up/$',
-  getParentRoute: () => AuthRoute,
+const dashboardDashboardRoute = dashboardDashboardImport.update({
+  id: '/_dashboard',
+  getParentRoute: () => dashboardRoute,
 } as any)
 
-const AuthSignInSplatRoute = AuthSignInSplatImport.update({
+const authAuthRoute = authAuthImport.update({
+  id: '/_auth',
+  getParentRoute: () => authRoute,
+} as any)
+
+const dashboardstandaloneDashboardRoute =
+  dashboardstandaloneDashboardImport.update({
+    id: '/(standalone)/_dashboard_',
+    getParentRoute: () => dashboardRoute,
+  } as any)
+
+const dashboardDashboardWorkspacesWorkspaceIdRoute =
+  dashboardDashboardWorkspacesWorkspaceIdImport.update({
+    id: '/workspaces/$workspaceId',
+    path: '/workspaces/$workspaceId',
+    getParentRoute: () => dashboardDashboardRoute,
+  } as any)
+
+const dashboardstandaloneDashboardstandaloneRoute =
+  dashboardstandaloneDashboardstandaloneImport.update({
+    id: '/_standalone',
+    getParentRoute: () => dashboardstandaloneDashboardRoute,
+  } as any)
+
+const authAuthSignUpSplatRoute = authAuthSignUpSplatImport.update({
+  id: '/sign-up/$',
+  path: '/sign-up/$',
+  getParentRoute: () => authAuthRoute,
+} as any)
+
+const authAuthSignInSplatRoute = authAuthSignInSplatImport.update({
   id: '/sign-in/$',
   path: '/sign-in/$',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => authAuthRoute,
 } as any)
+
+const dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute =
+  dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdImport.update({
+    id: '/projects/$projectId',
+    path: '/projects/$projectId',
+    getParentRoute: () => dashboardDashboardWorkspacesWorkspaceIdRoute,
+  } as any)
+
+const dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute =
+  dashboardstandaloneDashboardstandaloneWorkspacesCreateImport.update({
+    id: '/workspaces/create',
+    path: '/workspaces/create',
+    getParentRoute: () => dashboardstandaloneDashboardstandaloneRoute,
+  } as any)
+
+const dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute =
+  dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsImport.update(
+    {
+      id: '/settings',
+      path: '/settings',
+      getParentRoute: () =>
+        dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute,
+    } as any,
+  )
+
+const dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute =
+  dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsImport.update(
+    {
+      id: '/workspaces/$workspaceId/settings',
+      path: '/workspaces/$workspaceId/settings',
+      getParentRoute: () => dashboardstandaloneDashboardstandaloneRoute,
+    } as any,
+  )
+
+const dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute =
+  dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersImport.update(
+    {
+      id: '/workspaces/$workspaceId/members',
+      path: '/workspaces/$workspaceId/members',
+      getParentRoute: () => dashboardstandaloneDashboardstandaloneRoute,
+    } as any,
+  )
+
+const dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute =
+  dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeImport.update(
+    {
+      id: '/workspaces/$workspaceId/join/$joinCode',
+      path: '/workspaces/$workspaceId/join/$joinCode',
+      getParentRoute: () => dashboardstandaloneDashboardstandaloneRoute,
+    } as any,
+  )
 
 // Populate the FileRoutesByPath interface
 
@@ -59,101 +156,338 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
+    '/(auth)': {
+      id: '/(auth)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof authImport
       parentRoute: typeof rootRoute
     }
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthImport
+    '/(auth)/_auth': {
+      id: '/(auth)/_auth'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof authAuthImport
+      parentRoute: typeof authRoute
+    }
+    '/(dashboard)': {
+      id: '/(dashboard)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof dashboardImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/sign-in/$': {
-      id: '/_auth/sign-in/$'
+    '/(dashboard)/_dashboard': {
+      id: '/(dashboard)/_dashboard'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof dashboardDashboardImport
+      parentRoute: typeof dashboardRoute
+    }
+    '/(auth)/_auth/sign-in/$': {
+      id: '/(auth)/_auth/sign-in/$'
       path: '/sign-in/$'
       fullPath: '/sign-in/$'
-      preLoaderRoute: typeof AuthSignInSplatImport
-      parentRoute: typeof AuthImport
+      preLoaderRoute: typeof authAuthSignInSplatImport
+      parentRoute: typeof authAuthImport
     }
-    '/_auth/sign-up/$': {
-      id: '/_auth/sign-up/$'
+    '/(auth)/_auth/sign-up/$': {
+      id: '/(auth)/_auth/sign-up/$'
       path: '/sign-up/$'
       fullPath: '/sign-up/$'
-      preLoaderRoute: typeof AuthSignUpSplatImport
-      parentRoute: typeof AuthImport
+      preLoaderRoute: typeof authAuthSignUpSplatImport
+      parentRoute: typeof authAuthImport
+    }
+    '/(dashboard)/(standalone)/_dashboard_': {
+      id: '/(dashboard)/(standalone)/_dashboard_'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof dashboardstandaloneDashboardImport
+      parentRoute: typeof dashboardImport
+    }
+    '/(dashboard)/(standalone)/_dashboard_/_standalone': {
+      id: '/(dashboard)/(standalone)/_dashboard_/_standalone'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof dashboardstandaloneDashboardstandaloneImport
+      parentRoute: typeof dashboardstandaloneDashboardRoute
+    }
+    '/(dashboard)/_dashboard/workspaces/$workspaceId': {
+      id: '/(dashboard)/_dashboard/workspaces/$workspaceId'
+      path: '/workspaces/$workspaceId'
+      fullPath: '/workspaces/$workspaceId'
+      preLoaderRoute: typeof dashboardDashboardWorkspacesWorkspaceIdImport
+      parentRoute: typeof dashboardDashboardImport
+    }
+    '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/create': {
+      id: '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/create'
+      path: '/workspaces/create'
+      fullPath: '/workspaces/create'
+      preLoaderRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesCreateImport
+      parentRoute: typeof dashboardstandaloneDashboardstandaloneImport
+    }
+    '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId': {
+      id: '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId'
+      path: '/projects/$projectId'
+      fullPath: '/workspaces/$workspaceId/projects/$projectId'
+      preLoaderRoute: typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdImport
+      parentRoute: typeof dashboardDashboardWorkspacesWorkspaceIdImport
+    }
+    '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members': {
+      id: '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members'
+      path: '/workspaces/$workspaceId/members'
+      fullPath: '/workspaces/$workspaceId/members'
+      preLoaderRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersImport
+      parentRoute: typeof dashboardstandaloneDashboardstandaloneImport
+    }
+    '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings': {
+      id: '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings'
+      path: '/workspaces/$workspaceId/settings'
+      fullPath: '/workspaces/$workspaceId/settings'
+      preLoaderRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsImport
+      parentRoute: typeof dashboardstandaloneDashboardstandaloneImport
+    }
+    '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings': {
+      id: '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings'
+      path: '/settings'
+      fullPath: '/workspaces/$workspaceId/projects/$projectId/settings'
+      preLoaderRoute: typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsImport
+      parentRoute: typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdImport
+    }
+    '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode': {
+      id: '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode'
+      path: '/workspaces/$workspaceId/join/$joinCode'
+      fullPath: '/workspaces/$workspaceId/join/$joinCode'
+      preLoaderRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeImport
+      parentRoute: typeof dashboardstandaloneDashboardstandaloneImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface AuthRouteChildren {
-  AuthSignInSplatRoute: typeof AuthSignInSplatRoute
-  AuthSignUpSplatRoute: typeof AuthSignUpSplatRoute
+interface authAuthRouteChildren {
+  authAuthSignInSplatRoute: typeof authAuthSignInSplatRoute
+  authAuthSignUpSplatRoute: typeof authAuthSignUpSplatRoute
 }
 
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthSignInSplatRoute: AuthSignInSplatRoute,
-  AuthSignUpSplatRoute: AuthSignUpSplatRoute,
+const authAuthRouteChildren: authAuthRouteChildren = {
+  authAuthSignInSplatRoute: authAuthSignInSplatRoute,
+  authAuthSignUpSplatRoute: authAuthSignUpSplatRoute,
 }
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const authAuthRouteWithChildren = authAuthRoute._addFileChildren(
+  authAuthRouteChildren,
+)
+
+interface authRouteChildren {
+  authAuthRoute: typeof authAuthRouteWithChildren
+}
+
+const authRouteChildren: authRouteChildren = {
+  authAuthRoute: authAuthRouteWithChildren,
+}
+
+const authRouteWithChildren = authRoute._addFileChildren(authRouteChildren)
+
+interface dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteChildren {
+  dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute: typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
+}
+
+const dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteChildren: dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteChildren =
+  {
+    dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute:
+      dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute,
+  }
+
+const dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren =
+  dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute._addFileChildren(
+    dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteChildren,
+  )
+
+interface dashboardDashboardWorkspacesWorkspaceIdRouteChildren {
+  dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute: typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren
+}
+
+const dashboardDashboardWorkspacesWorkspaceIdRouteChildren: dashboardDashboardWorkspacesWorkspaceIdRouteChildren =
+  {
+    dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute:
+      dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren,
+  }
+
+const dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren =
+  dashboardDashboardWorkspacesWorkspaceIdRoute._addFileChildren(
+    dashboardDashboardWorkspacesWorkspaceIdRouteChildren,
+  )
+
+interface dashboardDashboardRouteChildren {
+  dashboardDashboardWorkspacesWorkspaceIdRoute: typeof dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren
+}
+
+const dashboardDashboardRouteChildren: dashboardDashboardRouteChildren = {
+  dashboardDashboardWorkspacesWorkspaceIdRoute:
+    dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren,
+}
+
+const dashboardDashboardRouteWithChildren =
+  dashboardDashboardRoute._addFileChildren(dashboardDashboardRouteChildren)
+
+interface dashboardstandaloneDashboardstandaloneRouteChildren {
+  dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute
+  dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute
+  dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute
+  dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute
+}
+
+const dashboardstandaloneDashboardstandaloneRouteChildren: dashboardstandaloneDashboardstandaloneRouteChildren =
+  {
+    dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute:
+      dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute,
+    dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute:
+      dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute,
+    dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute:
+      dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute,
+    dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute:
+      dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute,
+  }
+
+const dashboardstandaloneDashboardstandaloneRouteWithChildren =
+  dashboardstandaloneDashboardstandaloneRoute._addFileChildren(
+    dashboardstandaloneDashboardstandaloneRouteChildren,
+  )
+
+interface dashboardstandaloneDashboardRouteChildren {
+  dashboardstandaloneDashboardstandaloneRoute: typeof dashboardstandaloneDashboardstandaloneRouteWithChildren
+}
+
+const dashboardstandaloneDashboardRouteChildren: dashboardstandaloneDashboardRouteChildren =
+  {
+    dashboardstandaloneDashboardstandaloneRoute:
+      dashboardstandaloneDashboardstandaloneRouteWithChildren,
+  }
+
+const dashboardstandaloneDashboardRouteWithChildren =
+  dashboardstandaloneDashboardRoute._addFileChildren(
+    dashboardstandaloneDashboardRouteChildren,
+  )
+
+interface dashboardRouteChildren {
+  dashboardDashboardRoute: typeof dashboardDashboardRouteWithChildren
+  dashboardstandaloneDashboardRoute: typeof dashboardstandaloneDashboardRouteWithChildren
+}
+
+const dashboardRouteChildren: dashboardRouteChildren = {
+  dashboardDashboardRoute: dashboardDashboardRouteWithChildren,
+  dashboardstandaloneDashboardRoute:
+    dashboardstandaloneDashboardRouteWithChildren,
+}
+
+const dashboardRouteWithChildren = dashboardRoute._addFileChildren(
+  dashboardRouteChildren,
+)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRouteRoute
-  '': typeof AuthRouteWithChildren
-  '/sign-in/$': typeof AuthSignInSplatRoute
-  '/sign-up/$': typeof AuthSignUpSplatRoute
+  '/': typeof dashboardstandaloneDashboardstandaloneRouteWithChildren
+  '/sign-in/$': typeof authAuthSignInSplatRoute
+  '/sign-up/$': typeof authAuthSignUpSplatRoute
+  '/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren
+  '/workspaces/create': typeof dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute
+  '/workspaces/$workspaceId/projects/$projectId': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren
+  '/workspaces/$workspaceId/members': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute
+  '/workspaces/$workspaceId/settings': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute
+  '/workspaces/$workspaceId/projects/$projectId/settings': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
+  '/workspaces/$workspaceId/join/$joinCode': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRouteRoute
-  '': typeof AuthRouteWithChildren
-  '/sign-in/$': typeof AuthSignInSplatRoute
-  '/sign-up/$': typeof AuthSignUpSplatRoute
+  '/': typeof dashboardstandaloneDashboardstandaloneRouteWithChildren
+  '/sign-in/$': typeof authAuthSignInSplatRoute
+  '/sign-up/$': typeof authAuthSignUpSplatRoute
+  '/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren
+  '/workspaces/create': typeof dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute
+  '/workspaces/$workspaceId/projects/$projectId': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren
+  '/workspaces/$workspaceId/members': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute
+  '/workspaces/$workspaceId/settings': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute
+  '/workspaces/$workspaceId/projects/$projectId/settings': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
+  '/workspaces/$workspaceId/join/$joinCode': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRouteRoute
-  '/_auth': typeof AuthRouteWithChildren
-  '/_auth/sign-in/$': typeof AuthSignInSplatRoute
-  '/_auth/sign-up/$': typeof AuthSignUpSplatRoute
+  '/(auth)': typeof authRouteWithChildren
+  '/(auth)/_auth': typeof authAuthRouteWithChildren
+  '/(dashboard)': typeof dashboardRouteWithChildren
+  '/(dashboard)/_dashboard': typeof dashboardDashboardRouteWithChildren
+  '/(auth)/_auth/sign-in/$': typeof authAuthSignInSplatRoute
+  '/(auth)/_auth/sign-up/$': typeof authAuthSignUpSplatRoute
+  '/(dashboard)/(standalone)/_dashboard_': typeof dashboardstandaloneDashboardRouteWithChildren
+  '/(dashboard)/(standalone)/_dashboard_/_standalone': typeof dashboardstandaloneDashboardstandaloneRouteWithChildren
+  '/(dashboard)/_dashboard/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren
+  '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/create': typeof dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute
+  '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren
+  '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute
+  '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute
+  '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
+  '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '' | '/sign-in/$' | '/sign-up/$'
+  fullPaths:
+    | '/'
+    | '/sign-in/$'
+    | '/sign-up/$'
+    | '/workspaces/$workspaceId'
+    | '/workspaces/create'
+    | '/workspaces/$workspaceId/projects/$projectId'
+    | '/workspaces/$workspaceId/members'
+    | '/workspaces/$workspaceId/settings'
+    | '/workspaces/$workspaceId/projects/$projectId/settings'
+    | '/workspaces/$workspaceId/join/$joinCode'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '' | '/sign-in/$' | '/sign-up/$'
+  to:
+    | '/'
+    | '/sign-in/$'
+    | '/sign-up/$'
+    | '/workspaces/$workspaceId'
+    | '/workspaces/create'
+    | '/workspaces/$workspaceId/projects/$projectId'
+    | '/workspaces/$workspaceId/members'
+    | '/workspaces/$workspaceId/settings'
+    | '/workspaces/$workspaceId/projects/$projectId/settings'
+    | '/workspaces/$workspaceId/join/$joinCode'
   id:
     | '__root__'
     | '/'
-    | '/dashboard'
-    | '/_auth'
-    | '/_auth/sign-in/$'
-    | '/_auth/sign-up/$'
+    | '/(auth)'
+    | '/(auth)/_auth'
+    | '/(dashboard)'
+    | '/(dashboard)/_dashboard'
+    | '/(auth)/_auth/sign-in/$'
+    | '/(auth)/_auth/sign-up/$'
+    | '/(dashboard)/(standalone)/_dashboard_'
+    | '/(dashboard)/(standalone)/_dashboard_/_standalone'
+    | '/(dashboard)/_dashboard/workspaces/$workspaceId'
+    | '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/create'
+    | '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId'
+    | '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members'
+    | '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings'
+    | '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings'
+    | '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRouteRoute: typeof DashboardRouteRoute
-  AuthRoute: typeof AuthRouteWithChildren
+  authRoute: typeof authRouteWithChildren
+  dashboardRoute: typeof dashboardRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRouteRoute: DashboardRouteRoute,
-  AuthRoute: AuthRouteWithChildren,
+  authRoute: authRouteWithChildren,
+  dashboardRoute: dashboardRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -167,30 +501,99 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/dashboard",
-        "/_auth"
+        "/(auth)",
+        "/(dashboard)"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/dashboard": {
-      "filePath": "dashboard/route.tsx"
-    },
-    "/_auth": {
-      "filePath": "_auth.tsx",
+    "/(auth)": {
+      "filePath": "(auth)",
       "children": [
-        "/_auth/sign-in/$",
-        "/_auth/sign-up/$"
+        "/(auth)/_auth"
       ]
     },
-    "/_auth/sign-in/$": {
-      "filePath": "_auth.sign-in.$.tsx",
-      "parent": "/_auth"
+    "/(auth)/_auth": {
+      "filePath": "(auth)/_auth.tsx",
+      "parent": "/(auth)",
+      "children": [
+        "/(auth)/_auth/sign-in/$",
+        "/(auth)/_auth/sign-up/$"
+      ]
     },
-    "/_auth/sign-up/$": {
-      "filePath": "_auth.sign-up.$.tsx",
-      "parent": "/_auth"
+    "/(dashboard)": {
+      "filePath": "(dashboard)",
+      "children": [
+        "/(dashboard)/_dashboard",
+        "/(dashboard)/(standalone)/_dashboard_"
+      ]
+    },
+    "/(dashboard)/_dashboard": {
+      "filePath": "(dashboard)/_dashboard.tsx",
+      "parent": "/(dashboard)",
+      "children": [
+        "/(dashboard)/_dashboard/workspaces/$workspaceId"
+      ]
+    },
+    "/(auth)/_auth/sign-in/$": {
+      "filePath": "(auth)/_auth.sign-in.$.tsx",
+      "parent": "/(auth)/_auth"
+    },
+    "/(auth)/_auth/sign-up/$": {
+      "filePath": "(auth)/_auth.sign-up.$.tsx",
+      "parent": "/(auth)/_auth"
+    },
+    "/(dashboard)/(standalone)/_dashboard_": {
+      "filePath": "(dashboard)/(standalone)",
+      "parent": "/(dashboard)",
+      "children": [
+        "/(dashboard)/(standalone)/_dashboard_/_standalone"
+      ]
+    },
+    "/(dashboard)/(standalone)/_dashboard_/_standalone": {
+      "filePath": "(dashboard)/(standalone)/_dashboard_._standalone.tsx",
+      "parent": "/(dashboard)/(standalone)/_dashboard_",
+      "children": [
+        "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/create",
+        "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members",
+        "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings",
+        "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode"
+      ]
+    },
+    "/(dashboard)/_dashboard/workspaces/$workspaceId": {
+      "filePath": "(dashboard)/_dashboard.workspaces.$workspaceId.tsx",
+      "parent": "/(dashboard)/_dashboard",
+      "children": [
+        "/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId"
+      ]
+    },
+    "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/create": {
+      "filePath": "(dashboard)/(standalone)/_dashboard_._standalone.workspaces.create.tsx",
+      "parent": "/(dashboard)/(standalone)/_dashboard_/_standalone"
+    },
+    "/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId": {
+      "filePath": "(dashboard)/_dashboard.workspaces.$workspaceId.projects.$projectId.tsx",
+      "parent": "/(dashboard)/_dashboard/workspaces/$workspaceId",
+      "children": [
+        "/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings"
+      ]
+    },
+    "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members": {
+      "filePath": "(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.members.tsx",
+      "parent": "/(dashboard)/(standalone)/_dashboard_/_standalone"
+    },
+    "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings": {
+      "filePath": "(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.settings.tsx",
+      "parent": "/(dashboard)/(standalone)/_dashboard_/_standalone"
+    },
+    "/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings": {
+      "filePath": "(dashboard)/_dashboard.workspaces.$workspaceId.projects.$projectId.settings.tsx",
+      "parent": "/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId"
+    },
+    "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode": {
+      "filePath": "(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.join.$joinCode.tsx",
+      "parent": "/(dashboard)/(standalone)/_dashboard_/_standalone"
     }
   }
 }

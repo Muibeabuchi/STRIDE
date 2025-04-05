@@ -6,7 +6,7 @@ import {
   useMatch,
 } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_auth")({
+export const Route = createFileRoute("/(auth)/_auth")({
   beforeLoad: async ({ context: { userId } }) => {
     if (userId) {
       throw redirect({
@@ -19,11 +19,11 @@ export const Route = createFileRoute("/_auth")({
 
 function RouteComponent() {
   const signInPageMatch = useMatch({
-    from: "/_auth/sign-in/$",
+    from: "/(auth)/_auth/sign-in/$",
     shouldThrow: false,
   });
   const signUpPageMatch = useMatch({
-    from: "/_auth/sign-up/$",
+    from: "/(auth)/_auth/sign-up/$",
     shouldThrow: false,
   });
   return (

@@ -6,6 +6,7 @@ import {
   Scripts,
   useRouteContext,
   redirect,
+  useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import * as React from "react";
@@ -67,11 +68,9 @@ export const Route = createRootRouteWithContext<{
   beforeLoad: async (ctx) => {
     const auth = await fetchClerkAuth();
     const { userId, token } = auth;
-
     if (token) {
       ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
     }
-
     return {
       userId,
       token,
@@ -105,6 +104,9 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const loading = useRouterState({
+    select: (state) => state.isLoading,
+  });
   return (
     <html>
       <head>
@@ -113,6 +115,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         <div className="h-screen flex flex-col min-h-0">
           <div className="flex-grow min-h-0 h-full flex flex-col">
+            {loading && (
+              <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
+                <div className="animate-spin h-8 w-8 border-[3px] border-primary border-dashed rounded-full"></div>
+              </div>
+            )}
             {children}
             <Toaster />
           </div>
