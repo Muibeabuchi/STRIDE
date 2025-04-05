@@ -1,7 +1,12 @@
-import { internalMutation, query, QueryCtx } from "./_generated/server";
+import {
+  internalMutation,
+  MutationCtx,
+  query,
+  QueryCtx,
+} from "./_generated/server";
 import { UserJSON } from "@clerk/backend";
 
-import { v, Validator } from "convex/values";
+import { ConvexError, v, Validator } from "convex/values";
 
 export const current = query({
   args: {},
@@ -36,6 +41,69 @@ export const deleteFromClerk = internalMutation({
     const user = await userByExternalId(ctx, clerkUserId);
 
     if (user !== null) {
+      // grab the users memberships
+      const memberships = await ctx.db
+        .query("members")
+        .withIndex("by_userId", (q) => q.eq("userId", user._id))
+        .collect();
+      if (!memberships || memberships.length < 1)
+        throw new ConvexError("User has no memberships");
+      // delete all memberships
+      await Promise.all(
+        memberships.map(
+          async (membership) => await ctx.db.delete(membership._id)
+        )
+      );
+      // grab the users workspaces
+      const workspaces = await ctx.db
+        .query("workspaces")
+        .withIndex("by_workspace_creator", (q) =>
+          q.eq("workspaceCreator", user._id)
+        )
+        .collect();
+      if (!workspaces || workspaces.length < 1)
+        throw new ConvexError("User has no workspaces");
+      // delete all workspaces and workspace projects
+      await Promise.all(
+        workspaces.map(async (workspace) => {
+          // delete all projects
+          const projects = await ctx.db
+            .query("projects")
+            .withIndex("by_workspaceId", (q) =>
+              q.eq("workspaceId", workspace._id)
+            )
+            .collect();
+          // delete all projects
+          await Promise.all(
+            projects.map(async (project) => await ctx.db.delete(project._id))
+          );
+
+          // delete all the tasks of this workspace
+          const tasks = await ctx.db
+            .query("tasks")
+            .withIndex("by_workspaceId", (q) =>
+              q.eq("workspaceId", workspace._id)
+            )
+            .collect();
+          await Promise.all(
+            tasks.map(async (task) => await ctx.db.delete(task._id))
+          );
+
+          // delete the workspace
+          await ctx.db.delete(workspace._id);
+        })
+      );
+
+      // delete all tasks assigned to the user
+      const tasks = await ctx.db
+        .query("tasks")
+        .withIndex("by_assigneeId", (q) => q.eq("assigneeId", user._id))
+        .collect();
+      await Promise.all(
+        tasks.map(async (task) => await ctx.db.delete(task._id))
+      );
+
+      // delete the user
       await ctx.db.delete(user._id);
     } else {
       console.warn(
