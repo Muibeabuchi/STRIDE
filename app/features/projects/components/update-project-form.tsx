@@ -27,18 +27,7 @@ import { useGenerateUploadUrl } from "../../../hooks/use-generate-image-upload-u
 import { updateProjectSchema } from "../schema";
 import { useRemoveProject } from "../api/use-remove-project";
 import { useNavigate } from "@tanstack/react-router";
-
-function assertImage(image: File | string) {
-  if (typeof image === "string") {
-    if (image.length === 0) {
-      return undefined;
-    } else {
-      return;
-    }
-  }
-
-  return image;
-}
+import { assertImageUpdate } from "@/utils/image";
 
 interface updateProjectFormProps {
   onCancel?: () => void;
@@ -80,7 +69,7 @@ export const UpdateProjectForm = ({
     if (typeof values.image === "string" && values.image.length !== 0) return;
     if (initialValues.projectName === values.name) return;
     try {
-      const image = assertImage(values.image);
+      const image = assertImageUpdate(values.image);
 
       if (workspaceImageRef.current)
         URL.revokeObjectURL(workspaceImageRef.current.src);

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useGetProjectById } from "@/features/projects/api/use-get-projects-by-id";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
-import { useCreateProjectModal } from "@/features/projects/hooks/use-create-project-modal";
+import { TaskViewSwitcher } from "@/features/tasks/components/task-view-switcher";
 import { convexQuery } from "@convex-dev/react-query";
 import { Outlet } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
@@ -42,9 +42,7 @@ function RouteComponent() {
     projectId,
     workspaceId,
   });
-  const { open, setIsOpen } = useCreateProjectModal();
 
-  const handleEditProject = () => open();
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex items-center justify-between">
@@ -71,7 +69,7 @@ function RouteComponent() {
           </Button>
         </div>
       </div>
-      {/* <TaskViewSwitcher /> */}
+      <TaskViewSwitcher />
       <Outlet />
     </div>
   );

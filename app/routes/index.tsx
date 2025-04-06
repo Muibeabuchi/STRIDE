@@ -13,20 +13,22 @@ export const Route = createFileRoute("/")({
   //     });
   //   }
   // },
-  beforeLoad: async ({ context: { queryClient, convexQueryClient } }) => {
-    const user = await queryClient.ensureQueryData({
-      staleTime: 1000 * 60 * 5,
-      queryKey: ["user"],
-      queryFn: async () => {
-        const auth = await fetchClerkAuth();
-        if (auth?.token) {
-          convexQueryClient.serverHttpClient?.setAuth(auth.token);
-        }
-        return auth;
-      },
-    });
+  beforeLoad: async ({
+    context: { queryClient, convexQueryClient, userId },
+  }) => {
+    // const user = await queryClient.fetchQuery({
+    //   staleTime: 1000 * 60 * 5,
+    //   queryKey: ["user"],
+    //   queryFn: async () => {
+    //     const auth = await fetchClerkAuth();
+    //     if (auth?.token) {
+    //       convexQueryClient.serverHttpClient?.setAuth(auth.token);
+    //     }
+    //     return auth;
+    //   },
+    // });
 
-    if (!user.userId) {
+    if (!userId) {
       throw redirect({
         to: "/sign-in/$",
       });

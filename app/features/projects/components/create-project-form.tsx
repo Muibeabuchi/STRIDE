@@ -24,8 +24,8 @@ import { createProjectSchema } from "../schema";
 import { useCreateProject } from "../api/use-create-project";
 
 import { useGenerateUploadUrl } from "@/hooks/use-generate-image-upload-url";
-// import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
+import { useNavigate } from "@tanstack/react-router";
 
 interface CreateProjectFormProps {
   onCancel?: () => void;
@@ -33,10 +33,8 @@ interface CreateProjectFormProps {
 
 export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   const navigate = useNavigate();
-  // const workspaceId = useWorkspaceId();
-  const { workspaceId } = useParams({
-    from: "/(dashboard)/_dashboard/workspaces/$workspaceId",
-  });
+  const workspaceId = useWorkspaceId();
+  if (!workspaceId) throw new Error("workspaceId is not defined");
   const workspaceImageRef = useRef<HTMLImageElement>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { mutate: createProject, isPending: isCreatingProject } =
@@ -53,18 +51,20 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   const onSubmit = async (values: z.infer<typeof createProjectSchema>) => {
     console.log("creating project");
     try {
-      const storageId = await handleSendImage(values.image);
       if (workspaceImageRef.current)
         URL.revokeObjectURL(workspaceImageRef.current.src);
       createProject(
         {
           projectName: values.name,
-          projectImage: storageId,
+          projectImage: !values.image
+            ? undefined
+            : await handleSendImage(values.image),
           workspaceId,
         },
         {
           onSuccess(projectId) {
             form.reset();
+            onCancel?.();
             navigate({
               to: "/workspaces/$workspaceId/projects/$projectId",
               params: {

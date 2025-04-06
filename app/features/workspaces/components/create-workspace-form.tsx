@@ -46,13 +46,15 @@ export const CreateWorkspaceForm = ({ onCancel }: createWorkspaceFormProps) => {
 
   const onSubmit = async (values: z.infer<typeof createWorkspaceSchema>) => {
     try {
-      const storageId = await handleSendImage(values.image);
+      // const storageId = await handleSendImage(values.image);
       if (workspaceImageRef.current)
         URL.revokeObjectURL(workspaceImageRef.current.src);
       createWorkspace(
         {
           workspaceName: values.name,
-          workspaceImageId: storageId,
+          workspaceImageId: !values.image
+            ? undefined
+            : await handleSendImage(values.image),
         },
         {
           onSuccess(data) {

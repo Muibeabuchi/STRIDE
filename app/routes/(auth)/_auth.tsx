@@ -8,19 +8,19 @@ import {
 } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(auth)/_auth")({
-  beforeLoad: async ({ context: { queryClient, convexQueryClient } }) => {
-    const user = await queryClient.ensureQueryData({
-      queryKey: ["user"],
-      queryFn: async () => {
-        const auth = await fetchClerkAuth();
-        if (auth?.token) {
-          convexQueryClient.serverHttpClient?.setAuth(auth.token);
-        }
-        return auth;
-      },
-    });
+  beforeLoad: async ({ context: { userId } }) => {
+    // const user = await queryClient.ensureQueryData({
+    //   queryKey: ["user"],
+    //   queryFn: async () => {
+    //     const auth = await fetchClerkAuth();
+    //     if (auth?.token) {
+    //       convexQueryClient.serverHttpClient?.setAuth(auth.token);
+    //     }
+    //     return auth;
+    //   },
+    // });
 
-    if (user.userId) {
+    if (userId) {
       throw redirect({
         to: "/",
       });

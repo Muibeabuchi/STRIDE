@@ -30,6 +30,7 @@ export function createRouter() {
   const queryClient: QueryClient = new QueryClient({
     defaultOptions: {
       queries: {
+        // networkMode:"",
         staleTime: 1000 * 60 * 5,
         queryKeyHashFn: convexQueryClient.hashFn(),
         queryFn: convexQueryClient.queryFn(),
