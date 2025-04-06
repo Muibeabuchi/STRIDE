@@ -119,9 +119,15 @@ importers:
       '@tanstack/react-start':
         specifier: ^1.114.30
         version: 1.114.30(@tanstack/react-router@1.114.29(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@types/node@22.13.17)(db0@0.3.1)(ioredis@5.6.0)(jiti@2.4.2)(lightningcss@1.29.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(terser@5.39.0)(tsx@4.19.3)(vite@6.2.4(@types/node@22.13.17)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(yaml@2.7.1)
+      '@tanstack/zod-adapter':
+        specifier: ^1.115.0
+        version: 1.115.0(@tanstack/react-router@1.114.29(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(zod@3.24.2)
       '@uidotdev/usehooks':
         specifier: ^2.4.1
         version: 2.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      arktype:
+        specifier: ^2.1.17
+        version: 2.1.17
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -253,6 +259,12 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
+
+  '@ark/schema@0.45.7':
+    resolution: {integrity: sha512-TS8jHOkAwRLviu84a7PQGebQ8PzGfxeAznJX3AzaXbb9bOYrtCiqo52/BWBwptc7pZJxL0ejN4Yufgb9YsNALw==}
+
+  '@ark/util@0.45.7':
+    resolution: {integrity: sha512-ymzzU8C8W+tQzkOIcaLWx4lLXSe5AnF3lpmAtc2FqkxLEVwRnyeKCYPOVXuttLjMwv8R4S/0D0E2cwmUUzim2Q==}
 
   '@babel/code-frame@7.26.2':
     resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
@@ -2274,6 +2286,13 @@ packages:
     resolution: {integrity: sha512-DufKsQy/qxDpOTiggJCgshhJkpSyUygwHHfl2LA66CXOf3aUjZtlNu4io1UpmJNf8C/9lVlGARhkoq5fTRRk0w==}
     engines: {node: '>=12'}
 
+  '@tanstack/zod-adapter@1.115.0':
+    resolution: {integrity: sha512-p5nMx4hcu+ULgWaK7OmtjHkdNAMBYL9n1EyAdobbBMi2FqH9+W3ECsBGI/P+7nQtsc1WR6ip+/Utxg4XoPPjBA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@tanstack/react-router': '>=1.43.2'
+      zod: ^3.23.8
+
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
 
@@ -2431,6 +2450,9 @@ packages:
   aria-hidden@1.2.4:
     resolution: {integrity: sha512-y+CcFFwelSXpLZk/7fMB2mUbGtX9lKycf1MWJ7CaTIERyitVlyQx6C+sxcROU2BAJ24OiZyK+8wj2i8AlBoS3A==}
     engines: {node: '>=10'}
+
+  arktype@2.1.17:
+    resolution: {integrity: sha512-w1uDYt+5riOWhjLV7mho7UgofiXLyVWXpHC/Y6xkqVTi9ickuF8aNmEOne7fPN5eTT4Ub4HBfDD7JKJMSa4Htw==}
 
   async-sema@3.1.1:
     resolution: {integrity: sha512-tLRNUXati5MFePdAk8dw7Qt7DpxPB60ofAgn8WRhW6a2rcimZnYBP9oxHiv0OHy+Wz7kPMG+t4LGdt31+4EmGg==}
@@ -4525,6 +4547,12 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
+
+  '@ark/schema@0.45.7':
+    dependencies:
+      '@ark/util': 0.45.7
+
+  '@ark/util@0.45.7': {}
 
   '@babel/code-frame@7.26.2':
     dependencies:
@@ -6649,6 +6677,11 @@ snapshots:
 
   '@tanstack/virtual-file-routes@1.114.29': {}
 
+  '@tanstack/zod-adapter@1.115.0(@tanstack/react-router@1.114.29(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(zod@3.24.2)':
+    dependencies:
+      '@tanstack/react-router': 1.114.29(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      zod: 3.24.2
+
   '@types/babel__core@7.20.5':
     dependencies:
       '@babel/parser': 7.27.0
@@ -6839,6 +6872,11 @@ snapshots:
   aria-hidden@1.2.4:
     dependencies:
       tslib: 2.8.1
+
+  arktype@2.1.17:
+    dependencies:
+      '@ark/schema': 0.45.7
+      '@ark/util': 0.45.7
 
   async-sema@3.1.1: {}
 
