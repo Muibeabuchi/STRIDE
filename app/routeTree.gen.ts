@@ -20,12 +20,12 @@ import { Route as dashboardDashboardWorkspacesWorkspaceIdImport } from './routes
 import { Route as dashboardstandaloneDashboardstandaloneImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone'
 import { Route as authAuthSignUpSplatImport } from './routes/(auth)/_auth.sign-up.$'
 import { Route as authAuthSignInSplatImport } from './routes/(auth)/_auth.sign-in.$'
-import { Route as dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdImport } from './routes/(dashboard)/_dashboard.workspaces.$workspaceId.projects.$projectId'
+import { Route as dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdImport } from './routes/(dashboard)/_dashboard.workspaces_.$workspaceId.projects.$projectId'
 import { Route as dashboardstandaloneDashboardstandaloneWorkspacesCreateImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone.workspaces.create'
-import { Route as dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsImport } from './routes/(dashboard)/_dashboard.workspaces.$workspaceId.projects.$projectId.settings'
 import { Route as dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.settings'
 import { Route as dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.members'
 import { Route as dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.join.$joinCode'
+import { Route as dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdProjectsProjectIdSettingsImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.projects.$projectId.settings'
 
 // Create Virtual Routes
 
@@ -96,9 +96,9 @@ const authAuthSignInSplatRoute = authAuthSignInSplatImport.update({
 
 const dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute =
   dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdImport.update({
-    id: '/projects/$projectId',
-    path: '/projects/$projectId',
-    getParentRoute: () => dashboardDashboardWorkspacesWorkspaceIdRoute,
+    id: '/workspaces_/$workspaceId/projects/$projectId',
+    path: '/workspaces/$workspaceId/projects/$projectId',
+    getParentRoute: () => dashboardDashboardRoute,
   } as any)
 
 const dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute =
@@ -107,16 +107,6 @@ const dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute =
     path: '/workspaces/create',
     getParentRoute: () => dashboardstandaloneDashboardstandaloneRoute,
   } as any)
-
-const dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute =
-  dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsImport.update(
-    {
-      id: '/settings',
-      path: '/settings',
-      getParentRoute: () =>
-        dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute,
-    } as any,
-  )
 
 const dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute =
   dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsImport.update(
@@ -141,6 +131,15 @@ const dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRou
     {
       id: '/workspaces/$workspaceId/join/$joinCode',
       path: '/workspaces/$workspaceId/join/$joinCode',
+      getParentRoute: () => dashboardstandaloneDashboardstandaloneRoute,
+    } as any,
+  )
+
+const dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute =
+  dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdProjectsProjectIdSettingsImport.update(
+    {
+      id: '/workspaces/$workspaceId/projects/$projectId/settings',
+      path: '/workspaces/$workspaceId/projects/$projectId/settings',
       getParentRoute: () => dashboardstandaloneDashboardstandaloneRoute,
     } as any,
   )
@@ -226,12 +225,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesCreateImport
       parentRoute: typeof dashboardstandaloneDashboardstandaloneImport
     }
-    '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId': {
-      id: '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId'
-      path: '/projects/$projectId'
+    '/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId': {
+      id: '/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId'
+      path: '/workspaces/$workspaceId/projects/$projectId'
       fullPath: '/workspaces/$workspaceId/projects/$projectId'
       preLoaderRoute: typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdImport
-      parentRoute: typeof dashboardDashboardWorkspacesWorkspaceIdImport
+      parentRoute: typeof dashboardDashboardImport
     }
     '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members': {
       id: '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members'
@@ -247,18 +246,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsImport
       parentRoute: typeof dashboardstandaloneDashboardstandaloneImport
     }
-    '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings': {
-      id: '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings'
-      path: '/settings'
-      fullPath: '/workspaces/$workspaceId/projects/$projectId/settings'
-      preLoaderRoute: typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsImport
-      parentRoute: typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdImport
-    }
     '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode': {
       id: '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode'
       path: '/workspaces/$workspaceId/join/$joinCode'
       fullPath: '/workspaces/$workspaceId/join/$joinCode'
       preLoaderRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeImport
+      parentRoute: typeof dashboardstandaloneDashboardstandaloneImport
+    }
+    '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/projects/$projectId/settings': {
+      id: '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/projects/$projectId/settings'
+      path: '/workspaces/$workspaceId/projects/$projectId/settings'
+      fullPath: '/workspaces/$workspaceId/projects/$projectId/settings'
+      preLoaderRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdProjectsProjectIdSettingsImport
       parentRoute: typeof dashboardstandaloneDashboardstandaloneImport
     }
   }
@@ -290,43 +289,16 @@ const authRouteChildren: authRouteChildren = {
 
 const authRouteWithChildren = authRoute._addFileChildren(authRouteChildren)
 
-interface dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteChildren {
-  dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute: typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
-}
-
-const dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteChildren: dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteChildren =
-  {
-    dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute:
-      dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute,
-  }
-
-const dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren =
-  dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute._addFileChildren(
-    dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteChildren,
-  )
-
-interface dashboardDashboardWorkspacesWorkspaceIdRouteChildren {
-  dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute: typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren
-}
-
-const dashboardDashboardWorkspacesWorkspaceIdRouteChildren: dashboardDashboardWorkspacesWorkspaceIdRouteChildren =
-  {
-    dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute:
-      dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren,
-  }
-
-const dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren =
-  dashboardDashboardWorkspacesWorkspaceIdRoute._addFileChildren(
-    dashboardDashboardWorkspacesWorkspaceIdRouteChildren,
-  )
-
 interface dashboardDashboardRouteChildren {
-  dashboardDashboardWorkspacesWorkspaceIdRoute: typeof dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren
+  dashboardDashboardWorkspacesWorkspaceIdRoute: typeof dashboardDashboardWorkspacesWorkspaceIdRoute
+  dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute: typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute
 }
 
 const dashboardDashboardRouteChildren: dashboardDashboardRouteChildren = {
   dashboardDashboardWorkspacesWorkspaceIdRoute:
-    dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren,
+    dashboardDashboardWorkspacesWorkspaceIdRoute,
+  dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute:
+    dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute,
 }
 
 const dashboardDashboardRouteWithChildren =
@@ -337,6 +309,7 @@ interface dashboardstandaloneDashboardstandaloneRouteChildren {
   dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute
   dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute
   dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute
+  dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute: typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
 }
 
 const dashboardstandaloneDashboardstandaloneRouteChildren: dashboardstandaloneDashboardstandaloneRouteChildren =
@@ -349,6 +322,8 @@ const dashboardstandaloneDashboardstandaloneRouteChildren: dashboardstandaloneDa
       dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute,
     dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute:
       dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute,
+    dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute:
+      dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute,
   }
 
 const dashboardstandaloneDashboardstandaloneRouteWithChildren =
@@ -390,26 +365,26 @@ export interface FileRoutesByFullPath {
   '/': typeof dashboardstandaloneDashboardstandaloneRouteWithChildren
   '/sign-in/$': typeof authAuthSignInSplatRoute
   '/sign-up/$': typeof authAuthSignUpSplatRoute
-  '/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren
+  '/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRoute
   '/workspaces/create': typeof dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute
-  '/workspaces/$workspaceId/projects/$projectId': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren
+  '/workspaces/$workspaceId/projects/$projectId': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute
   '/workspaces/$workspaceId/members': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute
   '/workspaces/$workspaceId/settings': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute
-  '/workspaces/$workspaceId/projects/$projectId/settings': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
   '/workspaces/$workspaceId/join/$joinCode': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute
+  '/workspaces/$workspaceId/projects/$projectId/settings': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof dashboardstandaloneDashboardstandaloneRouteWithChildren
   '/sign-in/$': typeof authAuthSignInSplatRoute
   '/sign-up/$': typeof authAuthSignUpSplatRoute
-  '/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren
+  '/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRoute
   '/workspaces/create': typeof dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute
-  '/workspaces/$workspaceId/projects/$projectId': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren
+  '/workspaces/$workspaceId/projects/$projectId': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute
   '/workspaces/$workspaceId/members': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute
   '/workspaces/$workspaceId/settings': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute
-  '/workspaces/$workspaceId/projects/$projectId/settings': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
   '/workspaces/$workspaceId/join/$joinCode': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute
+  '/workspaces/$workspaceId/projects/$projectId/settings': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
 }
 
 export interface FileRoutesById {
@@ -423,13 +398,13 @@ export interface FileRoutesById {
   '/(auth)/_auth/sign-up/$': typeof authAuthSignUpSplatRoute
   '/(dashboard)/(standalone)/_dashboard_': typeof dashboardstandaloneDashboardRouteWithChildren
   '/(dashboard)/(standalone)/_dashboard_/_standalone': typeof dashboardstandaloneDashboardstandaloneRouteWithChildren
-  '/(dashboard)/_dashboard/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRouteWithChildren
+  '/(dashboard)/_dashboard/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRoute
   '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/create': typeof dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute
-  '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRouteWithChildren
+  '/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute
   '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdMembersRoute
   '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdSettingsRoute
-  '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
   '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdJoinJoinCodeRoute
+  '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/projects/$projectId/settings': typeof dashboardstandaloneDashboardstandaloneWorkspacesWorkspaceIdProjectsProjectIdSettingsRoute
 }
 
 export interface FileRouteTypes {
@@ -443,8 +418,8 @@ export interface FileRouteTypes {
     | '/workspaces/$workspaceId/projects/$projectId'
     | '/workspaces/$workspaceId/members'
     | '/workspaces/$workspaceId/settings'
-    | '/workspaces/$workspaceId/projects/$projectId/settings'
     | '/workspaces/$workspaceId/join/$joinCode'
+    | '/workspaces/$workspaceId/projects/$projectId/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -455,8 +430,8 @@ export interface FileRouteTypes {
     | '/workspaces/$workspaceId/projects/$projectId'
     | '/workspaces/$workspaceId/members'
     | '/workspaces/$workspaceId/settings'
-    | '/workspaces/$workspaceId/projects/$projectId/settings'
     | '/workspaces/$workspaceId/join/$joinCode'
+    | '/workspaces/$workspaceId/projects/$projectId/settings'
   id:
     | '__root__'
     | '/'
@@ -470,11 +445,11 @@ export interface FileRouteTypes {
     | '/(dashboard)/(standalone)/_dashboard_/_standalone'
     | '/(dashboard)/_dashboard/workspaces/$workspaceId'
     | '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/create'
-    | '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId'
+    | '/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId'
     | '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members'
     | '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings'
-    | '/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings'
     | '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode'
+    | '/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/projects/$projectId/settings'
   fileRoutesById: FileRoutesById
 }
 
@@ -533,7 +508,8 @@ export const routeTree = rootRoute
       "filePath": "(dashboard)/_dashboard.tsx",
       "parent": "/(dashboard)",
       "children": [
-        "/(dashboard)/_dashboard/workspaces/$workspaceId"
+        "/(dashboard)/_dashboard/workspaces/$workspaceId",
+        "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId"
       ]
     },
     "/(auth)/_auth/sign-in/$": {
@@ -558,26 +534,21 @@ export const routeTree = rootRoute
         "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/create",
         "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members",
         "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings",
-        "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode"
+        "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode",
+        "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/projects/$projectId/settings"
       ]
     },
     "/(dashboard)/_dashboard/workspaces/$workspaceId": {
       "filePath": "(dashboard)/_dashboard.workspaces.$workspaceId.tsx",
-      "parent": "/(dashboard)/_dashboard",
-      "children": [
-        "/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId"
-      ]
+      "parent": "/(dashboard)/_dashboard"
     },
     "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/create": {
       "filePath": "(dashboard)/(standalone)/_dashboard_._standalone.workspaces.create.tsx",
       "parent": "/(dashboard)/(standalone)/_dashboard_/_standalone"
     },
-    "/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId": {
-      "filePath": "(dashboard)/_dashboard.workspaces.$workspaceId.projects.$projectId.tsx",
-      "parent": "/(dashboard)/_dashboard/workspaces/$workspaceId",
-      "children": [
-        "/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings"
-      ]
+    "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId": {
+      "filePath": "(dashboard)/_dashboard.workspaces_.$workspaceId.projects.$projectId.tsx",
+      "parent": "/(dashboard)/_dashboard"
     },
     "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/members": {
       "filePath": "(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.members.tsx",
@@ -587,12 +558,12 @@ export const routeTree = rootRoute
       "filePath": "(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.settings.tsx",
       "parent": "/(dashboard)/(standalone)/_dashboard_/_standalone"
     },
-    "/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId/settings": {
-      "filePath": "(dashboard)/_dashboard.workspaces.$workspaceId.projects.$projectId.settings.tsx",
-      "parent": "/(dashboard)/_dashboard/workspaces/$workspaceId/projects/$projectId"
-    },
     "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/join/$joinCode": {
       "filePath": "(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.join.$joinCode.tsx",
+      "parent": "/(dashboard)/(standalone)/_dashboard_/_standalone"
+    },
+    "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/projects/$projectId/settings": {
+      "filePath": "(dashboard)/(standalone)/_dashboard_._standalone.workspaces.$workspaceId.projects.$projectId.settings.tsx",
       "parent": "/(dashboard)/(standalone)/_dashboard_/_standalone"
     }
   }

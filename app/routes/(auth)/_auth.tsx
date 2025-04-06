@@ -1,3 +1,4 @@
+import { fetchClerkAuth } from "@/utils/auth";
 import {
   createFileRoute,
   Link,
@@ -7,8 +8,19 @@ import {
 } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(auth)/_auth")({
-  beforeLoad: async ({ context: { userId } }) => {
-    if (userId) {
+  beforeLoad: async ({ context: { queryClient, convexQueryClient } }) => {
+    const user = await queryClient.ensureQueryData({
+      queryKey: ["user"],
+      queryFn: async () => {
+        const auth = await fetchClerkAuth();
+        if (auth?.token) {
+          convexQueryClient.serverHttpClient?.setAuth(auth.token);
+        }
+        return auth;
+      },
+    });
+
+    if (user.userId) {
       throw redirect({
         to: "/",
       });

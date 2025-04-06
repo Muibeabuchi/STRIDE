@@ -80,7 +80,7 @@ export const create = authorizedWorkspaceMutation({
 export const update = authorizedWorkspaceMutation({
   args: {
     projectId: v.id("projects"),
-    projectName: v.optional(v.string()),
+    projectName: v.string(),
     projectImage: v.optional(v.id("_storage")),
   },
   async handler(ctx, args) {
@@ -89,7 +89,7 @@ export const update = authorizedWorkspaceMutation({
     if (!project) throw new ConvexError("project does not exist");
 
     await ctx.db.patch(project._id, {
-      projectName: args.projectImage,
+      projectName: args.projectName,
       projectImage: args.projectImage,
     });
     return project;

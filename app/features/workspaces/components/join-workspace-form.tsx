@@ -8,8 +8,8 @@ import {
 import { DottedSeparator } from "@/components/doted-separator";
 import { Button } from "@/components/ui/button";
 import { useJoinWorkspace } from "@/features/workspaces/api/use-join-workspace";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { useWorkspaceId } from "../hooks/use-workspace-id";
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
+// import { useWorkspaceId } from "../hooks/use-workspace-id";
 
 interface JoinWorkspaceFormProps {
   workspaceName: string;
@@ -20,7 +20,9 @@ export const JoinWorkspaceForm = ({
   workspaceJoinCode,
   workspaceName,
 }: JoinWorkspaceFormProps) => {
-  const workspaceId = useWorkspaceId();
+  const { workspaceId } = useParams({
+    from: "/(dashboard)/_dashboard/workspaces/$workspaceId",
+  });
   const navigate = useNavigate();
 
   const { mutate: joinWorkspace, isPending: isJoiningWorkspace } =

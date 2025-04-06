@@ -1,10 +1,25 @@
-import { Id } from "convex/_generated/dataModel";
-import { getRouteApi } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 
 export function useWorkspaceId() {
-  const routeApi = getRouteApi(
-    "/(dashboard)/_dashboard/workspaces/$workspaceId"
-  );
-  const params = routeApi.useParams();
-  return params.workspaceId as Id<"workspaces">;
+  const workspaceLayoutWorkspaceId = useParams({
+    from: "/(dashboard)/_dashboard/workspaces/$workspaceId",
+    shouldThrow: false,
+  });
+  const ProjectWorkspaceId = useParams({
+    from: "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId",
+    shouldThrow: false,
+  });
+
+  const params1 = useParams({
+    from: "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/projects/$projectId/settings",
+    shouldThrow: false,
+  });
+
+  const workspaceId =
+    (ProjectWorkspaceId?.workspaceId ||
+      workspaceLayoutWorkspaceId?.workspaceId ||
+      params1?.workspaceId) ??
+    null;
+
+  return workspaceId;
 }

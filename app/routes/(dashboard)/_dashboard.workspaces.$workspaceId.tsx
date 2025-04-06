@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { Id } from "convex/_generated/dataModel";
 
 export const Route = createFileRoute(
@@ -15,5 +15,10 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  return <div>Hello "/_dashboard/workspaces/$workspaceId"!</div>;
+  return (
+    <div>
+      Hello "/_dashboard/workspaces/$workspaceId"!
+      <Outlet />
+    </div>
+  );
 }

@@ -9,33 +9,33 @@ import {
 import { useGetUserWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
 import { WorkspaceAvatar } from "@/features/workspaces/components/workspace-avatar";
 import { Id } from "convex/_generated/dataModel";
-import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useCreateWorkspaceModal } from "@/features/workspaces/hooks/use-create-workspace-modal";
-import { useRouter } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
-
-type Props = {};
+import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 
 export function WorkspaceSwitcherSkeleton() {
   return (
-    <div className="flex flex-col gap-y-2">
+    <div className="flex flex-col gap-y-2 ">
       <div className="flex items-center justify-between">
-        <Skeleton className="h-4 w-24" />
-        <Skeleton className="size-5 rounded-full" />
+        <Skeleton className="h-4 w-24 bg-white" />
+        <Skeleton className="size-5 rounded-full bg-white" />
       </div>
-      <Skeleton className="w-full h-9" />
+      <Skeleton className="w-full h-9 bg-white" />
     </div>
   );
 }
 
-export default function WorkspaceSwitcher({}: Props) {
-  const router = useRouter();
+export default function WorkspaceSwitcher() {
+  const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
+  if (!workspaceId) throw new Error("WorkspaceId not found");
+
   const { data: workspaces } = useGetUserWorkspaces();
   const { open } = useCreateWorkspaceModal();
 
   const onSelect = (workspaceId: Id<"workspaces">) => {
-    router.navigate({
+    navigate({
       to: `/workspaces/$workspaceId`,
       params: { workspaceId },
     });
@@ -50,13 +50,14 @@ export default function WorkspaceSwitcher({}: Props) {
         />
       </div>
 
+      {/* The user should always have a workspace */}
       {workspaces && workspaces.length > 0 ? (
         <Select value={workspaceId} onValueChange={onSelect}>
           <SelectTrigger className="w-full h-9 font-medium bg-neutral-200">
             <SelectValue placeholder="No workspace selected" className="py-4" />
           </SelectTrigger>
           <SelectContent>
-            {workspaces?.map((workspace) => (
+            {workspaces.map((workspace) => (
               <SelectItem key={workspace._id} value={workspace._id}>
                 <div className="flex items-center justify-start gap-3 font-medium ">
                   <WorkspaceAvatar

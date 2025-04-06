@@ -5,13 +5,11 @@ import {
   HeadContent,
   Scripts,
   useRouteContext,
-  redirect,
   useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import * as React from "react";
-import { Toaster } from "react-hot-toast";
-import type { QueryClient } from "@tanstack/react-query";
+import { queryOptions, type QueryClient } from "@tanstack/react-query";
 import { DefaultCatchBoundary } from "@/components/DefaultCatchBoundary";
 import { NotFound } from "@/components/NotFound";
 import { seo } from "@/utils/seo";
@@ -21,6 +19,19 @@ import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { ConvexReactClient } from "convex/react";
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { fetchClerkAuth } from "@/utils/auth";
+import { Toaster } from "sonner";
+
+
+export const userQueryOptions = queryOptions({
+  queryKey: ["user"],
+      queryFn: async () => {
+        const auth = await fetchClerkAuth();
+        // if (auth?.token) {
+        //   ctx.context.convexQueryClient.serverHttpClient?.setAuth(auth.token);
+        // }
+        return auth;
+      },
+})
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -66,15 +77,26 @@ export const Route = createRootRouteWithContext<{
     ],
   }),
   beforeLoad: async (ctx) => {
-    const auth = await fetchClerkAuth();
-    const { userId, token } = auth;
-    if (token) {
-      ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
-    }
-    return {
-      userId,
-      token,
-    };
+    await ctx.context.queryClient.ensureQueryData({
+      queryKey: ["user"],
+      queryFn: async () => {
+        const auth = await fetchClerkAuth();
+        if (auth?.token) {
+          ctx.context.convexQueryClient.serverHttpClient?.setAuth(auth.token);
+        }
+        return auth;
+      },
+    });
+    // const auth = await fetchClerkAuth();
+    // const { userId, token } = auth;
+    // if (token) {
+    //   ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
+    // }
+
+    // return {
+    //   userId,
+    //   token,
+    // };
   },
 
   errorComponent: (props) => {
@@ -114,6 +136,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <div className="h-full flex flex-col">
+          <Toaster />
           <div className="flex-grow  h-full flex flex-col">
             {loading && (
               <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
@@ -121,7 +144,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               </div>
             )}
             {children}
-            <Toaster />
           </div>
         </div>
         <ReactQueryDevtools position="bottom" />

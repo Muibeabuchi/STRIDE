@@ -2,11 +2,31 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Loader } from "@/components/Loader";
 import { convexQuery } from "@convex-dev/react-query";
 import { api } from "convex/_generated/api";
+import { fetchClerkAuth } from "@/utils/auth";
 
 export const Route = createFileRoute("/")({
   pendingComponent: () => <Loader />,
-  beforeLoad: async ({ context: { userId } }) => {
-    if (!userId) {
+  // beforeLoad: async ({ context: { userId } }) => {
+  //   if (!userId) {
+  //     throw redirect({
+  //       to: "/sign-in/$",
+  //     });
+  //   }
+  // },
+  beforeLoad: async ({ context: { queryClient, convexQueryClient } }) => {
+    const user = await queryClient.ensureQueryData({
+      staleTime: 1000 * 60 * 5,
+      queryKey: ["user"],
+      queryFn: async () => {
+        const auth = await fetchClerkAuth();
+        if (auth?.token) {
+          convexQueryClient.serverHttpClient?.setAuth(auth.token);
+        }
+        return auth;
+      },
+    });
+
+    if (!user.userId) {
       throw redirect({
         to: "/sign-in/$",
       });
