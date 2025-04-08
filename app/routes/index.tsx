@@ -13,10 +13,15 @@ export const Route = createFileRoute("/")({
   //     });
   //   }
   // },
-  beforeLoad: async ({
-    context: { queryClient, convexQueryClient, userId },
-  }) => {
-    // const user = await queryClient.fetchQuery({
+  beforeLoad: async ({ context: { queryClient, convexQueryClient } }) => {
+    const user:
+      | {
+          userId: string | null;
+          token: string | null;
+        }
+      | undefined = await queryClient.getQueryData(["user"]);
+
+    // fetchQuery({
     //   staleTime: 1000 * 60 * 5,
     //   queryKey: ["user"],
     //   queryFn: async () => {
@@ -28,7 +33,12 @@ export const Route = createFileRoute("/")({
     //   },
     // });
 
-    if (!userId) {
+    if (!user) {
+      throw redirect({
+        to: "/sign-in/$",
+      });
+    }
+    if (!user.userId) {
       throw redirect({
         to: "/sign-in/$",
       });

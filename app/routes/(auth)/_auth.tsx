@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(auth)/_auth")({
-  beforeLoad: async ({ context: { userId } }) => {
+  beforeLoad: async ({ context: { convexQueryClient, queryClient } }) => {
     // const user = await queryClient.ensureQueryData({
     //   queryKey: ["user"],
     //   queryFn: async () => {
@@ -19,8 +19,13 @@ export const Route = createFileRoute("/(auth)/_auth")({
     //     return auth;
     //   },
     // });
-
-    if (userId) {
+    const user:
+      | {
+          userId: string | null;
+          token: string | null;
+        }
+      | undefined = await queryClient.getQueryData(["user"]);
+    if (user && user.userId) {
       throw redirect({
         to: "/",
       });

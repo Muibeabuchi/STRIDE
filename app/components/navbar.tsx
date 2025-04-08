@@ -1,5 +1,6 @@
-import { UserButton } from "@clerk/tanstack-react-start";
+// import { UserButton } from "@clerk/tanstack-react-start";
 import { MobileSidebar } from "./mobile-sidebar";
+import { UserButton } from "./userButton";
 
 function Navbar() {
   return (
@@ -11,6 +12,7 @@ function Navbar() {
         </p>
       </div>
       <MobileSidebar />
+      {/* <UserButton /> */}
       <UserButton />
     </nav>
   );

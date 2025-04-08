@@ -76,27 +76,27 @@ export const Route = createRootRouteWithContext<{
     ],
   }),
   beforeLoad: async (ctx) => {
-    // await ctx.context.queryClient.fetchQuery({
-    //   staleTime: 1000 * 2 * 60,
-    //   queryKey: ["user"],
-    //   queryFn: async () => {
-    //     const auth = await fetchClerkAuth();
-    //     if (auth?.token) {
-    //       ctx.context.convexQueryClient.serverHttpClient?.setAuth(auth.token);
-    //     }
-    //     return auth;
-    //   },
-    // });
-    const auth = await fetchClerkAuth();
-    const { userId, token } = auth;
-    if (token) {
-      ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
-    }
+    await ctx.context.queryClient.fetchQuery({
+      staleTime: 1000 * 60 * 5,
+      queryKey: ["user"],
+      queryFn: async () => {
+        const auth = await fetchClerkAuth();
+        if (auth?.token) {
+          ctx.context.convexQueryClient.serverHttpClient?.setAuth(auth.token);
+        }
+        return auth;
+      },
+    });
+    // const auth = await fetchClerkAuth();
+    // const { userId, token } = auth;
+    // if (token) {
+    //   ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
+    // }
 
-    return {
-      userId,
-      token,
-    };
+    // return {
+    //   userId: user.userId,
+    //   token: user.token,
+    // };
   },
 
   errorComponent: (props) => {
