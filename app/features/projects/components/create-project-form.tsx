@@ -49,7 +49,6 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof createProjectSchema>) => {
-    console.log("creating project");
     try {
       if (workspaceImageRef.current)
         URL.revokeObjectURL(workspaceImageRef.current.src);
@@ -82,7 +81,6 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log(file);
     if (file) form.setValue("image", file);
   };
 

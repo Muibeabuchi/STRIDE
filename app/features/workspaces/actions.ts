@@ -44,10 +44,7 @@ export const getWorkspaceInfo = createServerFn({ method: "GET" })
           },
         }
       );
-      console.log(response.data);
       if (!response) throw notFound();
       return response.data;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   });

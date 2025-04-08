@@ -52,7 +52,11 @@ const schema = defineSchema({
   })
     .index("by_workspaceId_by_status", ["workspaceId", "status"])
     .index("by_assigneeId", ["assigneeId"])
-    .index("by_workspaceId", ["workspaceId"]),
+    .index("by_workspaceId", ["workspaceId"])
+    .searchIndex("by_description_by_taskName", {
+      searchField: "taskName",
+      filterFields: ["workspaceId", "description", "status"],
+    }),
 });
 export default schema;
 

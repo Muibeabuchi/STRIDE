@@ -14,22 +14,15 @@ import { createClerkClient as ck } from "@clerk/backend";
 export const clearClerkSessions = internalAction({
   args: { userId: v.string(), sessionId: v.string() },
   async handler(ctx, { userId, sessionId }) {
-    console.log(process.env.CLERK_PUBLISHABLE_KEY);
-    console.log(process.env.CLERK_SECRET_KEY);
-
     const clerkClient = ck({
       publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
       secretKey: process.env.CLERK_SECRET_KEY,
     });
 
-    console.log(clerkClient);
-
     const userSessions = await clerkClient.sessions.getSessionList({
       userId,
       status: "active",
     });
-
-    console.log(userSessions);
 
     await Promise.all(
       userSessions.data.map(async (session) => {

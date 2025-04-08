@@ -10,7 +10,6 @@ function Navigation() {
     <ul className="flex flex-col gap-y-2">
       {Routes.map(({ FilledIcon, Icon, label, to }) => {
         const fullHref = `/workspaces/${workspaceId}${to}`;
-        console.log(fullHref);
         return (
           <Link key={label} to={fullHref} activeOptions={{ exact: true }}>
             {({ isActive }) => {

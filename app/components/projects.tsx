@@ -28,7 +28,6 @@ const Projects = () => {
       {projects && projects.length > 0 ? (
         projects.map((project) => {
           const href = `/workspaces/${workspaceId}/projects/${project._id}`;
-          console.log(href);
           return (
             <Link key={project._id} to={href} activeOptions={{ exact: true }}>
               {({ isActive }) => {

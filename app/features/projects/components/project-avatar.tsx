@@ -15,7 +15,6 @@ export const ProjectAvatar = ({
   fallbackClassName,
 }: ProjectAvatarProps) => {
   const avatarFallback = name.charAt(0).toUpperCase();
-  console.log(image);
   if (image) {
     return (
       <div

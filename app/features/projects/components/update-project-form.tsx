@@ -99,7 +99,6 @@ export const UpdateProjectForm = ({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log(file);
     if (file) form.setValue("image", file);
   };
 

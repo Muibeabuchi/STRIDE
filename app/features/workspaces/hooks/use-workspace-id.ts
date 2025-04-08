@@ -21,5 +21,7 @@ export function useWorkspaceId() {
       params1?.workspaceId) ??
     null;
 
+  if (!workspaceId) throw new Error("WorkspaceId does not exist");
+
   return workspaceId;
 }
