@@ -141,7 +141,7 @@ export const get = authorizedWorkspaceQuery({
 
     return {
       ...results,
-      pages: results.page.map(async ({ projectId, assigneeId, ...rest }) => {
+      pages: results.page.map(({ projectId, assigneeId, ...rest }) => {
         const project = projects.find((id) => id._id === projectId);
         const memberWithUser = members.find((id) => id.user._id === assigneeId);
         return {

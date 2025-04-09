@@ -1,3 +1,4 @@
+// import { useMediaQuery } from "@uidotdev/usehooks";
 import { useMediaQuery } from "usehooks-ts";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Drawer, DrawerContent } from "./ui/drawer";
@@ -14,7 +15,7 @@ export const ResponsiveModal = ({
   onOpenChange,
   open,
 }: ResponsiveModalProps) => {
-  const isDesktop = useMediaQuery("only screen and (min-width : 120px)");
+  const isDesktop = useMediaQuery("(min-width : 1024px)");
 
   if (isDesktop) {
     return (

@@ -11,7 +11,6 @@ const Projects = () => {
   // ? INVESTIGATE THE ROUTE OF THIS HOOK
 
   const workspaceId = useWorkspaceId();
-  if (!workspaceId) throw new Error("WorkspaceId not found");
   const { open } = useCreateProjectModal();
 
   const { data: projects } = useGetWorkspaceProjects(workspaceId);

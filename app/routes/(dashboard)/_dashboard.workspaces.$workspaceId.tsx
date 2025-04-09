@@ -1,4 +1,6 @@
+import { convexQuery } from "@convex-dev/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 
 export const Route = createFileRoute(
@@ -11,6 +13,12 @@ export const Route = createFileRoute(
         workspaceId: params.workspaceId as Id<"workspaces">,
       };
     },
+  },
+  loader: async ({ context, params }) => {
+    //  // Prefetch data for members
+    context.queryClient.prefetchQuery(
+      convexQuery(api.members.get, { workspaceId: params.workspaceId })
+    );
   },
 });
 

@@ -26,6 +26,9 @@ export const Route = createFileRoute(
     const { params } = ctx;
 
     // prefetch other data that might be needed in this route-----------------
+    ctx.context.queryClient.prefetchQuery(
+      convexQuery(api.members.get, { workspaceId: params.workspaceId })
+    );
 
     await ctx.context.queryClient.ensureQueryData(
       convexQuery(api.projects.getById, {

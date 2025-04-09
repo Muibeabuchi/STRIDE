@@ -12,5 +12,7 @@ export function useProjectId() {
 
   const projectId = (params?.projectId || params1?.projectId) ?? null;
 
+  if (!projectId) throw new Error("projectId does not exist");
+
   return projectId;
 }

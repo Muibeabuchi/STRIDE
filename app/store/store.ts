@@ -29,3 +29,19 @@ export const useProjectModalStore = create<ProjectModalStore>((set) => ({
   selectedProjectId: null,
   setSelectedProjectId: (id) => set({ selectedProjectId: id }),
 }));
+
+interface TaskModalStore {
+  isOpen: boolean;
+  open: () => void;
+  close: () => void;
+  // selectedProjectId: string | null;
+  // setSelectedProjectId: (id: string | null) => void;
+}
+
+export const useTaskModalStore = create<TaskModalStore>((set) => ({
+  isOpen: false,
+  open: () => set({ isOpen: true }),
+  close: () => set({ isOpen: false }),
+  // selectedProjectId: null,
+  // setSelectedProjectId: (id) => set({ selectedProjectId: id }),
+}));

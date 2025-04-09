@@ -7,17 +7,17 @@ import { useRouterState } from "@tanstack/react-router";
 
 export const MobileSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // const routerState = useRouterState();
+  const routerState = useRouterState();
 
-  // const location = routerState.location.pathname;
+  const location = routerState.location.pathname;
 
-  //   close the mobile-sidebar whenever the pathname changes
-  // useEffect(
-  //   function () {
-  //     setIsOpen(false);
-  //   },
-  //   [location]
-  // );
+  // close the mobile-sidebar whenever the pathname changes
+  useEffect(
+    function () {
+      setIsOpen(false);
+    },
+    [location]
+  );
   return (
     <Sheet modal={false} open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>

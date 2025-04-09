@@ -64,8 +64,8 @@ export const UserButton = () => {
           >
             <div className="flex flex-col items-center gap-2 px-2.5 justify-center py-4">
               <Avatar className="size-[52px]  border border-neutral-300 ">
+                <AvatarImage src={user?.imageUrl} />
                 <AvatarFallback className="text-xl font-medium flex items-center justify-center bg-neutral-200 text-neutral-500">
-                  <AvatarImage src={user?.imageUrl} />
                   {avatarCallback}
                 </AvatarFallback>
                 <AvatarImage />

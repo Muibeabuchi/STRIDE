@@ -18,9 +18,6 @@ export const get = authorizedWorkspaceQuery({
       .order("desc")
       .collect();
 
-    // TODO: crosscheck this return type
-    if (!projects) return null;
-
     return await Promise.all(
       projects.map(async (project) => {
         if (!project.projectImage)
