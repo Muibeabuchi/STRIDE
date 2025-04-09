@@ -6,6 +6,15 @@ import { PlusIcon } from "lucide-react";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useGetTasksPaginated } from "../hooks/use-get-tasks";
 import { useTaskModalStore } from "@/store/store";
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import { z } from "zod";
+// import { taskViewSearchSchema } from "@/routes/(dashboard)/_dashboard";
+
+const tabSchema = z.union([
+  z.literal("table"),
+  z.literal("calendar"),
+  z.literal("kanban"),
+]);
 
 export const TaskViewSwitcher = () => {
   const workspaceId = useWorkspaceId();
@@ -14,8 +23,28 @@ export const TaskViewSwitcher = () => {
 
   const { open } = useTaskModalStore();
 
+  // TODO: Move this hook into a custom hook that takes other routes that mounts the TaskViewSwitcher component,
+  const { taskView } = useSearch({
+    from: "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId",
+  });
+
+  console.log(taskView);
+
+  const navigate = useNavigate();
+  // const types = taskViewSearchSchema.infer
   return (
-    <Tabs className="flex-1 w-full border rounded-lg">
+    <Tabs
+      className="flex-1 w-full border rounded-lg"
+      defaultValue={taskView}
+      onValueChange={(tab) => {
+        navigate({
+          to: ".",
+          search: {
+            taskView: tabSchema.parse(tab),
+          },
+        });
+      }}
+    >
       {isLoading && <p>Loading...</p>}
       {status === "LoadingFirstPage" ? (
         <p>Loading first page</p>
@@ -34,8 +63,8 @@ export const TaskViewSwitcher = () => {
             <TabsTrigger className="h-8 w-full lg:w-auto" value="kanban">
               Kanban
             </TabsTrigger>
-            <TabsTrigger className="h-8 w-full lg:w-auto" value="calender">
-              Calender
+            <TabsTrigger className="h-8 w-full lg:w-auto" value="calendar">
+              Calendar
             </TabsTrigger>
           </TabsList>
           <Button size="sm" className="w-full lg:w-auto" onClick={open}>
@@ -54,8 +83,8 @@ export const TaskViewSwitcher = () => {
           <TabsContent value="kanban" className="mt-0">
             Data Kanban
           </TabsContent>
-          <TabsContent value="calender" className="mt-0">
-            Data Calender
+          <TabsContent value="calendar" className="mt-0">
+            Data Calendar
           </TabsContent>
         </>
       </div>

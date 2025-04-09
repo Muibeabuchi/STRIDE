@@ -2,7 +2,7 @@ import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 import { CreateWorkspaceModal } from "@/features/workspaces/components/create-workspace-modal";
 import { convexQuery } from "@convex-dev/react-query";
-import { Outlet } from "@tanstack/react-router";
+import { Outlet, stripSearchParams } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { CreateProjectModal } from "@/features/projects/components/create-project-modal";
@@ -15,6 +15,9 @@ export const Route = createFileRoute("/(dashboard)/_dashboard")({
       convexQuery(api.workspaces.getUserWorkspaces, {})
     );
   },
+  // search: {
+  //   middlewares: [stripSearchParams(true)],
+  // },
 });
 
 function DashboardLayout() {

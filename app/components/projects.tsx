@@ -28,7 +28,11 @@ const Projects = () => {
         projects.map((project) => {
           const href = `/workspaces/${workspaceId}/projects/${project._id}`;
           return (
-            <Link key={project._id} to={href} activeOptions={{ exact: true }}>
+            <Link
+              key={project._id}
+              to={href}
+              activeOptions={{ exact: true, includeSearch: false }}
+            >
               {({ isActive }) => {
                 return (
                   <div
