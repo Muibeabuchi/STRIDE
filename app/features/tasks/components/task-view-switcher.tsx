@@ -20,7 +20,7 @@ const tabSchema = z.union([
 
 export const TaskViewSwitcher = () => {
   const workspaceId = useWorkspaceId();
-  const { status } = useTaskFilters();
+  const { status, assigneeId, projectId, dueDate, taskView } = useTaskFilters();
   const {
     results,
     isLoading,
@@ -29,18 +29,20 @@ export const TaskViewSwitcher = () => {
   } = useGetTasksPaginated({
     workspaceId,
     status,
+    assigneeId,
+    projectId,
+    dueDate,
   });
 
   const { open } = useTaskModalStore();
 
   // TODO: Move this hook into a custom hook that takes other routes that mounts the TaskViewSwitcher component,
-  const { taskView } = useSearch({
-    from: "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId",
-  });
 
   console.log(taskView);
 
-  const navigate = useNavigate();
+  const navigate = useNavigate({
+    from: "/workspaces/$workspaceId/projects/$projectId",
+  });
   // const types = taskViewSearchSchema.infer
   return (
     <Tabs

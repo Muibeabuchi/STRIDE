@@ -11,6 +11,7 @@ interface DatePickerProps {
   onChange: (date: Date) => void;
   className?: string;
   placeholder?: string;
+  create?: boolean;
 }
 
 const DatePicker = ({
@@ -18,6 +19,7 @@ const DatePicker = ({
   value,
   className,
   placeholder = "Select Date",
+  create = true,
 }: DatePickerProps) => {
   return (
     <Popover>
@@ -42,11 +44,13 @@ const DatePicker = ({
           initialFocus
           onSelect={(date) => {
             if (!date) return;
-            return Date.now() - 24 * 60 * 60 * 1000 >= date.getTime()
-              ? toast("Select a date in the future ", {
-                  position: "top-center",
-                })
-              : onChange(date as Date);
+            return create
+              ? Date.now() - 24 * 60 * 60 * 1000 >= date.getTime()
+                ? toast("Select a date in the future ", {
+                    position: "top-center",
+                  })
+                : onChange(date as Date)
+              : onChange(date);
           }}
         />
       </PopoverContent>

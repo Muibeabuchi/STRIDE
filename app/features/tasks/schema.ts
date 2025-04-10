@@ -32,6 +32,9 @@ export const taskViewSearchSchema = z.object({
     .union([z.literal("kanban"), z.literal("table"), z.literal("calendar")])
     .catch("table"),
   status: StatusSchema.catch("ALL"),
+  assigneeId: z.string().optional(),
+  projectId: z.string().optional(),
+  dueDate: z.string().optional(),
 });
 
 export type taskViewSearchType = z.infer<typeof taskViewSearchSchema>;
