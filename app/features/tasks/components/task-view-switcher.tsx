@@ -8,6 +8,8 @@ import { useGetTasksPaginated } from "../hooks/use-get-tasks";
 import { useTaskModalStore } from "@/store/store";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { z } from "zod";
+import DataFilter from "./data-filter";
+import useTaskFilters from "../hooks/use-task-filters";
 // import { taskViewSearchSchema } from "@/routes/(dashboard)/_dashboard";
 
 const tabSchema = z.union([
@@ -18,8 +20,16 @@ const tabSchema = z.union([
 
 export const TaskViewSwitcher = () => {
   const workspaceId = useWorkspaceId();
-  const { results, isLoading, loadMore, status } =
-    useGetTasksPaginated(workspaceId);
+  const { status } = useTaskFilters();
+  const {
+    results,
+    isLoading,
+    loadMore,
+    status: queryStatus,
+  } = useGetTasksPaginated({
+    workspaceId,
+    status,
+  });
 
   const { open } = useTaskModalStore();
 
@@ -45,15 +55,6 @@ export const TaskViewSwitcher = () => {
         });
       }}
     >
-      {isLoading && <p>Loading...</p>}
-      {status === "LoadingFirstPage" ? (
-        <p>Loading first page</p>
-      ) : (
-        <pre>{JSON.stringify(results, null, 2)}</pre>
-      )}
-      {status !== "Exhausted" && (
-        <Button onClick={() => loadMore(5)}>Load More</Button>
-      )}
       <div className="h-full flex flex-col overflow-auto p-4">
         <div className="flex flex-col lg:flex-row gap-y-2 justify-between items-center">
           <TabsList className="w-full lg:w-auto ">
@@ -74,11 +75,19 @@ export const TaskViewSwitcher = () => {
         </div>
         <DottedSeparator className="my-4" />
         {/* add filters */}
-        Data Filters
+        <DataFilter workspaceId={workspaceId} />
         <DottedSeparator className="my-4" />
         <>
           <TabsContent value="table" className="mt-0">
-            Data Table
+            {isLoading && <p>Loading...</p>}
+            {queryStatus === "LoadingFirstPage" ? (
+              <p>Loading first page</p>
+            ) : (
+              <pre>{JSON.stringify(results, null, 2)}</pre>
+            )}
+            {queryStatus !== "Exhausted" && (
+              <Button onClick={() => loadMore(5)}>Load More</Button>
+            )}
           </TabsContent>
           <TabsContent value="kanban" className="mt-0">
             Data Kanban

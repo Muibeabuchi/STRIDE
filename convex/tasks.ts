@@ -84,11 +84,12 @@ export const get = authorizedWorkspaceQuery({
       paginationOpts,
     }
   ) {
+    console.log(status);
     const tasksTable: QueryInitializer<DataModel["tasks"]> =
       ctx.db.query("tasks");
 
     let indexedQuery: Query<DataModel["tasks"]> = tasksTable;
-    if (workspaceId !== undefined) {
+    if (workspaceId !== undefined && search === undefined) {
       indexedQuery = tasksTable.withIndex("by_workspaceId", (q) =>
         q.eq("workspaceId", workspaceId)
       );
@@ -96,7 +97,9 @@ export const get = authorizedWorkspaceQuery({
 
     let orderedQuery: OrderedQuery<DataModel["tasks"]> = indexedQuery;
 
-    if (search !== undefined) {
+    orderedQuery = indexedQuery.order("desc");
+
+    if (search !== undefined && workspaceId !== undefined) {
       orderedQuery = tasksTable.withSearchIndex(
         "by_description_by_taskName",
         (q) => q.search("taskName", search).eq("workspaceId", workspaceId)
@@ -122,7 +125,6 @@ export const get = authorizedWorkspaceQuery({
       );
     }
 
-    orderedQuery = indexedQuery.order("desc");
     const results = await orderedQuery.paginate(paginationOpts);
 
     // results.page[0].

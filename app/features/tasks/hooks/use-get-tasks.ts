@@ -1,13 +1,20 @@
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { usePaginatedQuery } from "convex/react";
+import { StatusSchemaType } from "../schema";
 
-export function useGetTasksPaginated(workspaceId: Id<"workspaces">) {
+export function useGetTasksPaginated({
+  workspaceId,
+  status,
+}: {
+  workspaceId: Id<"workspaces">;
+  status: StatusSchemaType;
+}) {
   return usePaginatedQuery(
     api.tasks.get,
-    { workspaceId },
+    { workspaceId, status: status === "ALL" ? undefined : status },
     {
-      initialNumItems: 2,
+      initialNumItems: 5,
     }
   );
 }

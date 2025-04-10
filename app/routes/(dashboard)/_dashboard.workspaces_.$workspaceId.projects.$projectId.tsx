@@ -10,15 +10,14 @@ import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { PencilIcon } from "lucide-react";
 import { type } from "arktype";
-
-export const taskViewSearchSchema = type({
-  taskView: '"kanban"|"table"|"calendar"="table"',
-});
+import { z } from "zod";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { taskViewSearchSchema } from "../../features/tasks/schema";
 
 export const Route = createFileRoute(
   "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId"
 )({
-  validateSearch: taskViewSearchSchema,
+  validateSearch: zodValidator(taskViewSearchSchema),
   params: {
     parse: (params) => {
       return {
