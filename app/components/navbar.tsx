@@ -12,7 +12,6 @@ function Navbar() {
         </p>
       </div>
       <MobileSidebar />
-      {/* <UserButton /> */}
       <UserButton />
     </nav>
   );

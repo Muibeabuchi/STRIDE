@@ -84,7 +84,6 @@ export const get = authorizedWorkspaceQuery({
       paginationOpts,
     }
   ) {
-    console.log(status);
     const tasksTable: QueryInitializer<DataModel["tasks"]> =
       ctx.db.query("tasks");
 
@@ -134,6 +133,15 @@ export const get = authorizedWorkspaceQuery({
 
     // Populate the projects
     const projects = await populateProject({ ctx, projectIds });
+
+    // projects.map(async (project) => {
+    //   if (!project.projectImage) return project;
+    //   const image = await ctx.storage.getUrl(project.projectImage);
+    //   return {
+    //     ...project,
+    //     projectImage: image ?? "",
+    //   };
+    // });
     // populate the members
     const members = await populateMemberWithUser({
       ctx,
@@ -143,19 +151,18 @@ export const get = authorizedWorkspaceQuery({
 
     return {
       ...results,
-      pages: results.page.map(({ projectId, assigneeId, ...rest }) => {
+      page: results.page.map(({ projectId, assigneeId, ...rest }) => {
         const project = projects.find((id) => id._id === projectId);
+        if (!project) throw new ConvexError("Project does not exist");
         const memberWithUser = members.find((id) => id.user._id === assigneeId);
+        if (!memberWithUser) throw new ConvexError("MemberUser does not exist");
+
         return {
           ...rest,
-          project,
-          memberWithUser,
+          taskProject: project,
+          memberUser: memberWithUser,
         };
       }),
     };
-
-    // get all the projects using the projects Ids
-
-    // return results.page[0].;
   },
 });

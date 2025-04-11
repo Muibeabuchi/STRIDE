@@ -13,7 +13,9 @@ export async function populateProject({
     projectIds.map(async (id) => {
       const response = await ctx.db.get(id);
       if (!response) throw new ConvexError("Project does not exist");
-      return response;
+      if (!response.projectImage) return { ...response, projectImage: "" };
+      const image = await ctx.storage.getUrl(response.projectImage);
+      return { ...response, projectImage: image ?? "" };
     })
   );
 }

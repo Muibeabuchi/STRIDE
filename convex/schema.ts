@@ -1,5 +1,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { type Infer, v } from "convex/values";
+import { Doc } from "./_generated/dataModel";
+import { api } from "./_generated/api";
 
 export const taskStatusValidator = v.union(
   v.literal("BACKLOG"),
@@ -62,6 +64,12 @@ export default schema;
 
 export type taskStatus = Infer<typeof taskStatusValidator>;
 
+// export type TasksArguments = Infer<typeof schema.tables.tasks.validator>;
+export type Tasks = Doc<"tasks">;
+export type PaginatedTasksResponse =
+  (typeof api.tasks.get._returnType)["page"][number];
+
+// const board = schema.tables.boards.validator;
 // const board = schema.tables.boards.validator;
 // const column = schema.tables.columns.validator;
 // const item = schema.tables.items.validator;

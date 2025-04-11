@@ -10,8 +10,6 @@ const useTaskFilters = () => {
   const navigate = useNavigate();
   const { status, assigneeId, projectId, dueDate, taskView } = useSearch();
 
-  console.log(projectId);
-
   const onStatusChange = (value: StatusSchemaType) => {
     navigate({
       to: ".",

@@ -12,6 +12,13 @@ export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }
 
+export function snakeCaseToTitleCase(str: string) {
+  return str
+    .toLowerCase()
+    .replace(/_/g, "")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 // import { useGetProjectById } from "@/features/projects/api/use-get-projects-by-id";
 // import { UpdateProjectForm } from "@/features/projects/components/update-project-form";
 // import { createFileRoute } from "@tanstack/react-router";

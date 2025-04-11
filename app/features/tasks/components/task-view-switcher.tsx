@@ -10,6 +10,8 @@ import { useNavigate, useSearch } from "@tanstack/react-router";
 import { z } from "zod";
 import DataFilter from "./data-filter";
 import useTaskFilters from "../hooks/use-task-filters";
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
 // import { taskViewSearchSchema } from "@/routes/(dashboard)/_dashboard";
 
 const tabSchema = z.union([
@@ -34,11 +36,11 @@ export const TaskViewSwitcher = () => {
     dueDate,
   });
 
+  console.log(results);
+
+  // results[0]
+
   const { open } = useTaskModalStore();
-
-  // TODO: Move this hook into a custom hook that takes other routes that mounts the TaskViewSwitcher component,
-
-  console.log(taskView);
 
   const navigate = useNavigate({
     from: "/workspaces/$workspaceId/projects/$projectId",
@@ -76,11 +78,13 @@ export const TaskViewSwitcher = () => {
           </Button>
         </div>
         <DottedSeparator className="my-4" />
-        {/* add filters */}
         <DataFilter workspaceId={workspaceId} />
         <DottedSeparator className="my-4" />
         <>
           <TabsContent value="table" className="mt-0">
+            <DataTable columns={columns} data={results} />
+          </TabsContent>
+          <TabsContent value="kanban" className="mt-0">
             {isLoading && <p>Loading...</p>}
             {queryStatus === "LoadingFirstPage" ? (
               <p>Loading first page</p>
@@ -90,9 +94,6 @@ export const TaskViewSwitcher = () => {
             {queryStatus !== "Exhausted" && (
               <Button onClick={() => loadMore(5)}>Load More</Button>
             )}
-          </TabsContent>
-          <TabsContent value="kanban" className="mt-0">
-            Data Kanban
           </TabsContent>
           <TabsContent value="calendar" className="mt-0">
             Data Calendar
