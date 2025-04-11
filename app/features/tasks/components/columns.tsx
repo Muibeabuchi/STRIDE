@@ -108,6 +108,7 @@ export const columns: ColumnDef<PaginatedTasksResponse>[] = [
       <TaskActions
         id={row.original._id}
         projectId={row.original.taskProject._id}
+        workspaceId={row.original.workspaceId}
       >
         <Button variant={"ghost"} className="size-8 p-0">
           <MoreVerticalIcon className="size-4" />

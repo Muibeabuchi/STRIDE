@@ -1,8 +1,9 @@
-import { DataModel } from "./_generated/dataModel.d";
+import { DataModel, Id } from "./_generated/dataModel.d";
 import { taskStatusValidator } from "./schema";
 import {
   authorizedWorkspaceMutation,
   authorizedWorkspaceQuery,
+  validateTaskWorkspace,
 } from "./middleware";
 import { ConvexError, v } from "convex/values";
 import {
@@ -14,7 +15,7 @@ import {
 
 import { filter } from "convex-helpers/server/filter";
 import { populateMemberWithUser, populateProject } from "./model/projects";
-import { query } from "./_generated/server";
+import { mutation, query, QueryCtx } from "./_generated/server";
 import { getCurrentUser } from "./users";
 
 export const create = authorizedWorkspaceMutation({
@@ -166,3 +167,21 @@ export const get = authorizedWorkspaceQuery({
     };
   },
 });
+
+export const remove = mutation({
+  args: { taskId: v.id("tasks") },
+  async handler(ctx, args) {
+    const task = await ensureTaskExists(ctx, args.taskId);
+    if (!task) throw new ConvexError("Failed to confirm if the task is exists");
+
+    await validateTaskWorkspace(ctx, task.workspaceId);
+    await ctx.db.delete(task._id);
+  },
+});
+
+async function ensureTaskExists(ctx: QueryCtx, taskId: Id<"tasks">) {
+  const task = await ctx.db.get(taskId);
+  if (!task) return null;
+
+  return task;
+}
