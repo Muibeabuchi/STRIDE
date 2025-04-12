@@ -55,6 +55,7 @@ const schema = defineSchema({
     .index("by_workspaceId_by_status", ["workspaceId", "status"])
     .index("by_assigneeId", ["assigneeId"])
     .index("by_workspaceId", ["workspaceId"])
+    .index("by_WorkspaceId_ProjectId", ["workspaceId", "projectId"])
     .searchIndex("by_description_by_taskName", {
       searchField: "taskName",
       filterFields: ["workspaceId", "description", "status"],
@@ -64,10 +65,13 @@ export default schema;
 
 export type taskStatus = Infer<typeof taskStatusValidator>;
 
+export const taskValidator = schema.tables.tasks.validator.fields;
+
 // export type TasksArguments = Infer<typeof schema.tables.tasks.validator>;
 export type Tasks = Doc<"tasks">;
 export type PaginatedTasksResponse =
   (typeof api.tasks.get._returnType)["page"][number];
+export type getTaskByIdResponse = typeof api.tasks.getById._returnType;
 
 // const board = schema.tables.boards.validator;
 // const board = schema.tables.boards.validator;

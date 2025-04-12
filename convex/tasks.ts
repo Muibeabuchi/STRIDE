@@ -1,9 +1,9 @@
 import { DataModel, Id } from "./_generated/dataModel.d";
 import { taskStatusValidator } from "./schema";
 import {
+  authenticatedUserQuery,
   authorizedWorkspaceMutation,
   authorizedWorkspaceQuery,
-  validateTaskWorkspace,
 } from "./middleware";
 import { ConvexError, v } from "convex/values";
 import {
@@ -17,11 +17,13 @@ import { filter } from "convex-helpers/server/filter";
 import { populateMemberWithUser, populateProject } from "./model/projects";
 import { mutation, query, QueryCtx } from "./_generated/server";
 import { getCurrentUser } from "./users";
+import { ensureTaskExists, validateTaskWorkspace } from "./model/tasks";
 
 export const create = authorizedWorkspaceMutation({
   args: {
     status: taskStatusValidator,
     taskName: v.string(),
+    // TODO: Refactor to accept and store the memberId instead of the userId
     assigneeId: v.id("users"),
     projectId: v.id("projects"),
     dueDate: v.string(),
@@ -168,6 +170,46 @@ export const get = authorizedWorkspaceQuery({
   },
 });
 
+export const getById = authenticatedUserQuery({
+  args: {
+    taskId: v.id("tasks"),
+  },
+  async handler(ctx, args) {
+    const task = await ctx.db.get(args.taskId);
+    if (!task) throw new ConvexError("Task does not exist");
+
+    // load the project associated with this task
+    const taskProject = await ctx.db.get(task.workspaceId);
+    if (!taskProject) throw new ConvexError("TaskProject does not exist");
+
+    // load the task Assignee
+    const taskAssignee = await ctx.db.get(task.assigneeId);
+    if (!taskAssignee) throw new ConvexError("Task Assignee does not exist");
+
+    // load the task Member detail
+    const taskMember = await ctx.db
+      .query("members")
+      .withIndex("by_userId_by_workspaceId", (q) =>
+        q.eq("userId", task.assigneeId).eq("workspaceId", task.workspaceId)
+      )
+      .unique();
+
+    if (!taskMember) throw new ConvexError("Task Member does not exist");
+
+    const assignee = {
+      ...taskMember,
+      name: taskAssignee.name,
+      email: taskAssignee.email,
+    };
+
+    return {
+      ...task,
+      project: taskProject,
+      assignee,
+    };
+  },
+});
+
 export const remove = mutation({
   args: { taskId: v.id("tasks") },
   async handler(ctx, args) {
@@ -179,9 +221,37 @@ export const remove = mutation({
   },
 });
 
-async function ensureTaskExists(ctx: QueryCtx, taskId: Id<"tasks">) {
-  const task = await ctx.db.get(taskId);
-  if (!task) return null;
+export const edit = authorizedWorkspaceMutation({
+  args: {
+    taskId: v.id("tasks"),
+    projectId: v.optional(v.id("projects")),
+    taskDescription: v.optional(v.string()),
+    taskName: v.optional(v.string()),
+    taskStatus: v.optional(taskStatusValidator),
+    dueDate: v.optional(v.string()),
+    assigneeId: v.optional(v.id("users")),
+  },
+  async handler(ctx, args) {
+    const {
+      taskId,
+      workspaceId,
+      assigneeId,
+      dueDate,
+      projectId,
+      taskStatus,
+      taskDescription,
+      taskName,
+    } = args;
+    const task = await ensureTaskExists(ctx, taskId);
+    if (!task) throw new ConvexError("Task does not exist");
 
-  return task;
-}
+    await ctx.db.patch(task._id, {
+      status: taskStatus,
+      description: taskDescription,
+      assigneeId,
+      dueDate,
+      projectId,
+      taskName,
+    });
+  },
+});

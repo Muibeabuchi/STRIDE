@@ -7,6 +7,7 @@ import { api } from "convex/_generated/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { CreateProjectModal } from "@/features/projects/components/create-project-modal";
 import { CreateTaskModal } from "@/features/tasks/components/create-task-modal";
+import { EditTaskModal } from "@/features/tasks/components/edit-task-modal";
 
 export const Route = createFileRoute("/(dashboard)/_dashboard")({
   component: DashboardLayout,
@@ -26,6 +27,7 @@ function DashboardLayout() {
       <CreateWorkspaceModal />
       <CreateProjectModal />
       <CreateTaskModal />
+      <EditTaskModal />
       <div className="flex w-full h-full">
         <div className="fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-y-auto">
           <Sidebar />

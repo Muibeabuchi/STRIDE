@@ -18,6 +18,7 @@ import type * as http from "../http.js";
 import type * as members from "../members.js";
 import type * as middleware from "../middleware.js";
 import type * as model_projects from "../model/projects.js";
+import type * as model_tasks from "../model/tasks.js";
 import type * as projects from "../projects.js";
 import type * as tasks from "../tasks.js";
 import type * as upload from "../upload.js";
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   members: typeof members;
   middleware: typeof middleware;
   "model/projects": typeof model_projects;
+  "model/tasks": typeof model_tasks;
   projects: typeof projects;
   tasks: typeof tasks;
   upload: typeof upload;

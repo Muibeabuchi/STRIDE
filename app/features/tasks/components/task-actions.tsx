@@ -10,6 +10,7 @@ import { ExternalLinkIcon, PencilIcon, TrashIcon } from "lucide-react";
 import { ReactNode } from "react";
 import { useDeleteTask } from "../api/use-delete-task";
 import { useNavigate } from "@tanstack/react-router";
+import { useEditTaskModalStore } from "@/store/store";
 
 interface TaskActionProps {
   id: Id<"tasks">;
@@ -29,6 +30,7 @@ const TaskActions = ({
     description: "This action cannot be undone",
     variant: "destructive",
   });
+  const { openEditTaskModal } = useEditTaskModalStore();
 
   const navigate = useNavigate();
 
@@ -55,6 +57,10 @@ const TaskActions = ({
   //  TODO:  Write method for opening a task
   const openTask = () => {};
 
+  const handleOpenEditTaskModal = () => {
+    openEditTaskModal(id);
+  };
+
   return (
     <div className="flex justify-end">
       <ConfirmDialog />
@@ -65,7 +71,10 @@ const TaskActions = ({
             <ExternalLinkIcon className="size-4 mr-w stroke-2" />
             Task Details
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => {}} className="font-medium p-[10px]">
+          <DropdownMenuItem
+            onClick={handleOpenEditTaskModal}
+            className="font-medium p-[10px]"
+          >
             <PencilIcon className="size-4 mr-w stroke-2" />
             Edit Task
           </DropdownMenuItem>

@@ -98,6 +98,20 @@ export const remove = authorizedWorkspaceMutation({
   async handler(ctx, args) {
     // TODO: Delete all project tasks
 
+    // grab all the tasks that belongs to the project
+    const tasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_WorkspaceId_ProjectId", (q) =>
+        q.eq("workspaceId", args.workspaceId).eq("projectId", args.projectId)
+      )
+      .collect();
+    // delete all the tasks and await them in parallel
+    await Promise.all(
+      tasks.map(async (task) => {
+        await ctx.db.delete(task._id);
+      })
+    );
+
     const project = await ctx.db.get(args.projectId);
     if (!project) throw new ConvexError("Project does not exist");
 

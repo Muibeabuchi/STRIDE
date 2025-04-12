@@ -15,7 +15,7 @@ export const useGetWorkspaceTasks = ({
   workspaceId: Id<"workspaces">;
   initialNumItems: number;
 }) => {
-  usePaginatedQuery(
+  return usePaginatedQuery(
     api.tasks.get,
     {
       workspaceId,

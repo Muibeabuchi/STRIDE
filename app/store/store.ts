@@ -1,3 +1,4 @@
+import { Id } from "convex/_generated/dataModel";
 import { create } from "zustand";
 
 // Workspace Modal Store
@@ -44,4 +45,20 @@ export const useTaskModalStore = create<TaskModalStore>((set) => ({
   close: () => set({ isOpen: false }),
   // selectedProjectId: null,
   // setSelectedProjectId: (id) => set({ selectedProjectId: id }),
+}));
+
+interface EditTaskModalStore {
+  // if at askId exists, then the modal should be open
+  taskId: Id<"tasks"> | null;
+  openEditTaskModal: (taskId: Id<"tasks">) => void;
+  closeEditTaskModal: () => void;
+}
+
+export const useEditTaskModalStore = create<EditTaskModalStore>((set) => ({
+  taskId: null,
+  openEditTaskModal: (taskId) =>
+    set({
+      taskId,
+    }),
+  closeEditTaskModal: () => set({ taskId: null }),
 }));
