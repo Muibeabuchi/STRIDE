@@ -11,7 +11,15 @@ function Navigation() {
       {Routes.map(({ FilledIcon, Icon, label, to }) => {
         const fullHref = `/workspaces/${workspaceId}${to}`;
         return (
-          <Link key={label} to={fullHref} activeOptions={{ exact: true }}>
+          <Link
+            key={label}
+            to={fullHref}
+            activeOptions={{ exact: true }}
+            // search={(search) => ({
+            //   ...search,
+            //   taskView: "",
+            // })}
+          >
             {({ isActive }) => {
               return (
                 <div

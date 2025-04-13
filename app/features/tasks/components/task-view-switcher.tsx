@@ -12,6 +12,7 @@ import DataFilter from "./data-filter";
 import useTaskFilters from "../hooks/use-task-filters";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
+import DataKanban from "./data-kanban";
 // import { taskViewSearchSchema } from "@/routes/(dashboard)/_dashboard";
 
 const tabSchema = z.union([
@@ -37,9 +38,9 @@ export const TaskViewSwitcher = () => {
   });
 
   console.log(results);
+  console.log("taskView", taskView);
 
   // results[0]
-
   const { open } = useTaskModalStore();
 
   const navigate = useNavigate({
@@ -50,6 +51,7 @@ export const TaskViewSwitcher = () => {
     <Tabs
       className="flex-1 w-full border rounded-lg"
       defaultValue={taskView}
+      value={taskView}
       onValueChange={(tab) => {
         navigate({
           to: ".",
@@ -72,19 +74,30 @@ export const TaskViewSwitcher = () => {
               Calendar
             </TabsTrigger>
           </TabsList>
-          <Button size="sm" className="w-full lg:w-auto" onClick={open}>
+          <Button
+            size="sm"
+            className="w-full lg:w-auto"
+            onClick={() => open("ALL")}
+          >
             <PlusIcon className="size-4 mr-2" />
             New
           </Button>
         </div>
         <DottedSeparator className="my-4" />
-        <DataFilter workspaceId={workspaceId} />
-        <DottedSeparator className="my-4" />
+        {taskView !== "kanban" && (
+          <>
+            <DataFilter workspaceId={workspaceId} />
+            <DottedSeparator className="my-4" />
+          </>
+        )}
         <>
           <TabsContent value="table" className="mt-0">
             <DataTable columns={columns} data={results} />
           </TabsContent>
           <TabsContent value="kanban" className="mt-0">
+            <DataKanban data={results} />
+          </TabsContent>
+          <TabsContent value="calendar" className="mt-0">
             {isLoading && <p>Loading...</p>}
             {queryStatus === "LoadingFirstPage" ? (
               <p>Loading first page</p>
@@ -94,9 +107,6 @@ export const TaskViewSwitcher = () => {
             {queryStatus !== "Exhausted" && (
               <Button onClick={() => loadMore(5)}>Load More</Button>
             )}
-          </TabsContent>
-          <TabsContent value="calendar" className="mt-0">
-            Data Calendar
           </TabsContent>
         </>
       </div>

@@ -230,6 +230,7 @@ export const edit = authorizedWorkspaceMutation({
     taskStatus: v.optional(taskStatusValidator),
     dueDate: v.optional(v.string()),
     assigneeId: v.optional(v.id("users")),
+    taskPosition: v.optional(v.number()),
   },
   async handler(ctx, args) {
     const {
@@ -241,17 +242,19 @@ export const edit = authorizedWorkspaceMutation({
       taskStatus,
       taskDescription,
       taskName,
+      taskPosition,
     } = args;
     const task = await ensureTaskExists(ctx, taskId);
     if (!task) throw new ConvexError("Task does not exist");
 
     await ctx.db.patch(task._id, {
-      status: taskStatus,
-      description: taskDescription,
-      assigneeId,
-      dueDate,
-      projectId,
-      taskName,
+      status: taskStatus ?? task.status,
+      position: taskPosition ?? task.position,
+      description: taskDescription ?? task.description,
+      assigneeId: assigneeId ?? task.assigneeId,
+      dueDate: dueDate ?? task.dueDate,
+      projectId: projectId ?? task.projectId,
+      taskName: taskName ?? task.taskName,
     });
   },
 });

@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{
   }),
   beforeLoad: async (ctx) => {
     await ctx.context.queryClient.fetchQuery({
-      staleTime: 1000 * 60 * 5,
+      staleTime: 1000 * 60 * 2,
       queryKey: ["user"],
       queryFn: async () => {
         const auth = await fetchClerkAuth();

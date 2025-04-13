@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { ColumnDef } from "@tanstack/react-table";
-import { PaginatedTasksResponse, Tasks } from "convex/schema";
+import { PaginatedTasksResponse } from "convex/schema";
 import { ArrowUpDown, MoreVerticalIcon } from "lucide-react";
 import { Row } from "react-day-picker";
 import TaskDate from "./task-date";

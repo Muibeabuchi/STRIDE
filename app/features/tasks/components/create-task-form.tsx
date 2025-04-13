@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/select";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
+import { useTaskModalStore } from "@/store/store";
 
 interface CreateTaskFormProps {
   onCancel?: () => void;
@@ -54,12 +55,15 @@ export const CreateTaskForm = ({
 }: CreateTaskFormProps) => {
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
+  const { taskStatus } = useTaskModalStore();
   const projectId = useProjectId();
   const { mutate: createTask, isPending: isCreatingTask } = useCreateTask();
   const form = useForm<z.infer<typeof createTaskSchema>>({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
       taskName: "",
+      status:
+        taskStatus === "ALL" || taskStatus === null ? undefined : taskStatus,
     },
   });
 
@@ -177,6 +181,11 @@ export const CreateTaskForm = ({
                     <FormItem>
                       <FormLabel>Select Status</FormLabel>
                       <Select
+                        defaultValue={
+                          taskStatus === "ALL" || taskStatus === null
+                            ? undefined
+                            : taskStatus
+                        }
                         value={field.value}
                         onValueChange={field.onChange}
                       >

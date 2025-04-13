@@ -4,16 +4,16 @@ import {
   CreateTaskFormWrapper,
   CreateTaskFormWrapperSkeleton,
 } from "./create-task-form-wrapper";
-import { Suspense } from "react";
+// import { Suspense } from "react";
 
 export const CreateTaskModal = () => {
-  const { isOpen, close } = useTaskModalStore();
+  const { taskStatus, close } = useTaskModalStore();
   return (
     <>
-      <ResponsiveModal open={isOpen} onOpenChange={close}>
-        <Suspense fallback={<CreateTaskFormWrapperSkeleton />}>
-          <CreateTaskFormWrapper />
-        </Suspense>
+      <ResponsiveModal open={!!taskStatus} onOpenChange={close}>
+        {/* <Suspense fallback={<CreateTaskFormWrapperSkeleton />}> */}
+        <CreateTaskFormWrapper />
+        {/* </Suspense> */}
       </ResponsiveModal>
     </>
   );

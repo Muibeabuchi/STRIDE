@@ -15,6 +15,7 @@
     "@clerk/backend": "^1.25.8",
     "@clerk/tanstack-react-start": "^0.12.2",
     "@convex-dev/react-query": "0.0.0-alpha.8",
+    "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^5.0.0",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",

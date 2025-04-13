@@ -1,3 +1,4 @@
+import { TaskStatus } from "@/features/tasks/schema";
 import { Id } from "convex/_generated/dataModel";
 import { create } from "zustand";
 
@@ -31,24 +32,22 @@ export const useProjectModalStore = create<ProjectModalStore>((set) => ({
   setSelectedProjectId: (id) => set({ selectedProjectId: id }),
 }));
 
-interface TaskModalStore {
-  isOpen: boolean;
-  open: () => void;
+interface CreateTaskModalStore {
+  taskStatus: TaskStatus | null | "ALL";
+  open: (taskStatus: TaskStatus | "ALL") => void;
   close: () => void;
   // selectedProjectId: string | null;
   // setSelectedProjectId: (id: string | null) => void;
 }
 
-export const useTaskModalStore = create<TaskModalStore>((set) => ({
-  isOpen: false,
-  open: () => set({ isOpen: true }),
-  close: () => set({ isOpen: false }),
-  // selectedProjectId: null,
-  // setSelectedProjectId: (id) => set({ selectedProjectId: id }),
+export const useTaskModalStore = create<CreateTaskModalStore>((set) => ({
+  taskStatus: null,
+  open: (taskStatus) => set({ taskStatus: taskStatus }),
+  close: () => set({ taskStatus: null }),
 }));
 
 interface EditTaskModalStore {
-  // if at askId exists, then the modal should be open
+  // if a taskId exists, then the modal should be open
   taskId: Id<"tasks"> | null;
   openEditTaskModal: (taskId: Id<"tasks">) => void;
   closeEditTaskModal: () => void;
