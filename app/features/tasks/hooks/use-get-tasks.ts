@@ -1,7 +1,9 @@
+import { convexQuery } from "@convex-dev/react-query";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { usePaginatedQuery } from "convex/react";
+// import { usePaginatedQuery } from "convex/react";
 import { StatusSchemaType } from "../schema";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export function useGetTasksPaginated({
   workspaceId,
@@ -16,17 +18,13 @@ export function useGetTasksPaginated({
   projectId: string | undefined;
   dueDate: string | undefined;
 }) {
-  return usePaginatedQuery(
-    api.tasks.get,
-    {
+  return useSuspenseQuery(
+    convexQuery(api.tasks.get, {
       workspaceId,
       status: status === "ALL" ? undefined : status,
       assigneeId: assigneeId as Id<"users"> | undefined,
       projectId: projectId as Id<"projects"> | undefined,
       dueDate,
-    },
-    {
-      initialNumItems: 5,
-    }
+    })
   );
 }

@@ -25,10 +25,11 @@ export const TaskViewSwitcher = () => {
   const workspaceId = useWorkspaceId();
   const { status, assigneeId, projectId, dueDate, taskView } = useTaskFilters();
   const {
-    results,
-    isLoading,
-    loadMore,
-    status: queryStatus,
+    // results,
+    // isLoading,
+    // loadMore,
+    // status: queryStatus,
+    data: results,
   } = useGetTasksPaginated({
     workspaceId,
     status,
@@ -98,7 +99,7 @@ export const TaskViewSwitcher = () => {
             <DataKanban data={results} />
           </TabsContent>
           <TabsContent value="calendar" className="mt-0">
-            {isLoading && <p>Loading...</p>}
+            {/* {isLoading && <p>Loading...</p>}
             {queryStatus === "LoadingFirstPage" ? (
               <p>Loading first page</p>
             ) : (
@@ -106,7 +107,7 @@ export const TaskViewSwitcher = () => {
             )}
             {queryStatus !== "Exhausted" && (
               <Button onClick={() => loadMore(5)}>Load More</Button>
-            )}
+            )} */}
           </TabsContent>
         </>
       </div>

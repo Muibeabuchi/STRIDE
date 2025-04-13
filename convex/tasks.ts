@@ -66,7 +66,7 @@ export const create = authorizedWorkspaceMutation({
 
 export const get = authorizedWorkspaceQuery({
   args: {
-    paginationOpts: paginationOptsValidator,
+    // paginationOpts: paginationOptsValidator,
     // TODO: Find a way to eliminate this field (workspaceId) from the query from the frontend
     workspaceId: v.id("workspaces"),
     projectId: v.optional(v.id("projects")),
@@ -84,7 +84,7 @@ export const get = authorizedWorkspaceQuery({
       dueDate,
       search,
       status,
-      paginationOpts,
+      // paginationOpts,
     }
   ) {
     const tasksTable: QueryInitializer<DataModel["tasks"]> =
@@ -127,10 +127,10 @@ export const get = authorizedWorkspaceQuery({
       );
     }
 
-    const results = await orderedQuery.paginate(paginationOpts);
+    const results = await orderedQuery.collect();
 
     // results.page[0].
-    const tasks = results.page;
+    const tasks = results;
     const projectIds = tasks.map((task) => task.projectId);
     const assigneeIds = tasks.map((task) => task.assigneeId);
 
@@ -152,21 +152,20 @@ export const get = authorizedWorkspaceQuery({
       workspaceId,
     });
 
-    return {
-      ...results,
-      page: results.page.map(({ projectId, assigneeId, ...rest }) => {
-        const project = projects.find((id) => id._id === projectId);
-        if (!project) throw new ConvexError("Project does not exist");
-        const memberWithUser = members.find((id) => id.user._id === assigneeId);
-        if (!memberWithUser) throw new ConvexError("MemberUser does not exist");
+    const tasksResult = results.map(({ projectId, assigneeId, ...rest }) => {
+      const project = projects.find((id) => id._id === projectId);
+      if (!project) throw new ConvexError("Project does not exist");
+      const memberWithUser = members.find((id) => id.user._id === assigneeId);
+      if (!memberWithUser) throw new ConvexError("MemberUser does not exist");
 
-        return {
-          ...rest,
-          taskProject: project,
-          memberUser: memberWithUser,
-        };
-      }),
-    };
+      return {
+        ...rest,
+        taskProject: project,
+        memberUser: memberWithUser,
+      };
+    });
+
+    return tasksResult;
   },
 });
 

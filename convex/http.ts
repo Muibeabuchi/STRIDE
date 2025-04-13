@@ -67,6 +67,17 @@ app.get("/workspace/:workspaceId/get-info", async (c) => {
   }
   return c.json(workspace);
 });
+app.get("/tasks", async (c) => {
+  // const taskId = c.req.param("taskId");
+  // const {} = c.body;
+  // const tasks = await c.env.runQuery(api.tasks.get, {
+  //   workspaceId: workspaceId as Id<"workspaces">,
+  // });
+  // if (!workspace) {
+  //   return c.json({ error: "Workspace not found" }, 404);
+  // }
+  // return c.json(workspace);
+});
 
 async function validateRequest(
   request: HonoRequest

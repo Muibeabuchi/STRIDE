@@ -13,6 +13,7 @@ import { type } from "arktype";
 import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { taskViewSearchSchema } from "../../features/tasks/schema";
+import { Suspense } from "react";
 
 export const Route = createFileRoute(
   "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId"
@@ -77,7 +78,9 @@ function RouteComponent() {
           </Button>
         </div>
       </div>
-      <TaskViewSwitcher />
+      <Suspense fallback={<p>Loading...</p>}>
+        <TaskViewSwitcher />
+      </Suspense>
       <Outlet />
     </div>
   );
