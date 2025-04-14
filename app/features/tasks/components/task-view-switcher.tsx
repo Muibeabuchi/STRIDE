@@ -14,6 +14,7 @@ import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import DataKanban from "./data-kanban";
 import { Id } from "convex/_generated/dataModel";
+import DataCalendar from "./data-calendar";
 // import { taskViewSearchSchema } from "@/routes/(dashboard)/_dashboard";
 
 const tabSchema = z.union([
@@ -111,15 +112,7 @@ export const TaskViewSwitcher = ({
             <DataKanban data={tasks} />
           </TabsContent>
           <TabsContent value="calendar" className="mt-0">
-            {/* {isLoading && <p>Loading...</p>}
-            {queryStatus === "LoadingFirstPage" ? (
-              <p>Loading first page</p>
-            ) : (
-              <pre>{JSON.stringify(results, null, 2)}</pre>
-            )}
-            {queryStatus !== "Exhausted" && (
-              <Button onClick={() => loadMore(5)}>Load More</Button>
-            )} */}
+            <DataCalendar data={tasks} />
           </TabsContent>
         </>
       </div>
