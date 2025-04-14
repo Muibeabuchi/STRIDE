@@ -47,11 +47,11 @@ const DataKanban = ({ data }: DataKanbanProps) => {
     tasks[status as TaskStatus].sort((a, b) => a.position - b.position);
   });
 
-  console.log(tasks);
+  // console.log(tasks);
 
-  const { mutate: editTask } = useEditTask();
+  const editTask = useEditTask();
 
-  const onDragEnd = (result: DropResult) => {
+  const onDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
 
     const { source, destination } = result;
@@ -129,24 +129,26 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       if (destination.index === 0 && !destinationColumn[destination.index]) {
         console.log("fired - first card and there exist no card");
 
-        return editTask({
+        await editTask({
           taskId: sourceTask._id,
           workspaceId: sourceTask.workspaceId,
           taskPosition: 1000,
           taskStatus: destinationStatus,
         });
+        return;
       }
       //!  Check if the destination index is 0 and  the first card exists
       if (destination.index === 0 && destinationColumn[destination.index]) {
         console.log("fired - first card and there exist a card");
         // ? set the source position to the destination card divided by 2
         const destTaskPosition = destinationColumn[destination.index].position;
-        return editTask({
+        await editTask({
           taskId: sourceTask._id,
           workspaceId: sourceTask.workspaceId,
           taskPosition: destTaskPosition / 2,
           taskStatus: destinationStatus,
         });
+        return;
       }
 
       // ! Check if the destination card is the last card
@@ -159,12 +161,13 @@ const DataKanban = ({ data }: DataKanbanProps) => {
         // ? set the source position to the destination card + 1000
         const destTaskPosition =
           destinationColumn[destination.index - 1].position + 1000;
-        return editTask({
+        await editTask({
           taskId: sourceTask._id,
           workspaceId: sourceTask.workspaceId,
           taskPosition: destTaskPosition,
           taskStatus: destinationStatus,
         });
+        return;
       }
 
       console.log("fired- in between");
@@ -187,36 +190,40 @@ const DataKanban = ({ data }: DataKanbanProps) => {
         destTask.position -
         (destTask.position - topDestinationCard.position) / 2;
 
-      return editTask({
+      await editTask({
         taskId: sourceTask._id,
         workspaceId: sourceTask.workspaceId,
         taskPosition: newPosition,
         taskStatus: destinationStatus,
       });
     }
+
     if (sourceStatus === destinationStatus) {
       const [sourceTask] = sourceColumn.slice(source.index, source.index + 1);
       if (!sourceTask) return;
 
       // ! Check if the destination index  is 0 and the destination task  is undefined, this means the column is empty
       if (destination.index === 0 && !destinationColumn[destination.index]) {
-        return editTask({
+        await editTask({
           taskId: sourceTask._id,
           workspaceId: sourceTask.workspaceId,
           taskPosition: 1000,
-          //   taskStatus: destinationStatus,
+          // taskStatus: destinationStatus,
         });
+
+        return;
       }
       //!  Check if the destination index is 0 and  the first card exists
       if (destination.index === 0 && destinationColumn[destination.index]) {
         // ? set the source position to the destination card divided by 2
         const destTaskPosition = destinationColumn[destination.index].position;
-        return editTask({
+        await editTask({
           taskId: sourceTask._id,
           workspaceId: sourceTask.workspaceId,
           taskPosition: destTaskPosition / 2,
-          //   taskStatus: destinationStatus,
+          // taskStatus: destinationStatus,
         });
+        return;
       }
 
       // ! Check if the destination card is the last card
@@ -224,12 +231,13 @@ const DataKanban = ({ data }: DataKanbanProps) => {
         // ? set the source position to the destination card + 1000
         const destTaskPosition =
           destinationColumn[destination.index].position + 1000;
-        return editTask({
+        await editTask({
           taskId: sourceTask._id,
           workspaceId: sourceTask.workspaceId,
           taskPosition: destTaskPosition,
-          //   taskStatus: destinationStatus,
+          // taskStatus: destinationStatus,
         });
+        return;
       }
 
       // ! If the destination card is neither of these,then it must be a middle placement
@@ -248,7 +256,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
         destTask.position -
         (topDestinationCard.position - destTask.position) / 2;
 
-      return editTask({
+      await editTask({
         taskId: sourceTask._id,
         workspaceId: sourceTask.workspaceId,
         taskPosition: newPosition,

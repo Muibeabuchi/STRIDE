@@ -35,6 +35,7 @@ import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { useEditTask } from "../api/use-edit-task";
 import { getTaskByIdResponse } from "convex/schema";
+import { useState } from "react";
 
 interface EditTaskFormProps {
   onCancel?: () => void;
@@ -61,7 +62,8 @@ export const EditTaskForm = ({
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
-  const { mutate: editTask, isPending: isEditingTask } = useEditTask();
+  const [isEditingTask, setEditingTask] = useState(false);
+  const editTask = useEditTask();
   const form = useForm<z.infer<typeof createTaskSchema>>({
     resolver: zodResolver(createTaskSchema.omit({ description: true })),
     defaultValues: {
@@ -76,25 +78,35 @@ export const EditTaskForm = ({
   });
 
   const onSubmit = async (values: z.infer<typeof createTaskSchema>) => {
-    return editTask(
-      {
-        workspaceId,
-        taskId,
-        taskStatus: values.status,
-        taskName: values.taskName,
-        taskDescription: values.description,
-        // ? INSPECT THIS DATE METHOD
-        dueDate: values.dueDate.toISOString(),
-        assigneeId: values.assigneeId as Id<"users">,
-        projectId,
-      },
-      {
-        onSuccess(projectId) {
-          form.reset();
-          onCancel?.();
-        },
-      }
-    );
+    try {
+      setEditingTask(true);
+      await editTask(
+        {
+          workspaceId,
+          taskId,
+          taskStatus: values.status,
+          taskName: values.taskName,
+          taskDescription: values.description,
+          // ? INSPECT THIS DATE METHOD
+          dueDate: values.dueDate.toISOString(),
+          assigneeId: values.assigneeId as Id<"users">,
+          projectId,
+        }
+        // {
+        //   onSuccess(projectId) {
+        //     form.reset();
+        //     onCancel?.();
+        //   },
+        // }
+      );
+      form.reset();
+      onCancel?.();
+    } catch (error) {
+      toast.error("Failed to edit the  task");
+      console.error("Failed to edit the task");
+    } finally {
+      setEditingTask(false);
+    }
   };
 
   return (

@@ -4,7 +4,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { PlusIcon } from "lucide-react";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
-import { useGetTasksPaginated } from "../hooks/use-get-tasks";
+import { useGetTasks } from "../hooks/use-get-tasks";
 import { useTaskModalStore } from "@/store/store";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { z } from "zod";
@@ -29,8 +29,10 @@ export const TaskViewSwitcher = () => {
     // isLoading,
     // loadMore,
     // status: queryStatus,
-    data: results,
-  } = useGetTasksPaginated({
+    tasks,
+    taskIsError,
+    taskIsPending,
+  } = useGetTasks({
     workspaceId,
     status,
     assigneeId,
@@ -38,8 +40,8 @@ export const TaskViewSwitcher = () => {
     dueDate,
   });
 
-  console.log(results);
-  console.log("taskView", taskView);
+  // console.log(tasks);
+  // console.log("taskView", taskView);
 
   // results[0]
   const { open } = useTaskModalStore();
@@ -47,7 +49,14 @@ export const TaskViewSwitcher = () => {
   const navigate = useNavigate({
     from: "/workspaces/$workspaceId/projects/$projectId",
   });
-  // const types = taskViewSearchSchema.infer
+
+  if (taskIsPending || tasks === undefined) {
+    return <p>Loading...</p>;
+  }
+
+  if (taskIsError || tasks === null) {
+    return <p>Task Errored out</p>;
+  }
   return (
     <Tabs
       className="flex-1 w-full border rounded-lg"
@@ -93,10 +102,10 @@ export const TaskViewSwitcher = () => {
         )}
         <>
           <TabsContent value="table" className="mt-0">
-            <DataTable columns={columns} data={results} />
+            <DataTable columns={columns} data={tasks} />
           </TabsContent>
           <TabsContent value="kanban" className="mt-0">
-            <DataKanban data={results} />
+            <DataKanban data={tasks} />
           </TabsContent>
           <TabsContent value="calendar" className="mt-0">
             {/* {isLoading && <p>Loading...</p>}
