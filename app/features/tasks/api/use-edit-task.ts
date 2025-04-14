@@ -56,12 +56,17 @@ export const useEditTask = () => {
         taskDescription,
       }
     ) => {
+      console.log("fired optimistic update");
+      console.log("projectId", projectId);
       const tasks = localStore.getQuery(api.tasks.get, {
         workspaceId,
-        dueDate,
-        assigneeId,
+        // dueDate,
+        // assigneeId,
         projectId,
+        // status: taskStatus,
       });
+
+      console.log("tasks from local store", tasks);
       if (!tasks) return;
 
       // grab the task we wanna edit
@@ -74,9 +79,13 @@ export const useEditTask = () => {
         ...taskToEdit,
         status: taskStatus || taskToEdit.status,
         position: taskPosition || taskToEdit.position,
-        taskName: taskName || taskToEdit.taskName,
+        // taskName: taskName || taskToEdit.taskName,
         workspaceId,
-        dueDate: dueDate || taskToEdit.dueDate,
+        // dueDate: dueDate || taskToEdit.dueDate,
+        taskProject: {
+          ...taskToEdit.taskProject,
+          _id: projectId || taskToEdit.taskProject._id,
+        },
       };
 
       const optimisticTasks = tasks.map((task) => {
@@ -85,7 +94,11 @@ export const useEditTask = () => {
 
       console.log("optimistic tasks", optimisticTasks);
 
-      localStore.setQuery(api.tasks.get, { workspaceId }, optimisticTasks);
+      localStore.setQuery(
+        api.tasks.get,
+        { workspaceId, projectId },
+        optimisticTasks
+      );
     }
   );
 

@@ -78,9 +78,9 @@ function RouteComponent() {
           </Button>
         </div>
       </div>
-      <Suspense fallback={<p>Loading...</p>}>
-        <TaskViewSwitcher />
-      </Suspense>
+      {/* <Suspense fallback={<p>Loading...</p>}> */}
+      <TaskViewSwitcher hideProjectFilter={true} />
+      {/* </Suspense> */}
       <Outlet />
     </div>
   );

@@ -15,15 +15,15 @@ export function useGetTasks({
 }: {
   workspaceId: Id<"workspaces">;
   status: StatusSchemaType;
-  assigneeId: string | undefined;
-  projectId: string | undefined;
-  dueDate: string | undefined;
+  assigneeId?: Id<"users">;
+  projectId?: Id<"projects">;
+  dueDate?: string;
 }) {
   const tasks = useQuery(api.tasks.get, {
     workspaceId,
     status: status === "ALL" ? undefined : status,
-    assigneeId: assigneeId as Id<"users"> | undefined,
-    projectId: projectId as Id<"projects"> | undefined,
+    assigneeId: assigneeId,
+    projectId: projectId,
     dueDate,
   });
 

@@ -32,6 +32,10 @@ const Projects = () => {
               key={project._id}
               to={href}
               activeOptions={{ exact: true, includeSearch: false }}
+              search={(search) => ({
+                ...search,
+                projectId: project._id,
+              })}
             >
               {({ isActive }) => {
                 return (

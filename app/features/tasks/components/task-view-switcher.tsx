@@ -13,6 +13,7 @@ import useTaskFilters from "../hooks/use-task-filters";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import DataKanban from "./data-kanban";
+import { Id } from "convex/_generated/dataModel";
 // import { taskViewSearchSchema } from "@/routes/(dashboard)/_dashboard";
 
 const tabSchema = z.union([
@@ -21,22 +22,20 @@ const tabSchema = z.union([
   z.literal("kanban"),
 ]);
 
-export const TaskViewSwitcher = () => {
+interface TaskViewSwitcherProps {
+  hideProjectFilter: boolean;
+}
+
+export const TaskViewSwitcher = ({
+  hideProjectFilter = true,
+}: TaskViewSwitcherProps) => {
   const workspaceId = useWorkspaceId();
   const { status, assigneeId, projectId, dueDate, taskView } = useTaskFilters();
-  const {
-    // results,
-    // isLoading,
-    // loadMore,
-    // status: queryStatus,
-    tasks,
-    taskIsError,
-    taskIsPending,
-  } = useGetTasks({
+  const { tasks, taskIsError, taskIsPending } = useGetTasks({
     workspaceId,
     status,
-    assigneeId,
-    projectId,
+    assigneeId: assigneeId as Id<"users">,
+    projectId: projectId as Id<"projects">,
     dueDate,
   });
 
@@ -67,6 +66,7 @@ export const TaskViewSwitcher = () => {
           to: ".",
           search: {
             taskView: tabSchema.parse(tab),
+            projectId,
           },
         });
       }}
@@ -96,7 +96,10 @@ export const TaskViewSwitcher = () => {
         <DottedSeparator className="my-4" />
         {taskView !== "kanban" && (
           <>
-            <DataFilter workspaceId={workspaceId} />
+            <DataFilter
+              workspaceId={workspaceId}
+              hideProjectFilter={hideProjectFilter}
+            />
             <DottedSeparator className="my-4" />
           </>
         )}

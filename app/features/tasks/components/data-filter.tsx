@@ -118,35 +118,36 @@ const DataFilter = ({ hideProjectFilter, workspaceId }: DataFilterProps) => {
         </SelectContent>
       </Select>
 
-      <Select
-        defaultValue={projectId || "All"}
-        value={projectId || "All"}
-        onValueChange={onProjectIdChange}
-      >
-        <SelectTrigger className="w-full lg:w-auto h-8">
-          <div className="flex pr-2 items-center">
-            <FolderArchiveIcon className="size-4 mr-2" />
-            <SelectValue placeholder="All Projects" />
-          </div>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem key={"All-Projects"} value={"All"}>
-            All Projects
-          </SelectItem>
-          <SelectSeparator />
-          {projectOptions.map((project) => {
-            return (
-              <SelectItem key={project.id} value={project.id}>
-                <div className="flex items-center gap-x-2">
-                  <MemberAvatar name={project.name} className="size-6" />
-                  {project.name}
-                </div>
-              </SelectItem>
-            );
-          })}
-        </SelectContent>
-      </Select>
-
+      {!hideProjectFilter && (
+        <Select
+          defaultValue={projectId || "All"}
+          value={projectId || "All"}
+          onValueChange={onProjectIdChange}
+        >
+          <SelectTrigger className="w-full lg:w-auto h-8">
+            <div className="flex pr-2 items-center">
+              <FolderArchiveIcon className="size-4 mr-2" />
+              <SelectValue placeholder="All Projects" />
+            </div>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem key={"All-Projects"} value={"All"}>
+              All Projects
+            </SelectItem>
+            <SelectSeparator />
+            {projectOptions.map((project) => {
+              return (
+                <SelectItem key={project.id} value={project.id}>
+                  <div className="flex items-center gap-x-2">
+                    <MemberAvatar name={project.name} className="size-6" />
+                    {project.name}
+                  </div>
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+      )}
       <div className="relative">
         <DatePicker
           value={dueDate ? new Date(dueDate) : undefined}

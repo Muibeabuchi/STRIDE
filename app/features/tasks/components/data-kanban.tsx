@@ -134,6 +134,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           workspaceId: sourceTask.workspaceId,
           taskPosition: 1000,
           taskStatus: destinationStatus,
+          projectId: sourceTask.taskProject._id,
         });
         return;
       }
@@ -147,6 +148,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           workspaceId: sourceTask.workspaceId,
           taskPosition: destTaskPosition / 2,
           taskStatus: destinationStatus,
+          projectId: sourceTask.taskProject._id,
         });
         return;
       }
@@ -166,6 +168,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           workspaceId: sourceTask.workspaceId,
           taskPosition: destTaskPosition,
           taskStatus: destinationStatus,
+          projectId: sourceTask.taskProject._id,
         });
         return;
       }
@@ -195,6 +198,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
         workspaceId: sourceTask.workspaceId,
         taskPosition: newPosition,
         taskStatus: destinationStatus,
+        projectId: sourceTask.taskProject._id,
       });
     }
 
@@ -209,6 +213,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           workspaceId: sourceTask.workspaceId,
           taskPosition: 1000,
           // taskStatus: destinationStatus,
+          projectId: sourceTask.taskProject._id,
         });
 
         return;
@@ -222,6 +227,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           workspaceId: sourceTask.workspaceId,
           taskPosition: destTaskPosition / 2,
           // taskStatus: destinationStatus,
+          projectId: sourceTask.taskProject._id,
         });
         return;
       }
@@ -236,6 +242,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           workspaceId: sourceTask.workspaceId,
           taskPosition: destTaskPosition,
           // taskStatus: destinationStatus,
+          projectId: sourceTask.taskProject._id,
         });
         return;
       }
@@ -260,6 +267,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
         taskId: sourceTask._id,
         workspaceId: sourceTask.workspaceId,
         taskPosition: newPosition,
+        projectId: sourceTask.taskProject._id,
+
         // taskStatus: destinationStatus,
       });
     }
