@@ -1,4 +1,5 @@
 import { useParams } from "@tanstack/react-router";
+import { Id } from "convex/_generated/dataModel";
 
 export function useWorkspaceId() {
   const workspaceLayoutWorkspaceId = useParams({
@@ -14,14 +15,19 @@ export function useWorkspaceId() {
     from: "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/projects/$projectId/settings",
     shouldThrow: false,
   });
+  const params2 = useParams({
+    from: "/(dashboard)/_dashboard/workspaces_/$workspaceId/tasks",
+    shouldThrow: false,
+  });
 
   const workspaceId =
     (ProjectWorkspaceId?.workspaceId ||
       workspaceLayoutWorkspaceId?.workspaceId ||
-      params1?.workspaceId) ??
+      params1?.workspaceId ||
+      params2?.workspaceId) ??
     null;
 
   if (!workspaceId) throw new Error("WorkspaceId does not exist");
 
-  return workspaceId;
+  return workspaceId as Id<"workspaces">;
 }

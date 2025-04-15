@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useGetProjectById } from "@/features/projects/api/use-get-projects-by-id";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
-import { TaskViewSwitcher } from "@/features/tasks/components/task-view-switcher";
+import {
+  tabSchema,
+  TaskViewSwitcher,
+} from "@/features/tasks/components/task-view-switcher";
 import { convexQuery } from "@convex-dev/react-query";
 import { Outlet } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
@@ -9,11 +12,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { PencilIcon } from "lucide-react";
-import { type } from "arktype";
 import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { taskViewSearchSchema } from "../../features/tasks/schema";
-import { Suspense } from "react";
+import {
+  StatusSchemaType,
+  taskViewSearchSchema,
+} from "../../features/tasks/schema";
 
 export const Route = createFileRoute(
   "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId"
@@ -46,11 +50,64 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const { projectId, workspaceId } = Route.useParams();
+  const { projectId: projId, workspaceId } = Route.useParams();
+  const { status, taskView, assigneeId, dueDate, projectId } =
+    Route.useSearch();
+  const navigate = Route.useNavigate();
   const { data: project } = useGetProjectById({
-    projectId,
+    projectId: projId,
     workspaceId,
   });
+
+  const handleTaskViewChange = (tab: string) => {
+    navigate({
+      to: ".",
+      search: {
+        taskView: tabSchema.parse(tab),
+        // projectId,
+      },
+    });
+  };
+
+  const onStatusChange = (value: StatusSchemaType) => {
+    navigate({
+      to: ".",
+      search: (search) => ({
+        ...search,
+        status: value,
+      }),
+    });
+  };
+
+  const onAssigneeIdChange = (value: string | undefined) => {
+    navigate({
+      to: ".",
+      search: (search) => ({
+        ...search,
+        assigneeId: value === "All" ? undefined : value,
+      }),
+    });
+  };
+
+  const onProjectIdChange = (value: string | undefined) => {
+    navigate({
+      to: ".",
+      search: (search) => ({
+        ...search,
+        projectId: value === "All" ? undefined : value,
+      }),
+    });
+  };
+
+  const onDueDateChange = (value: string | undefined) => {
+    navigate({
+      to: ".",
+      search: (search) => ({
+        ...search,
+        dueDate: value,
+      }),
+    });
+  };
 
   return (
     <div className="flex flex-col gap-y-4">
@@ -68,7 +125,7 @@ function RouteComponent() {
             <Link
               to={"/workspaces/$workspaceId/projects/$projectId/settings"}
               params={{
-                projectId,
+                projectId: projId,
                 workspaceId,
               }}
             >
@@ -78,9 +135,20 @@ function RouteComponent() {
           </Button>
         </div>
       </div>
-      {/* <Suspense fallback={<p>Loading...</p>}> */}
-      <TaskViewSwitcher hideProjectFilter={true} />
-      {/* </Suspense> */}
+      <TaskViewSwitcher
+        projectId={projectId}
+        workspaceId={workspaceId}
+        hideProjectFilter={true}
+        status={status}
+        assigneeId={assigneeId}
+        dueDate={dueDate}
+        taskView={taskView}
+        onAssigneeIdChange={onAssigneeIdChange}
+        onDueDateChange={onDueDateChange}
+        onProjectIdChange={onProjectIdChange}
+        onStatusChange={onStatusChange}
+        handleTaskViewChange={handleTaskViewChange}
+      />
       <Outlet />
     </div>
   );

@@ -1,44 +1,5 @@
 import { api } from "convex/_generated/api";
-import { useConvexMutation } from "@convex-dev/react-query";
-// import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { useMutation } from "convex/react";
-
-// export const useEditTask = () => {
-//   const queryClient = useQueryClient();
-
-//   const mutation = useMutation({
-//     mutationFn: useConvexMutation(api.tasks.edit),
-//     // onMutate: (ctx) => {
-//     //   return {}
-//     // },
-//     onSuccess: () => {
-//       toast.success("Task Edited successfully");
-//     },
-//     onError: () => {
-//       toast.error("Failed to edit Task");
-//     },
-//     // onMutate: async (newTodo) => {
-//     //   // Cancel any outgoing refetches
-//     //   // (so they don't overwrite our optimistic update)
-//     //   await queryClient.cancelQueries({ queryKey: ["todos", newTodo.id] });
-
-//     //   // Snapshot the previous value
-//     //   const previousTodo = queryClient.getQueryData(["todos", newTodo.id]);
-
-//     //   // Optimistically update to the new value
-//     //   queryClient.setQueryData(["todos", newTodo.id], newTodo);
-
-//     //   // Return a context with the previous and new todo
-//     //   return { previousTodo, newTodo };
-//     // },
-//     // Always refetch after error or success:
-//     // onSettled: (newTodo) => {
-//     //   queryClient.invalidateQueries({ queryKey: ["todos", newTodo.id] });
-//     // },
-//   });
-//   return mutation;
-// };
 
 export const useEditTask = () => {
   const editTask = useMutation(api.tasks.edit).withOptimisticUpdate(
@@ -58,11 +19,12 @@ export const useEditTask = () => {
     ) => {
       console.log("fired optimistic update");
       console.log("projectId", projectId);
+      console.log("workspaceId", workspaceId);
       const tasks = localStore.getQuery(api.tasks.get, {
         workspaceId,
         // dueDate,
         // assigneeId,
-        projectId,
+        // projectId,
         // status: taskStatus,
       });
 
@@ -94,11 +56,7 @@ export const useEditTask = () => {
 
       console.log("optimistic tasks", optimisticTasks);
 
-      localStore.setQuery(
-        api.tasks.get,
-        { workspaceId, projectId },
-        optimisticTasks
-      );
+      localStore.setQuery(api.tasks.get, { workspaceId }, optimisticTasks);
     }
   );
 

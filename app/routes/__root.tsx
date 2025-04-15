@@ -21,16 +21,7 @@ import { ConvexQueryClient } from "@convex-dev/react-query";
 import { fetchClerkAuth } from "@/utils/auth";
 import { Toaster } from "sonner";
 
-export const userQueryOptions = queryOptions({
-  queryKey: ["user"],
-  queryFn: async () => {
-    const auth = await fetchClerkAuth();
-    // if (auth?.token) {
-    //   ctx.context.convexQueryClient.serverHttpClient?.setAuth(auth.token);
-    // }
-    return auth;
-  },
-});
+import { ConvexQueryCacheProvider } from "convex-helpers/react/cache";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -87,16 +78,6 @@ export const Route = createRootRouteWithContext<{
         return auth;
       },
     });
-    // const auth = await fetchClerkAuth();
-    // const { userId, token } = auth;
-    // if (token) {
-    //   ctx.context.convexQueryClient.serverHttpClient?.setAuth(token);
-    // }
-
-    // return {
-    //   userId: user.userId,
-    //   token: user.token,
-    // };
   },
 
   errorComponent: (props) => {
@@ -117,9 +98,11 @@ function RootComponent() {
   return (
     <ClerkProvider publishableKey={pk!}>
       <ConvexProviderWithClerk useAuth={useAuth} client={context.convexClient}>
-        <RootDocument>
-          <Outlet />
-        </RootDocument>
+        <ConvexQueryCacheProvider>
+          <RootDocument>
+            <Outlet />
+          </RootDocument>
+        </ConvexQueryCacheProvider>
       </ConvexProviderWithClerk>
     </ClerkProvider>
   );

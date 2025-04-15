@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DottedSeparator } from "@/components/doted-separator";
@@ -21,7 +20,6 @@ import { createTaskSchema, TaskStatus } from "../schema";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useNavigate } from "@tanstack/react-router";
 import { useCreateTask } from "../api/use-create-task";
-import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { Id } from "convex/_generated/dataModel";
 import DatePicker from "@/components/date-picker";
 import {
@@ -56,7 +54,6 @@ export const CreateTaskForm = ({
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
   const { taskStatus } = useTaskModalStore();
-  const projectId = useProjectId();
   const { mutate: createTask, isPending: isCreatingTask } = useCreateTask();
   const form = useForm<z.infer<typeof createTaskSchema>>({
     resolver: zodResolver(createTaskSchema),
@@ -76,7 +73,7 @@ export const CreateTaskForm = ({
         // ? INSPECT THIS DATE METHOD
         dueDate: values.dueDate.toISOString(),
         assigneeId: values.assigneeId as Id<"users">,
-        projectId,
+        projectId: values.projectId as Id<"projects">,
       },
       {
         onSuccess(projectId) {

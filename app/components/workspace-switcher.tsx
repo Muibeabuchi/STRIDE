@@ -29,7 +29,6 @@ export function WorkspaceSwitcherSkeleton() {
 export default function WorkspaceSwitcher() {
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
-  if (!workspaceId) throw new Error("WorkspaceId not found");
 
   const { data: workspaces } = useGetUserWorkspaces();
   const { open } = useCreateWorkspaceModal();
@@ -40,6 +39,7 @@ export default function WorkspaceSwitcher() {
       params: { workspaceId },
     });
   };
+  if (!workspaceId) throw new Error("WorkspaceId not found");
   return (
     <div className="flex flex-col gap-y-2">
       <div className="flex items-center justify-between">

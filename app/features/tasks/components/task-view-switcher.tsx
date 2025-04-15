@@ -15,23 +15,44 @@ import { columns } from "./columns";
 import DataKanban from "./data-kanban";
 import { Id } from "convex/_generated/dataModel";
 import DataCalendar from "./data-calendar";
-// import { taskViewSearchSchema } from "@/routes/(dashboard)/_dashboard";
+import { StatusSchemaType, taskViewSearchType } from "../schema";
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
 
-const tabSchema = z.union([
+export const tabSchema = z.union([
   z.literal("table"),
   z.literal("calendar"),
   z.literal("kanban"),
 ]);
 
 interface TaskViewSwitcherProps {
+  workspaceId: Id<"workspaces">;
+  projectId: string | undefined;
   hideProjectFilter: boolean;
+  taskView: taskViewSearchType;
+  status: StatusSchemaType;
+  assigneeId: string | undefined;
+  dueDate: string | undefined;
+  onDueDateChange: (value: string | undefined) => void;
+  onProjectIdChange: (value: string | undefined) => void;
+  onAssigneeIdChange: (value: string | undefined) => void;
+  onStatusChange: (value: StatusSchemaType) => void;
+  handleTaskViewChange: (tab: string) => void;
 }
 
 export const TaskViewSwitcher = ({
+  projectId,
+  handleTaskViewChange,
+  workspaceId,
   hideProjectFilter = true,
+  assigneeId,
+  dueDate,
+  status,
+  taskView,
+  onAssigneeIdChange,
+  onDueDateChange,
+  onProjectIdChange,
+  onStatusChange,
 }: TaskViewSwitcherProps) => {
-  const workspaceId = useWorkspaceId();
-  const { status, assigneeId, projectId, dueDate, taskView } = useTaskFilters();
   const { tasks, taskIsError, taskIsPending } = useGetTasks({
     workspaceId,
     status,
@@ -40,15 +61,7 @@ export const TaskViewSwitcher = ({
     dueDate,
   });
 
-  // console.log(tasks);
-  // console.log("taskView", taskView);
-
-  // results[0]
   const { open } = useTaskModalStore();
-
-  const navigate = useNavigate({
-    from: "/workspaces/$workspaceId/projects/$projectId",
-  });
 
   if (taskIsPending || tasks === undefined) {
     return <p>Loading...</p>;
@@ -62,15 +75,7 @@ export const TaskViewSwitcher = ({
       className="flex-1 w-full border rounded-lg"
       defaultValue={taskView}
       value={taskView}
-      onValueChange={(tab) => {
-        navigate({
-          to: ".",
-          search: {
-            taskView: tabSchema.parse(tab),
-            projectId,
-          },
-        });
-      }}
+      onValueChange={handleTaskViewChange}
     >
       <div className="h-full flex flex-col overflow-auto p-4">
         <div className="flex flex-col lg:flex-row gap-y-2 justify-between items-center">
@@ -98,8 +103,15 @@ export const TaskViewSwitcher = ({
         {taskView !== "kanban" && (
           <>
             <DataFilter
-              workspaceId={workspaceId}
               hideProjectFilter={hideProjectFilter}
+              assigneeId={assigneeId}
+              dueDate={dueDate}
+              onAssigneeIdChange={onAssigneeIdChange}
+              onDueDateChange={onDueDateChange}
+              onProjectIdChange={onProjectIdChange}
+              onStatusChange={onStatusChange}
+              projectId={projectId}
+              status={status}
             />
             <DottedSeparator className="my-4" />
           </>

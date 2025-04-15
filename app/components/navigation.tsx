@@ -14,10 +14,10 @@ function Navigation() {
           <Link
             key={label}
             to={fullHref}
-            activeOptions={{ exact: true }}
+            activeOptions={{ exact: true, includeSearch: false }}
             // search={(search) => ({
             //   ...search,
-            //   taskView: "",
+            //   taskView: "kanban",
             // })}
           >
             {({ isActive }) => {

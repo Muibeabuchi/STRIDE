@@ -15,29 +15,39 @@ import {
   UserIcon,
   XIcon,
 } from "lucide-react";
-import { StatusSchema, TaskStatus } from "../schema";
+import {
+  StatusSchema,
+  StatusSchemaType,
+  TaskStatus,
+  taskViewSearchType,
+} from "../schema";
 import useTaskFilters from "../hooks/use-task-filters";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 
 interface DataFilterProps {
   hideProjectFilter?: boolean;
-  workspaceId: Id<"workspaces">;
+  status: StatusSchemaType;
+  assigneeId: string | undefined;
+  onAssigneeIdChange: (value: string | undefined) => void;
+  onProjectIdChange: (value: string | undefined) => void;
+  projectId: string | undefined;
+  dueDate: string | undefined;
+  onDueDateChange: (value: string | undefined) => void;
+  onStatusChange: (value: StatusSchemaType) => void;
 }
 
-const DataFilter = ({ hideProjectFilter, workspaceId }: DataFilterProps) => {
-  const response = useGetTaskFormData();
-  const {
-    onStatusChange,
-    status,
-    assigneeId,
-    onAssigneeIdChange,
-    onProjectIdChange,
-    projectId,
-    dueDate,
-    onDueDateChange,
-  } = useTaskFilters();
-
-  const [projects, members] = response;
+const DataFilter = ({
+  hideProjectFilter,
+  status,
+  assigneeId,
+  onAssigneeIdChange,
+  onProjectIdChange,
+  projectId,
+  dueDate,
+  onDueDateChange,
+  onStatusChange,
+}: DataFilterProps) => {
+  const [projects, members] = useGetTaskFormData();
 
   const isLoading = projects.isPending || members.isPending;
 

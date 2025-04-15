@@ -36,5 +36,7 @@ export const taskViewSearchSchema = z.object({
   dueDate: z.string().optional(),
 });
 
-export type taskViewSearchType = z.infer<typeof taskViewSearchSchema>;
+export type taskViewSearchType = z.infer<
+  typeof taskViewSearchSchema
+>["taskView"];
 export type StatusSchemaType = z.infer<typeof StatusSchema>;
