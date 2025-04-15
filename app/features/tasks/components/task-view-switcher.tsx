@@ -8,15 +8,16 @@ import { useGetTasks } from "../hooks/use-get-tasks";
 import { useTaskModalStore } from "@/store/store";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { z } from "zod";
-import DataFilter from "./data-filter";
+import DataFilter, { DataFilterSkeleton } from "./data-filter";
 import useTaskFilters from "../hooks/use-task-filters";
-import { DataTable } from "./data-table";
+import { DataTable, DataTableSkeleton } from "./data-table";
 import { columns } from "./columns";
 import DataKanban from "./data-kanban";
 import { Id } from "convex/_generated/dataModel";
 import DataCalendar from "./data-calendar";
 import { StatusSchemaType, taskViewSearchType } from "../schema";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const tabSchema = z.union([
   z.literal("table"),
@@ -64,7 +65,7 @@ export const TaskViewSwitcher = ({
   const { open } = useTaskModalStore();
 
   if (taskIsPending || tasks === undefined) {
-    return <p>Loading...</p>;
+    return <TaskViewSwitcherSkeleton />;
   }
 
   if (taskIsError || tasks === null) {
@@ -127,6 +128,43 @@ export const TaskViewSwitcher = ({
             <DataCalendar data={tasks} />
           </TabsContent>
         </>
+      </div>
+    </Tabs>
+  );
+};
+
+export const TaskViewSwitcherSkeleton = () => {
+  return (
+    <Tabs className="flex-1 w-full border rounded-lg">
+      <div className="h-full flex flex-col overflow-auto p-4">
+        <div className="flex flex-col lg:flex-row gap-y-2  justify-between items-center">
+          {/* Tabs skeleton */}
+          {/* <div className="flex gap-x-2 bg-muted rounded-md p-1 w-full lg:w-auto">
+            <Skeleton className="h-8 w-full lg:w-24 rounded-md mx-1" />
+            <Skeleton className="h-8 w-full lg:w-24 rounded-md mx-1" />
+            <Skeleton className="h-8 w-full lg:w-24 rounded-md mx-1" />
+          </div> */}
+          <div className="flex bg-transparent rounded-md justify-between p-1 w-full lg:w-auto gap-x-4">
+            <Skeleton className="h-8 w-[65px]  lg:w-[65px] rounded-md" />
+            <Skeleton className="h-8 w-[65px]  lg:w-[65px] rounded-md" />
+            <Skeleton className="h-8 w-[65px] lg:w-[65px] rounded-md" />
+          </div>
+
+          {/* New button skeleton */}
+          <Skeleton className="h-8 w-24" />
+        </div>
+
+        <DottedSeparator className="my-4" />
+
+        {/* Data filter skeleton */}
+        <DataFilterSkeleton />
+
+        <DottedSeparator className="my-4" />
+
+        {/* Tab content - using DataTableSkeleton as default */}
+        {/* <TabsContent value="table" className="mt-0"> */}
+        <DataTableSkeleton columnCount={5} rowCount={5} />
+        {/* </TabsContent> */}
       </div>
     </Tabs>
   );

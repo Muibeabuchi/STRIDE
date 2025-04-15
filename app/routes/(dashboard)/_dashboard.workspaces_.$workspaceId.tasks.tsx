@@ -8,12 +8,15 @@ import {
 } from "@/features/tasks/schema";
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
+import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 
 export const Route = createFileRoute(
   "/(dashboard)/_dashboard/workspaces_/$workspaceId/tasks"
 )({
   component: TasksPage,
+  pendingComponent: () => <div>Loading...</div>,
+  errorComponent: () => <div>Error</div>,
   params: {
     parse: (params) => {
       return {
@@ -22,6 +25,19 @@ export const Route = createFileRoute(
     },
   },
   validateSearch: zodValidator(taskViewSearchSchema),
+  loaderDeps: ({ search }) => ({
+    ...search,
+  }),
+  // loader: async ({ params, deps, context }) => {
+  //   // const { status, assigneeId, dueDate, projectId } = deps;
+  //   // await context.convexClient.query(api.tasks.get, {
+  //   //   workspaceId: params.workspaceId,
+  //   //   status: status === "ALL" ? undefined : status,
+  //   //   assigneeId: assigneeId as Id<"users">,
+  //   //   dueDate,
+  //   //   projectId: projectId as Id<"projects">,
+  //   // });
+  // },
 });
 
 function TasksPage() {
@@ -79,19 +95,21 @@ function TasksPage() {
     });
   };
   return (
-    <TaskViewSwitcher
-      projectId={projectId}
-      hideProjectFilter={false}
-      status={status}
-      assigneeId={assigneeId}
-      dueDate={dueDate}
-      taskView={taskView}
-      workspaceId={workspaceId}
-      handleTaskViewChange={handleTaskViewChange}
-      onAssigneeIdChange={onAssigneeIdChange}
-      onDueDateChange={onDueDateChange}
-      onProjectIdChange={onProjectIdChange}
-      onStatusChange={onStatusChange}
-    />
+    <div className="flex h-full flex-col">
+      <TaskViewSwitcher
+        projectId={projectId}
+        hideProjectFilter={false}
+        status={status}
+        assigneeId={assigneeId}
+        dueDate={dueDate}
+        taskView={taskView}
+        workspaceId={workspaceId}
+        handleTaskViewChange={handleTaskViewChange}
+        onAssigneeIdChange={onAssigneeIdChange}
+        onDueDateChange={onDueDateChange}
+        onProjectIdChange={onProjectIdChange}
+        onStatusChange={onStatusChange}
+      />
+    </div>
   );
 }

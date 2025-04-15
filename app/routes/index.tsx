@@ -6,13 +6,7 @@ import { fetchClerkAuth } from "@/utils/auth";
 
 export const Route = createFileRoute("/")({
   pendingComponent: () => <Loader />,
-  // beforeLoad: async ({ context: { userId } }) => {
-  //   if (!userId) {
-  //     throw redirect({
-  //       to: "/sign-in/$",
-  //     });
-  //   }
-  // },
+
   beforeLoad: async ({ context: { queryClient, convexQueryClient } }) => {
     const user:
       | {
@@ -20,18 +14,6 @@ export const Route = createFileRoute("/")({
           token: string | null;
         }
       | undefined = await queryClient.getQueryData(["user"]);
-
-    // fetchQuery({
-    //   staleTime: 1000 * 60 * 5,
-    //   queryKey: ["user"],
-    //   queryFn: async () => {
-    //     const auth = await fetchClerkAuth();
-    //     if (auth?.token) {
-    //       convexQueryClient.serverHttpClient?.setAuth(auth.token);
-    //     }
-    //     return auth;
-    //   },
-    // });
 
     if (!user) {
       throw redirect({

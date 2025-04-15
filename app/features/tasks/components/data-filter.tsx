@@ -23,6 +23,7 @@ import {
 } from "../schema";
 import useTaskFilters from "../hooks/use-task-filters";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DataFilterProps {
   hideProjectFilter?: boolean;
@@ -54,7 +55,7 @@ const DataFilter = ({
   const error = projects.error || members.error;
 
   if (projects.isError || members.isError) throw error;
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <DataFilterSkeleton />;
 
   const projectOptions = projects.data.map((project) => ({
     id: project._id,
@@ -180,3 +181,44 @@ const DataFilter = ({
 };
 
 export default DataFilter;
+
+export const DataFilterSkeleton = () => {
+  return (
+    <div className="flex flex-col lg:flex-row gap-2">
+      {/* Status Filter Skeleton */}
+      <div className="w-full lg:w-auto h-8 relative bg-muted rounded-md flex items-center px-3">
+        <ListChecksIcon className="size-4 mr-2 text-muted-foreground" />
+        <Skeleton className="h-4 w-24" />
+        <div className="ml-auto">
+          <Skeleton className="h-4 w-4" />
+        </div>
+      </div>
+
+      {/* Assignee Filter Skeleton */}
+      <div className="w-full lg:w-auto h-8 relative bg-muted rounded-md flex items-center px-3">
+        <UserIcon className="size-4 mr-2 text-muted-foreground" />
+        <Skeleton className="h-4 w-24" />
+        <div className="ml-auto">
+          <Skeleton className="h-4 w-4" />
+        </div>
+      </div>
+
+      {/* Project Filter Skeleton - Only shown if not hidden */}
+      <div className="w-full lg:w-auto h-8 relative bg-muted rounded-md flex items-center px-3">
+        <FolderArchiveIcon className="size-4 mr-2 text-muted-foreground" />
+        <Skeleton className="h-4 w-24" />
+        <div className="ml-auto">
+          <Skeleton className="h-4 w-4" />
+        </div>
+      </div>
+
+      {/* Date Picker Skeleton */}
+      <div className="w-full lg:w-auto h-8 relative bg-muted rounded-md flex items-center px-3">
+        <Skeleton className="h-4 w-24" />
+        <div className="ml-auto">
+          <Skeleton className="h-4 w-4" />
+        </div>
+      </div>
+    </div>
+  );
+};

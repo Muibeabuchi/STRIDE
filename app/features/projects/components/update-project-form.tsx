@@ -300,7 +300,7 @@ export const UpdateProjectForm = ({
               disabled={removingProject || isUpdatingProject}
               onClick={handleRemoveProject}
             >
-              Delete Workspace
+              Delete Project
             </Button>
           </div>
         </CardContent>

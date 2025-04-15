@@ -5,6 +5,7 @@ import {
   useReactTable,
   getPaginationRowModel,
 } from "@tanstack/react-table";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -101,6 +102,49 @@ export function DataTable<TData, TValue>({
         >
           Next
         </Button>
+      </div>
+    </div>
+  );
+}
+
+interface DataTableSkeletonProps {
+  columnCount?: number;
+  rowCount?: number;
+}
+
+export function DataTableSkeleton({
+  columnCount = 5,
+  rowCount = 5,
+}: DataTableSkeletonProps) {
+  return (
+    <div>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {Array.from({ length: columnCount }).map((_, index) => (
+                <TableHead key={index}>
+                  <Skeleton className="h-4 w-24" />
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.from({ length: rowCount }).map((_, rowIndex) => (
+              <TableRow key={rowIndex}>
+                {Array.from({ length: columnCount }).map((_, cellIndex) => (
+                  <TableCell key={cellIndex}>
+                    <Skeleton className="h-4 w-full" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <Skeleton className="h-8 w-20" /> {/* Previous button */}
+        <Skeleton className="h-8 w-16" /> {/* Next button */}
       </div>
     </div>
   );

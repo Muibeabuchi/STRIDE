@@ -10,6 +10,8 @@ import KanbanColumnHeader from "./kanban-column-header";
 import KanbanCard from "./kanban-card";
 import { useCallback } from "react";
 import { useEditTask } from "../api/use-edit-task";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 interface DataKanbanProps {
   data: PaginatedTasksResponse[];
@@ -65,61 +67,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       sourceColumn[source.index]?._id ===
       destinationColumn[destination.index]?._id;
     if (noMovement) return;
-
-    console.log("source task", sourceColumn[source.index]);
-    console.log("destination task", destinationColumn[destination.index]);
-    console.log(destination);
-
-    // if the destination index is 0 and there is no item there,we set the position to 1000
-
-    //! Check if the destination status is equal to the sourceStatus
-    // if (sourceStatus === destinationStatus) {
-    //   const [sourceTask] = sourceColumn.slice(source.index, source.index + 1);
-    //   if (!sourceTask) return;
-    //   const destTask = sourceColumn.find(
-    //     (_, index) => destination.index === index
-    //   );
-    //   if (!destTask) return;
-
-    //   //!  Check if the destination is the first card
-    //   if (destination.index === 0) {
-    //     // ? set the source position to the destination card divided by 2
-    //     return editTask({
-    //       taskId: sourceTask._id,
-    //       workspaceId: sourceTask.workspaceId,
-    //       taskPosition: destTask.position / 2,
-    //     });
-    //   }
-
-    //   // ! Check if the destination card is the last card
-    //   if (!destinationColumn[destination.index + 1]) {
-    //     // ? set the source position to the destination card + 1000
-    //     return editTask({
-    //       taskId: sourceTask._id,
-    //       workspaceId: sourceTask.workspaceId,
-    //       taskPosition: destTask.position + 1000,
-    //     });
-    //   }
-
-    //   // ! If the destination card is neither of these,then it must be a middle placement
-    //   // TODO: Write logic to enforce that the destination card is between two cards
-    //   const topDestinationCard =
-    //     destinationColumn[destination.index - 1] ??
-    //     (() => {
-    //       throw new Error("The destination card does not have a top card");
-    //     })();
-
-    //   //   ? set the  position of the source card to the average of the top card and bottom card(destination card) minus the destination card position
-
-    //   const newPosition =
-    //     destTask.position -
-    //     (topDestinationCard.position - destTask.position) / 2;
-    //   return editTask({
-    //     taskId: sourceTask._id,
-    //     workspaceId: sourceTask.workspaceId,
-    //     taskPosition: newPosition,
-    //   });
-    // }
 
     if (sourceStatus !== destinationStatus) {
       const [sourceTask] = sourceColumn.slice(source.index, source.index + 1);
@@ -331,3 +278,50 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 };
 
 export default DataKanban;
+
+function LoadingKanbanSkeleton() {
+  // Create an array of column skeletons
+  const columnCount = 5;
+
+  return (
+    <div className="flex gap-4 overflow-x-auto pb-4">
+      {Array(columnCount)
+        .fill(0)
+        .map((_, colIndex) => (
+          <div key={colIndex} className="min-w-[300px] flex-shrink-0">
+            <Card className="h-full">
+              <CardHeader className="py-3 px-4">
+                <div className="flex justify-between items-center">
+                  <Skeleton className="h-5 w-24" />
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                </div>
+              </CardHeader>
+              <CardContent className="p-2">
+                {/* Random number of tasks per column (2-4) */}
+                {Array(Math.floor(Math.random() * 3) + 2)
+                  .fill(0)
+                  .map((_, taskIndex) => (
+                    <SkeletonTaskCard key={taskIndex} />
+                  ))}
+              </CardContent>
+            </Card>
+          </div>
+        ))}
+    </div>
+  );
+}
+
+function SkeletonTaskCard() {
+  return (
+    <Card className="mb-2">
+      <CardContent className="p-3">
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-3 w-3/4 mb-4" />
+        <div className="flex justify-between items-center">
+          <Skeleton className="h-5 w-16" />
+          <Skeleton className="h-6 w-6 rounded-full" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

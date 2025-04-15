@@ -1,9 +1,6 @@
-import { convexQuery } from "@convex-dev/react-query";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-// import { usePaginatedQuery } from "convex/react";
 import { StatusSchemaType } from "../schema";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { useQuery } from "convex/react";
 
 export function useGetTasks({

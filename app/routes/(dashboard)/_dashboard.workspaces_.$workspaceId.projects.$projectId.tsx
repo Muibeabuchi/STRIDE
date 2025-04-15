@@ -31,9 +31,17 @@ export const Route = createFileRoute(
       };
     },
   },
+
+  loaderDeps: ({ search }) => ({
+    ...search,
+  }),
+
   component: RouteComponent,
   loader: async (ctx) => {
-    const { params } = ctx;
+    const {
+      params,
+      deps: { status, assigneeId, dueDate, projectId },
+    } = ctx;
 
     // prefetch other data that might be needed in this route-----------------
     ctx.context.queryClient.prefetchQuery(

@@ -66,7 +66,6 @@ export const create = authorizedWorkspaceMutation({
 
 export const get = authorizedWorkspaceQuery({
   args: {
-    // paginationOpts: paginationOptsValidator,
     // TODO: Find a way to eliminate this field (workspaceId) from the query from the frontend
     workspaceId: v.id("workspaces"),
     projectId: v.optional(v.id("projects")),
@@ -176,6 +175,8 @@ export const getById = authenticatedUserQuery({
   async handler(ctx, args) {
     const task = await ctx.db.get(args.taskId);
     if (!task) throw new ConvexError("Task does not exist");
+
+    // ensure that the user is a member of the workspace
 
     // load the project associated with this task
     const taskProject = await ctx.db.get(task.workspaceId);

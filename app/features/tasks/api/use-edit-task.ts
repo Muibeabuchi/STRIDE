@@ -28,6 +28,40 @@ export const useEditTask = () => {
         // status: taskStatus,
       });
 
+      if (!tasks) {
+        console.log("optimistic update from projectsId page fired");
+        const tasksFromProjects = localStore.getQuery(api.tasks.get, {
+          workspaceId,
+          projectId,
+        });
+        console.log("tasksFromProjects", tasksFromProjects);
+        if (!tasksFromProjects) return;
+
+        // grab the task we wanna edit
+        const taskToEdit = tasksFromProjects.find(
+          (task) => task._id === taskId
+        );
+        console.log("taskToEdit", taskToEdit);
+        if (!taskToEdit) return;
+
+        const newTaskToEdit: typeof taskToEdit = {
+          ...taskToEdit,
+          status: taskStatus || taskToEdit.status,
+          position: taskPosition || taskToEdit.position,
+        };
+
+        const optimisticTasks = tasksFromProjects.map((task) => {
+          return task._id === taskToEdit._id ? newTaskToEdit : task;
+        });
+        console.log("optimisticTasks", optimisticTasks);
+
+        localStore.setQuery(
+          api.tasks.get,
+          { workspaceId, projectId },
+          optimisticTasks
+        );
+      }
+
       console.log("tasks from local store", tasks);
       if (!tasks) return;
 
