@@ -18,20 +18,6 @@ export const useGetTaskFormData = () => {
 
   // TODO: Talk about this typescript fix for tuples
   return [projects, members] as const;
-  // return useSuspenseQueries({
-  //   queries: [
-  //     {
-  //       queryKey: convexQuery(api.projects.get, { workspaceId }).queryKey,
-  //       queryFn: convexQuery(api.projects.get, { workspaceId }).queryFn,
-  //       staleTime: Infinity,
-  //     },
-  //     {
-  //       queryKey: convexQuery(api.members.get, { workspaceId }).queryKey,
-  //       queryFn: convexQuery(api.members.get, { workspaceId }).queryFn,
-  //       staleTime: Infinity,
-  //     },
-  //   ],
-  // });
 };
 
 // TODO: create SkeletonLoading component using AI

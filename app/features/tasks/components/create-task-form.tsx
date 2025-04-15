@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 
 import { createTaskSchema, TaskStatus } from "../schema";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
-import { useNavigate } from "@tanstack/react-router";
+import { useMatchRoute, useNavigate } from "@tanstack/react-router";
 import { useCreateTask } from "../api/use-create-task";
 import { Id } from "convex/_generated/dataModel";
 import DatePicker from "@/components/date-picker";
@@ -32,6 +32,7 @@ import {
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { useTaskModalStore } from "@/store/store";
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
 
 interface CreateTaskFormProps {
   onCancel?: () => void;
@@ -53,6 +54,16 @@ export const CreateTaskForm = ({
 }: CreateTaskFormProps) => {
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
+  const matchRoute = useMatchRoute();
+  const isMatch = matchRoute({
+    to: "/workspaces/$workspaceId/tasks",
+    params: {
+      workspaceId: workspaceId,
+    },
+  });
+
+  // pass true if the route is /workspaces/$workspaceId/tasks
+  const projectId = useProjectId(!!isMatch);
   const { taskStatus } = useTaskModalStore();
   const { mutate: createTask, isPending: isCreatingTask } = useCreateTask();
   const form = useForm<z.infer<typeof createTaskSchema>>({
@@ -61,8 +72,17 @@ export const CreateTaskForm = ({
       taskName: "",
       status:
         taskStatus === "ALL" || taskStatus === null ? undefined : taskStatus,
+      projectId: projectId ?? undefined,
     },
   });
+
+  const ProjectIdOption = projectOptions.find(
+    (project) => project.id === projectId
+  );
+
+  const ProjectOptionsToRender = ProjectIdOption
+    ? [ProjectIdOption]
+    : projectOptions;
 
   const onSubmit = async (values: z.infer<typeof createTaskSchema>) => {
     return createTask(
@@ -221,6 +241,9 @@ export const CreateTaskForm = ({
                       <Select
                         value={field.value}
                         onValueChange={field.onChange}
+                        defaultValue={
+                          projectId === null ? field.value : projectId
+                        }
                       >
                         <FormControl>
                           <SelectTrigger className="w-full">
@@ -229,18 +252,20 @@ export const CreateTaskForm = ({
                         </FormControl>
                         <FormMessage />
                         <SelectContent>
-                          {projectOptions.map((project) => (
-                            <SelectItem key={project.id} value={project.id}>
-                              <div className="flex items-center gap-x-2">
-                                <ProjectAvatar
-                                  name={project.name}
-                                  className="size-6"
-                                  image={project.imageUrl}
-                                />
-                                {project.name}
-                              </div>
-                            </SelectItem>
-                          ))}
+                          {ProjectOptionsToRender.map((project) => {
+                            return (
+                              <SelectItem key={project.id} value={project.id}>
+                                <div className="flex items-center gap-x-2">
+                                  <ProjectAvatar
+                                    name={project.name}
+                                    className="size-6"
+                                    image={project.imageUrl}
+                                  />
+                                  {project.name}
+                                </div>
+                              </SelectItem>
+                            );
+                          })}
                         </SelectContent>
                       </Select>
                       <FormMessage />

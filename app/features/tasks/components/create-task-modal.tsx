@@ -11,9 +11,7 @@ export const CreateTaskModal = () => {
   return (
     <>
       <ResponsiveModal open={!!taskStatus} onOpenChange={close}>
-        {/* <Suspense fallback={<CreateTaskFormWrapperSkeleton />}> */}
         <CreateTaskFormWrapper />
-        {/* </Suspense> */}
       </ResponsiveModal>
     </>
   );
