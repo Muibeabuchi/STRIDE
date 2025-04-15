@@ -19,12 +19,17 @@ export function useWorkspaceId() {
     from: "/(dashboard)/_dashboard/workspaces_/$workspaceId/tasks",
     shouldThrow: false,
   });
+  const params3 = useParams({
+    from: "/(dashboard)/_dashboard/workspaces_/$workspaceId_/tasks_/$taskId",
+    shouldThrow: false,
+  });
 
   const workspaceId =
     (ProjectWorkspaceId?.workspaceId ||
       workspaceLayoutWorkspaceId?.workspaceId ||
       params1?.workspaceId ||
-      params2?.workspaceId) ??
+      params2?.workspaceId ||
+      params3?.workspaceId) ??
     null;
 
   if (!workspaceId) throw new Error("WorkspaceId does not exist");

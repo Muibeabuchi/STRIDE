@@ -61,7 +61,7 @@ export const EditTaskForm = ({
 }: EditTaskFormProps) => {
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
-  const projectId = useProjectId();
+  // const projectId = useProjectId(true);
   const [isEditingTask, setEditingTask] = useState(false);
   const editTask = useEditTask();
   const form = useForm<z.infer<typeof createTaskSchema>>({
@@ -90,7 +90,7 @@ export const EditTaskForm = ({
           // ? INSPECT THIS DATE METHOD
           dueDate: values.dueDate.toISOString(),
           assigneeId: values.assigneeId as Id<"users">,
-          projectId,
+          projectId: values.projectId as Id<"projects">,
         }
         // {
         //   onSuccess(projectId) {

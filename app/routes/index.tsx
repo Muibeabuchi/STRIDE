@@ -5,8 +5,6 @@ import { api } from "convex/_generated/api";
 import { fetchClerkAuth } from "@/utils/auth";
 
 export const Route = createFileRoute("/")({
-  pendingComponent: () => <Loader />,
-
   beforeLoad: async ({ context: { queryClient, convexQueryClient } }) => {
     const user:
       | {

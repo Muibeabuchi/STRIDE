@@ -64,12 +64,17 @@ const DataCalendar = ({ data }: DataCalendarProps) => {
   const navigate = useNavigate();
   const handleEventCardClick = (
     e: React.MouseEvent<HTMLDivElement>,
-    taskId: Id<"tasks">
+    taskId: Id<"tasks">,
+    workspaceId: Id<"workspaces">
   ) => {
     e.preventDefault();
     navigate({
       // ? Navigate to "workspaces/$workspaceId/tasks/$taskId"
-      to: "/workspaces/create",
+      to: "/workspaces/$workspaceId/tasks/$taskId",
+      params: {
+        workspaceId,
+        taskId,
+      },
     });
   };
   return (

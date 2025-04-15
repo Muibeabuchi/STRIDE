@@ -14,7 +14,11 @@ import {
 } from "convex/server";
 
 import { filter } from "convex-helpers/server/filter";
-import { populateMemberWithUser, populateProject } from "./model/projects";
+import {
+  populateMemberWithUser,
+  populateProject,
+  populateProjectWithImage,
+} from "./model/projects";
 import { mutation, query, QueryCtx } from "./_generated/server";
 import { getCurrentUser } from "./users";
 import { ensureTaskExists, validateTaskWorkspace } from "./model/tasks";
@@ -179,8 +183,12 @@ export const getById = authenticatedUserQuery({
     // ensure that the user is a member of the workspace
 
     // load the project associated with this task
-    const taskProject = await ctx.db.get(task.workspaceId);
+    const taskProject = await ctx.db.get(task.projectId);
     if (!taskProject) throw new ConvexError("TaskProject does not exist");
+    const projectWithImage = await populateProjectWithImage({
+      ctx,
+      project: taskProject,
+    });
 
     // load the task Assignee
     const taskAssignee = await ctx.db.get(task.assigneeId);
@@ -204,7 +212,7 @@ export const getById = authenticatedUserQuery({
 
     return {
       ...task,
-      project: taskProject,
+      project: projectWithImage,
       assignee,
     };
   },

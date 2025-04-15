@@ -1,6 +1,6 @@
 import { useParams } from "@tanstack/react-router";
 
-export function useProjectId(createTask: boolean) {
+export function useProjectId(createTask: boolean = true) {
   const params = useParams({
     from: "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId",
     shouldThrow: false,

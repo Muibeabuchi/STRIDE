@@ -11,7 +11,11 @@ interface EventCardProps {
   assignee: Id<"users">;
   project: PaginatedTasksResponse["taskProject"];
   status: "BACKLOG" | "TODO" | "IN_PROGRESS" | "DONE" | "IN_REVIEW";
-  onClick: (e: React.MouseEvent<HTMLDivElement>, taskId: Id<"tasks">) => void;
+  onClick: (
+    e: React.MouseEvent<HTMLDivElement>,
+    taskId: Id<"tasks">,
+    workspaceId: Id<"workspaces">
+  ) => void;
 }
 
 const statusColorMap: Record<TaskStatus, string> = {
@@ -33,7 +37,7 @@ const EventCard = ({
   return (
     <div className="px-2">
       <div
-        onClick={(e) => onClick(e, id)}
+        onClick={(e) => onClick(e, id, project.workspaceId)}
         className={cn(
           "p-1.5 text-sm bg-white text-primary shadow-2xl border-l-6 rounded-md flex flex-col gap-y-1.5 cursor-pointer hover:opacity-75 transition  ",
           statusColorMap[status]

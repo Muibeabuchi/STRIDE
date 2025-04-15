@@ -1,5 +1,5 @@
 import { ConvexError } from "convex/values";
-import { Id } from "../_generated/dataModel";
+import { Doc, Id } from "../_generated/dataModel";
 import { QueryCtx } from "../_generated/server";
 
 export async function populateProject({
@@ -19,6 +19,19 @@ export async function populateProject({
     })
   );
 }
+
+export async function populateProjectWithImage({
+  ctx,
+  project,
+}: {
+  ctx: QueryCtx;
+  project: Doc<"projects">;
+}) {
+  if (!project.projectImage) return { ...project, projectImage: "" };
+  const image = await ctx.storage.getUrl(project.projectImage);
+  return { ...project, projectImage: image ?? "" };
+}
+
 export async function populateMemberWithUser({
   ctx,
   userIds,

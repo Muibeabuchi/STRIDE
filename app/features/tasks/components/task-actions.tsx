@@ -55,7 +55,15 @@ const TaskActions = ({
   };
 
   //  TODO:  Write method for opening a task
-  const openTask = () => {};
+  const openTask = () => {
+    navigate({
+      to: "/workspaces/$workspaceId/tasks/$taskId",
+      params: {
+        taskId: id,
+        workspaceId,
+      },
+    });
+  };
 
   const handleOpenEditTaskModal = () => {
     openEditTaskModal(id);
@@ -67,7 +75,7 @@ const TaskActions = ({
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuItem onClick={() => {}} className="font-medium p-[10px]">
+          <DropdownMenuItem onClick={openTask} className="font-medium p-[10px]">
             <ExternalLinkIcon className="size-4 mr-w stroke-2" />
             Task Details
           </DropdownMenuItem>
