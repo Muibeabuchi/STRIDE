@@ -3,6 +3,7 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery, useSuspenseQueries } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { CreateTaskForm } from "./create-task-form";
+import { useTaskModalStore } from "@/store/store";
 
 export const useGetTaskFormData = () => {
   const workspaceId = useWorkspaceId();
@@ -27,6 +28,7 @@ export function CreateTaskFormWrapperSkeleton() {
 
 export function CreateTaskFormWrapper() {
   const response = useGetTaskFormData();
+  const { close } = useTaskModalStore();
 
   const [projects, members] = response;
 
@@ -51,6 +53,7 @@ export function CreateTaskFormWrapper() {
     <CreateTaskForm
       memberOptions={memberOptions}
       projectOptions={projectOptions}
+      onCancel={close}
     />
   );
 }

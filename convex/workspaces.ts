@@ -9,6 +9,7 @@ import {
   authorizedWorkspaceQuery,
 } from "./middleware";
 import { generateInviteCode } from "./utils";
+import { query } from "./_generated/server";
 
 // ! DATABASE QUERIES
 export const getUserWorkspaces = authenticatedUserQuery({
@@ -52,6 +53,17 @@ export const getWorkspaceInfo = authenticatedUserQuery({
     return {
       workspaceName: workspace.workspaceName,
     };
+  },
+});
+
+export const getWorkspaceName = query({
+  args: {
+    workspaceId: v.id("workspaces"),
+  },
+  handler: async (ctx, args) => {
+    const workspace = await ctx.db.get(args.workspaceId);
+    if (!workspace) throw new ConvexError("Workspace not found");
+    return workspace.workspaceName;
   },
 });
 
@@ -200,9 +212,7 @@ export const join = authenticatedUserMutation({
       )
       .unique();
 
-    if (!member) throw new ConvexError("Already a member in the workspace");
-    if (member.userId === ctx.userId)
-      throw new ConvexError("Already a member of the workspace");
+    if (member) throw new ConvexError("Already a member in the workspace");
 
     // add the user as a member to the workspace
     await ctx.db.insert("members", {

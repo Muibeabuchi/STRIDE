@@ -67,12 +67,14 @@ export const remove = authenticatedUserMutation({
       )
       .collect();
 
+    // only admins can delete a member
+    if (userMember.role !== "admin") throw new ConvexError("Unauthorized");
     //     if we are trying to delete another user, we must be admins
     if (userMember._id !== memberToBeDeleted._id && userMember.role !== "admin")
       throw new ConvexError("Unauthorized");
 
     //     prevent user from deleting himself if he is the last member in the workspace
-    if (allMembers.length <= 1)
+    if (allMembers.length <= 1 && userMember._id === memberToBeDeleted._id)
       throw new ConvexError("There must be at least 1 member in the workspace");
 
     //     delete the member if all requirements has been fulfilled
@@ -90,7 +92,7 @@ export const updateRole = authenticatedUserMutation({
     // grab the member to be edited
     const memberToBeEdited = await ctx.db.get(args.memberId);
     if (!memberToBeEdited)
-      throw new ConvexError("Error while updating the member");
+      throw new ConvexError("User is not a member of the workspace");
 
     //     grab the users member data
     const userMember = await ctx.db
@@ -111,11 +113,13 @@ export const updateRole = authenticatedUserMutation({
       )
       .collect();
 
-    //     if we are trying to delete another user, we must be admins
+    // if we are trying to update our role to member, there must at least 1 admin in the workspace
+
+    //     if we are trying to update another user, we must be admins
     if (userMember.role !== "admin") throw new ConvexError("Unauthorized");
 
-    // prevent user from deleting himself if he is the last member in the workspace
-    if (allMembers.length <= 1)
+    // prevent user from updating  his role to member if he is the last member in the workspace
+    if (allMembers.length <= 1 && args.memberRole === "member")
       throw new ConvexError(
         "Cannot downgrade the only member in the workspace"
       );
@@ -124,6 +128,7 @@ export const updateRole = authenticatedUserMutation({
     await ctx.db.patch(memberToBeEdited._id, {
       role: args.memberRole,
     });
+
     return memberToBeEdited;
   },
 });

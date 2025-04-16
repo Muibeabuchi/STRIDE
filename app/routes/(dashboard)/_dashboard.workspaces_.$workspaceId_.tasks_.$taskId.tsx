@@ -1,5 +1,6 @@
 import { DottedSeparator } from "@/components/doted-separator";
 import TaskBreadCrumbs from "@/features/tasks/components/task-breadcrumbs";
+import TaskDescription from "@/features/tasks/components/task-description";
 import TaskOverview from "@/features/tasks/components/task-overview";
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -54,8 +55,9 @@ function RouteComponent() {
       <TaskBreadCrumbs task={task} project={task.project} />
       <DottedSeparator className="my-6" />
 
-      <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <TaskOverview task={task} />
+        <TaskDescription task={task} />
       </div>
     </div>
   );

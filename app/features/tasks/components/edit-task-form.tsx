@@ -61,14 +61,12 @@ export const EditTaskForm = ({
 }: EditTaskFormProps) => {
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
-  // const projectId = useProjectId(true);
   const [isEditingTask, setEditingTask] = useState(false);
   const editTask = useEditTask();
   const form = useForm<z.infer<typeof createTaskSchema>>({
     resolver: zodResolver(createTaskSchema.omit({ description: true })),
     defaultValues: {
       assigneeId: initialValues.assigneeId,
-      // description: initialValues.description,
       dueDate: new Date(initialValues.dueDate),
       projectId: initialValues.projectId,
       //! Watch out for this typescript assertion
@@ -80,25 +78,17 @@ export const EditTaskForm = ({
   const onSubmit = async (values: z.infer<typeof createTaskSchema>) => {
     try {
       setEditingTask(true);
-      await editTask(
-        {
-          workspaceId,
-          taskId,
-          taskStatus: values.status,
-          taskName: values.taskName,
-          taskDescription: values.description,
-          // ? INSPECT THIS DATE METHOD
-          dueDate: values.dueDate.toISOString(),
-          assigneeId: values.assigneeId as Id<"users">,
-          projectId: values.projectId as Id<"projects">,
-        }
-        // {
-        //   onSuccess(projectId) {
-        //     form.reset();
-        //     onCancel?.();
-        //   },
-        // }
-      );
+      await editTask({
+        workspaceId,
+        taskId,
+        taskStatus: values.status,
+        taskName: values.taskName,
+        taskDescription: values.description,
+        // ? INSPECT THIS DATE METHOD
+        dueDate: values.dueDate.toISOString(),
+        assigneeId: values.assigneeId as Id<"users">,
+        projectId: values.projectId as Id<"projects">,
+      });
       form.reset();
       onCancel?.();
     } catch (error) {

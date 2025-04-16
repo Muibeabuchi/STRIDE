@@ -74,24 +74,12 @@ export const UpdateProjectForm = ({
       if (workspaceImageRef.current)
         URL.revokeObjectURL(workspaceImageRef.current.src);
 
-      updateProject(
-        {
-          projectName: values.name || initialValues.projectName,
-          projectImage: image ? await handleSendImage(image) : undefined,
-          projectId: initialValues._id,
-          workspaceId: initialValues.workspaceId,
-        },
-        {
-          onSuccess() {
-            navigate({
-              to: "/workspaces/$workspaceId",
-              params: {
-                workspaceId: initialValues.workspaceId,
-              },
-            });
-          },
-        }
-      );
+      updateProject({
+        projectName: values.name || initialValues.projectName,
+        projectImage: image ? await handleSendImage(image) : undefined,
+        projectId: initialValues._id,
+        workspaceId: initialValues.workspaceId,
+      });
     } catch (error) {
       toast.error(`There was an error while uploading the image  ${error}`);
     }

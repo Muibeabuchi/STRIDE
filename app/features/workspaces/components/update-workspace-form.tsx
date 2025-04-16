@@ -85,22 +85,11 @@ export const UpdateWorkspaceForm = ({
       );
       if (workspaceImageRef.current)
         URL.revokeObjectURL(workspaceImageRef.current.src);
-      updateWorkspace(
-        {
-          workspaceName: values.name,
-          workspaceImageId: storageId,
-          workspaceId,
-        },
-        {
-          onSuccess() {
-            // form.reset();
-            navigate({
-              to: "/workspaces/$workspaceId",
-              params: { workspaceId },
-            });
-          },
-        }
-      );
+      updateWorkspace({
+        workspaceName: values.name,
+        workspaceImageId: storageId,
+        workspaceId,
+      });
     } catch (error) {
       toast.error(`There was an error while uploading the image  ${error}`);
     }
@@ -132,17 +121,7 @@ export const UpdateWorkspaceForm = ({
     const ok = await confirmResetWorkspaceLink();
     if (!ok) return;
 
-    resetWorkspaceLink(
-      { workspaceId },
-      {
-        onSuccess() {
-          navigate({
-            to: "/workspaces/$workspaceId",
-            params: { workspaceId },
-          }); // redirect to the workspace homepage after successfully resetting workspace link
-        },
-      }
-    );
+    resetWorkspaceLink({ workspaceId });
   };
 
   const [, setValue] = useCopyToClipboard();

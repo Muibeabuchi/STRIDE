@@ -57,13 +57,19 @@ const TaskBreadCrumbs = ({ project, task }: TaskBreadCrumbsProps) => {
           projectId: project._id,
           workspaceId,
         }}
+        search={(prev) => ({
+          ...prev,
+          projectId: project._id,
+        })}
       >
-        <p className="lg:text-lg text-sm font-semibold text-muted-foreground hover:opacity-75 transition  ">
+        <p className="lg:text-lg text-xs font-semibold text-muted-foreground hover:opacity-75 transition  ">
           {project.projectName}
         </p>
       </Link>
       <ChevronRightIcon className="size-4 lg:size:5" />
-      <p className="text-sm lg:text-lg font-semibold">{task.taskName}</p>
+      <p className="text-xs bg-foreground/10 px-2 py-1 rounded-md lg:text-lg font-semibold truncate">
+        {task.taskName}
+      </p>
       <Button
         className="ml-auto "
         variant="destructive"

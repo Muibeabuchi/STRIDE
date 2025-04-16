@@ -9,20 +9,20 @@ import { DottedSeparator } from "@/components/doted-separator";
 import { Button } from "@/components/ui/button";
 import { useJoinWorkspace } from "@/features/workspaces/api/use-join-workspace";
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
+import { Id } from "convex/_generated/dataModel";
 // import { useWorkspaceId } from "../hooks/use-workspace-id";
 
 interface JoinWorkspaceFormProps {
   workspaceName: string;
   workspaceJoinCode: string;
+  workspaceId: Id<"workspaces">;
 }
 
 export const JoinWorkspaceForm = ({
   workspaceJoinCode,
   workspaceName,
+  workspaceId,
 }: JoinWorkspaceFormProps) => {
-  const { workspaceId } = useParams({
-    from: "/(dashboard)/_dashboard/workspaces/$workspaceId",
-  });
   const navigate = useNavigate();
 
   const { mutate: joinWorkspace, isPending: isJoiningWorkspace } =
@@ -35,8 +35,11 @@ export const JoinWorkspaceForm = ({
         workspaceInviteCode: workspaceJoinCode,
       },
       {
-        onSuccess() {
-          navigate({ to: `/workspaces/$workspaceId`, params: { workspaceId } });
+        onSuccess(workspace) {
+          navigate({
+            to: `/workspaces/$workspaceId`,
+            params: { workspaceId: workspace._id },
+          });
         },
       }
     );

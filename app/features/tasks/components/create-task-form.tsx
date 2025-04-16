@@ -96,13 +96,18 @@ export const CreateTaskForm = ({
         projectId: values.projectId as Id<"projects">,
       },
       {
-        onSuccess(projectId) {
-          form.reset();
+        onSuccess(taskId) {
           onCancel?.();
-          // TODO: Redirect to the new task page
-          // navigate({
-          //   to:""
-          // })
+          form.reset();
+          setTimeout(() => {
+            navigate({
+              to: "/workspaces/$workspaceId/tasks/$taskId",
+              params: {
+                workspaceId,
+                taskId,
+              },
+            });
+          });
         },
       }
     );
