@@ -71,6 +71,7 @@ export const taskValidator = schema.tables.tasks.validator.fields;
 export type Tasks = Doc<"tasks">;
 export type PaginatedTasksResponse = (typeof api.tasks.get._returnType)[number];
 export type getTaskByIdResponse = typeof api.tasks.getById._returnType;
+export type getProjectAnalytics = typeof api.projects.getProjectAnalytics._returnType;
 
 // const board = schema.tables.boards.validator;
 // const board = schema.tables.boards.validator;

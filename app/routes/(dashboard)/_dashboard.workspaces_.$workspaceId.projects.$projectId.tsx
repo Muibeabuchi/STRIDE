@@ -18,6 +18,9 @@ import {
   StatusSchemaType,
   taskViewSearchSchema,
 } from "../../features/tasks/schema";
+import { Suspense } from "react";
+import Analytics from "@/features/projects/components/project-analytics";
+import ProjectAnalytics from "@/features/projects/components/project-analytics";
 
 export const Route = createFileRoute(
   "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId"
@@ -31,11 +34,9 @@ export const Route = createFileRoute(
       };
     },
   },
-
   loaderDeps: ({ search }) => ({
     ...search,
   }),
-
   component: RouteComponent,
   loader: async (ctx) => {
     const {
@@ -46,6 +47,13 @@ export const Route = createFileRoute(
     // prefetch other data that might be needed in this route-----------------
     ctx.context.queryClient.prefetchQuery(
       convexQuery(api.members.get, { workspaceId: params.workspaceId })
+    );
+
+    ctx.context.queryClient.prefetchQuery(
+      convexQuery(api.projects.getProjectAnalytics, {
+        workspaceId: params.workspaceId,
+        projectId: params.projectId,
+      })
     );
 
     await ctx.context.queryClient.ensureQueryData(
@@ -143,6 +151,10 @@ function RouteComponent() {
           </Button>
         </div>
       </div>
+      {/* Analytics component */}
+      <Suspense fallback={<p>Loading Project Analytics page</p>}>
+        <ProjectAnalytics workspaceId={workspaceId} projectId={projId} />
+      </Suspense>
       <TaskViewSwitcher
         projectId={projectId}
         workspaceId={workspaceId}

@@ -20,7 +20,6 @@ import {
   populateProjectWithImage,
 } from "./model/projects";
 import { mutation, query, QueryCtx } from "./_generated/server";
-import { getCurrentUser } from "./users";
 import { ensureTaskExists, validateTaskWorkspace } from "./model/tasks";
 
 export const create = authorizedWorkspaceMutation({
@@ -117,7 +116,7 @@ export const get = authorizedWorkspaceQuery({
     if (assigneeId !== undefined) {
       orderedQuery = filter(
         orderedQuery,
-        (tasks) => tasks.assigneeId === ctx.member.userId
+        (tasks) => tasks.assigneeId === assigneeId
       );
     }
     if (status !== undefined) {

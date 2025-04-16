@@ -1,10 +1,12 @@
 import { ConvexError, v } from "convex/values";
+import { subMonths, startOfMonth, endOfMonth } from "date-fns";
 
 import {
   authenticatedUserQuery,
   authorizedWorkspaceMutation,
   authorizedWorkspaceQuery,
 } from "./middleware";
+import { filter } from "convex-helpers/server/filter";
 
 export const get = authorizedWorkspaceQuery({
   args: {
@@ -116,5 +118,165 @@ export const remove = authorizedWorkspaceMutation({
     if (!project) throw new ConvexError("Project does not exist");
 
     await ctx.db.delete(args.projectId);
+  },
+});
+
+export const getProjectAnalytics = authorizedWorkspaceQuery({
+  args: {
+    projectId: v.id("projects"),
+  },
+  async handler(ctx, { projectId, workspaceId }) {
+    const now = new Date();
+    const thisMonthStart = startOfMonth(now);
+    const thisMonthEnd = endOfMonth(now);
+    const previousMonthStart = startOfMonth(subMonths(now, 1));
+    const previousMonthEnd = endOfMonth(subMonths(now, 1));
+
+    const thisMonthTasks = await filter(
+      ctx.db
+        .query("tasks")
+        .withIndex("by_WorkspaceId_ProjectId", (q) =>
+          q.eq("workspaceId", workspaceId).eq("projectId", projectId)
+        ),
+      (q) =>
+        q._creationTime <= thisMonthEnd.getTime() &&
+        q._creationTime >= thisMonthStart.getTime()
+    ).collect();
+
+    const lastMonthTasks = await filter(
+      ctx.db
+        .query("tasks")
+        .withIndex("by_WorkspaceId_ProjectId", (q) =>
+          q.eq("workspaceId", workspaceId).eq("projectId", projectId)
+        ),
+      (q) =>
+        q._creationTime <= previousMonthEnd.getTime() &&
+        q._creationTime >= previousMonthStart.getTime()
+    ).collect();
+
+    const taskDifference = thisMonthTasks.length - lastMonthTasks.length;
+
+    const thisMonthAssignedTasks = await filter(
+      ctx.db
+        .query("tasks")
+        .withIndex("by_WorkspaceId_ProjectId", (q) =>
+          q.eq("workspaceId", workspaceId).eq("projectId", projectId)
+        ),
+      (q) =>
+        q._creationTime <= thisMonthEnd.getTime() &&
+        q._creationTime >= thisMonthStart.getTime() &&
+        q.assigneeId === ctx.user._id
+    ).collect();
+
+    const lastMonthAssignedTasks = await filter(
+      ctx.db
+        .query("tasks")
+        .withIndex("by_WorkspaceId_ProjectId", (q) =>
+          q.eq("workspaceId", workspaceId).eq("projectId", projectId)
+        ),
+      (q) =>
+        q._creationTime <= previousMonthEnd.getTime() &&
+        q._creationTime >= previousMonthStart.getTime() &&
+        q.assigneeId === ctx.user._id
+    ).collect();
+
+    const assignedTaskDifference =
+      thisMonthAssignedTasks.length - lastMonthAssignedTasks.length;
+
+    const thisMonthIncompleteTasks = await filter(
+      ctx.db
+        .query("tasks")
+        .withIndex("by_WorkspaceId_ProjectId", (q) =>
+          q.eq("workspaceId", workspaceId).eq("projectId", projectId)
+        ),
+      (q) =>
+        q._creationTime <= thisMonthEnd.getTime() &&
+        q._creationTime >= thisMonthStart.getTime() &&
+        q.status !== "DONE"
+    ).collect();
+
+    const lastMonthIncompleteTasks = await filter(
+      ctx.db
+        .query("tasks")
+        .withIndex("by_WorkspaceId_ProjectId", (q) =>
+          q.eq("workspaceId", workspaceId).eq("projectId", projectId)
+        ),
+      (q) =>
+        q._creationTime <= previousMonthEnd.getTime() &&
+        q._creationTime >= previousMonthStart.getTime() &&
+        q.status !== "DONE"
+    ).collect();
+
+    const incompleteTaskDifference =
+      thisMonthIncompleteTasks.length - lastMonthIncompleteTasks.length;
+
+    const thisMonthCompleteTasks = await filter(
+      ctx.db
+        .query("tasks")
+        .withIndex("by_WorkspaceId_ProjectId", (q) =>
+          q.eq("workspaceId", workspaceId).eq("projectId", projectId)
+        ),
+      (q) =>
+        q._creationTime <= thisMonthEnd.getTime() &&
+        q._creationTime >= thisMonthStart.getTime() &&
+        q.status === "DONE"
+    ).collect();
+
+    const lastMonthCompleteTasks = await filter(
+      ctx.db
+        .query("tasks")
+        .withIndex("by_WorkspaceId_ProjectId", (q) =>
+          q.eq("workspaceId", workspaceId).eq("projectId", projectId)
+        ),
+      (q) =>
+        q._creationTime <= previousMonthEnd.getTime() &&
+        q._creationTime >= previousMonthStart.getTime() &&
+        q.status === "DONE"
+    ).collect();
+
+    const completedTaskDifference =
+      thisMonthCompleteTasks.length - lastMonthCompleteTasks.length;
+
+    const thisMonthOverdueTasks = await filter(
+      ctx.db
+        .query("tasks")
+        .withIndex("by_WorkspaceId_ProjectId", (q) =>
+          q.eq("workspaceId", workspaceId).eq("projectId", projectId)
+        ),
+      (q) =>
+        q._creationTime <= thisMonthEnd.getTime() &&
+        q._creationTime >= thisMonthStart.getTime() &&
+        q.status !== "DONE" &&
+        new Date(q.dueDate) <= now
+    ).collect();
+
+    const lastMonthOverdueTasks = await filter(
+      ctx.db
+        .query("tasks")
+        .withIndex("by_WorkspaceId_ProjectId", (q) =>
+          q.eq("workspaceId", workspaceId).eq("projectId", projectId)
+        ),
+      (q) =>
+        q._creationTime <= previousMonthEnd.getTime() &&
+        q._creationTime >= previousMonthStart.getTime() &&
+        q.status !== "DONE" &&
+        new Date(q.dueDate) <= now
+    ).collect();
+
+    const overdueTaskDifference =
+      thisMonthOverdueTasks.length - lastMonthOverdueTasks.length;
+
+    return {
+      completedTaskDifference,
+      completedTaskCount: thisMonthCompleteTasks.length,
+      overdueTaskDifference,
+      overDueTaskCount: thisMonthOverdueTasks.length,
+      incompleteTaskDifference,
+      incompleteTaskCount: thisMonthIncompleteTasks.length,
+      assignedTaskDifference,
+      assignedTaskCount: thisMonthAssignedTasks.length,
+      taskDifference,
+      taskCount: thisMonthTasks.length,
+    };
   },
 });

@@ -37,7 +37,7 @@ export const authorizedWorkspaceQuery = customQuery(query, {
       .unique();
     if (!member) throw new ConvexError("Unauthorized");
 
-    return { ctx: { member }, args: { workspaceId: args.workspaceId } };
+    return { ctx: { member, user }, args: { workspaceId: args.workspaceId } };
   },
 });
 
