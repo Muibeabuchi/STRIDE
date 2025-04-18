@@ -80,6 +80,7 @@ function RouteComponent() {
       to: ".",
       search: {
         taskView: tabSchema.parse(tab),
+        projectId,
         // projectId,
       },
     });

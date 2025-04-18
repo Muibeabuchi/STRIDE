@@ -1,9 +1,17 @@
+// ? THIS HOOK IS GOING TO ONLY TO BE MOUNTED ON THE HOME PAGE
+
+import { convexQuery } from "@convex-dev/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
+import { useQuery } from "convex-helpers/react/cache";
 import { StatusSchemaType } from "../schema";
-import { useQuery } from "convex/react";
 
-export function useGetTasks({
+interface useGetTasksProps {
+  workspaceId: Id<"workspaces">;
+}
+
+export function useGetHomePageTasks({
   workspaceId,
   status = undefined,
   assigneeId,
@@ -39,3 +47,12 @@ export function useGetTasks({
   //   })
   // );
 }
+
+// export function useGetHomePageTasks({ workspaceId }: useGetTasksProps) {
+//   return useSuspenseQuery(
+//     convexQuery(api.tasks.get, {
+//       workspaceId,
+//       projectId: undefined,
+//     })
+//   );
+// }

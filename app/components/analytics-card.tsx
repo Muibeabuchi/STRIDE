@@ -19,7 +19,7 @@ const AnalyticsCard = ({
   const Icon = variant === "up" ? ChevronUpIcon : ChevronDownIcon;
 
   return (
-    <Card className="shadow-none border-none w-full">
+    <Card className="shadow-none border-none w-full flex-1 flex shrink-0">
       <CardHeader>
         <div className="flex items-center w-full gap-x-2.5">
           <CardDescription className="flex items-center w-full gap-x-2 font-medium overflow-hidden">
@@ -30,14 +30,14 @@ const AnalyticsCard = ({
             <span
               className={cn(
                 iconColor,
-                "truncate text-xs lg:text-base font-medium"
+                "truncate text-xs lg:text-base w-full font-medium"
               )}
             >
               {increaseValue}
             </span>
           </div>
         </div>
-        <CardTitle className=" font-medium">{value}</CardTitle>
+        <CardTitle className=" font-medium w-full">{value}</CardTitle>
       </CardHeader>
     </Card>
   );

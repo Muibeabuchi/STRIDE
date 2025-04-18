@@ -51,6 +51,7 @@ function TasksPage() {
       to: ".",
       search: {
         taskView: tabSchema.parse(tab),
+        projectId,
       },
     });
   };

@@ -1,43 +1,37 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { getProjectAnalytics } from "convex/schema";
-import { useGetProjectAnalytics } from "../api/use-get-project-analytics";
 import { Id } from "convex/_generated/dataModel";
 import AnalyticsCard from "@/components/analytics-card";
 import { DottedSeparator } from "@/components/doted-separator";
+import { useGetWorkspaceAnalytics } from "../api/use-get-workspaces-analytics";
 
-interface ProjectAnalyticsProps {
+interface WorkspaceAnalyticsProps {
   workspaceId: Id<"workspaces">;
-  projectId: Id<"projects">;
 }
 
-const ProjectAnalytics = ({
-  projectId,
-  workspaceId,
-}: ProjectAnalyticsProps) => {
-  const { data: dataAnalyticsData } = useGetProjectAnalytics({
-    projectId,
-    workspaceId,
-  });
+const WorkspaceAnalytics = ({ workspaceId }: WorkspaceAnalyticsProps) => {
+  const { data: workspaceAnalyticsData } =
+    useGetWorkspaceAnalytics(workspaceId);
   return (
     <ScrollArea className="border rounded-lg w-full whitespace-nowrap shrink-0">
       <div className="w-full flex flex-row">
         <div className="flex w-full items-center flex-1 shrink-0 ">
           <AnalyticsCard
             title="Total Tasks"
-            value={dataAnalyticsData.taskCount}
-            variant={dataAnalyticsData.taskDifference > 0 ? "up" : "down"}
-            increaseValue={dataAnalyticsData.taskDifference}
+            value={workspaceAnalyticsData.taskCount}
+            variant={workspaceAnalyticsData.taskDifference > 0 ? "up" : "down"}
+            increaseValue={workspaceAnalyticsData.taskDifference}
           />
           <DottedSeparator direction="vertical" />
         </div>
         <div className="flex w-full items-center flex-1">
           <AnalyticsCard
             title="Assigned Tasks"
-            value={dataAnalyticsData.assignedTaskCount}
+            value={workspaceAnalyticsData.assignedTaskCount}
             variant={
-              dataAnalyticsData.assignedTaskDifference > 0 ? "up" : "down"
+              workspaceAnalyticsData.assignedTaskDifference > 0 ? "up" : "down"
             }
-            increaseValue={dataAnalyticsData.assignedTaskDifference}
+            increaseValue={workspaceAnalyticsData.assignedTaskDifference}
           />
           <DottedSeparator direction="vertical" />
         </div>
@@ -45,33 +39,35 @@ const ProjectAnalytics = ({
         <div className="flex w-full items-center flex-1">
           <AnalyticsCard
             title="Completed Tasks"
-            value={dataAnalyticsData.completedTaskCount}
+            value={workspaceAnalyticsData.completedTaskCount}
             variant={
-              dataAnalyticsData.completedTaskDifference > 0 ? "up" : "down"
+              workspaceAnalyticsData.completedTaskDifference > 0 ? "up" : "down"
             }
-            increaseValue={dataAnalyticsData.completedTaskDifference}
+            increaseValue={workspaceAnalyticsData.completedTaskDifference}
           />
           <DottedSeparator direction="vertical" />
         </div>
         <div className="flex w-full items-center flex-1">
           <AnalyticsCard
             title="UnCompleted Tasks"
-            value={dataAnalyticsData.incompleteTaskCount}
+            value={workspaceAnalyticsData.incompleteTaskCount}
             variant={
-              dataAnalyticsData.incompleteTaskDifference > 0 ? "up" : "down"
+              workspaceAnalyticsData.incompleteTaskDifference > 0
+                ? "up"
+                : "down"
             }
-            increaseValue={dataAnalyticsData.incompleteTaskDifference}
+            increaseValue={workspaceAnalyticsData.incompleteTaskDifference}
           />
           <DottedSeparator direction="vertical" />
         </div>
         <div className="flex items-center flex-1">
           <AnalyticsCard
             title="OverDue Tasks"
-            value={dataAnalyticsData.overDueTaskCount}
+            value={workspaceAnalyticsData.overDueTaskCount}
             variant={
-              dataAnalyticsData.overdueTaskDifference > 0 ? "up" : "down"
+              workspaceAnalyticsData.overdueTaskDifference > 0 ? "up" : "down"
             }
-            increaseValue={dataAnalyticsData.overdueTaskDifference}
+            increaseValue={workspaceAnalyticsData.overdueTaskDifference}
           />
         </div>
       </div>
@@ -80,4 +76,4 @@ const ProjectAnalytics = ({
   );
 };
 
-export default ProjectAnalytics;
+export default WorkspaceAnalytics;

@@ -51,6 +51,10 @@ const TaskActions = ({
         projectId,
         workspaceId,
       },
+      search: (search) => ({
+        ...search,
+        projectId,
+      }),
     });
   };
 
