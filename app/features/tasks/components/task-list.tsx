@@ -1,30 +1,27 @@
-import { PlusIcon, CalendarIcon, SettingsIcon } from "lucide-react";
-import { PaginatedTasksResponse } from "convex/schema";
+import { PlusIcon, CalendarIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { DottedSeparator } from "@/components/doted-separator";
 
-import { TaskStatus } from "../schema";
 import { Link } from "@tanstack/react-router";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatDistanceToNow } from "date-fns";
 import { Id } from "convex/_generated/dataModel";
-import { useGetHomePageTasks } from "../api/use-get-tasks";
 import { useTaskModalStore } from "@/store/store";
-// import { useGetTasks } from "../hooks/use-get-tasks";
+import { useGetTasks } from "../hooks/use-get-tasks";
+import TasksLoadingSkeleton from "./task-list-skeleton";
 interface TaskListProps {
   workspaceId: Id<"workspaces">;
 }
 
 const TaskList = ({ workspaceId }: TaskListProps) => {
-  const { tasks: homeTasks } = useGetHomePageTasks({ workspaceId });
-  // const { tasks: homeTasks } = useGetTasks({
-  //   workspaceId,
-  //   projectId: undefined,
-  // });
+  const { tasks: homeTasks } = useGetTasks({
+    workspaceId,
+    projectId: undefined,
+  });
   const { open } = useTaskModalStore();
 
-  if (homeTasks === undefined) return null;
+  if (homeTasks === undefined) return <TasksLoadingSkeleton />;
 
   if (homeTasks === null) return <p>Error loading tasks</p>;
 
@@ -50,7 +47,7 @@ const TaskList = ({ workspaceId }: TaskListProps) => {
                   workspaceId: task.workspaceId,
                 }}
               >
-                <Card className="shadow-none rounded-lg hover:opacity-75 transition">
+                <Card className="shadow-none rounded-lg hover:opacity-75 transition p-0">
                   <CardContent className="p-4">
                     <p className="truncate text-lg font-medium">
                       {task.taskName}

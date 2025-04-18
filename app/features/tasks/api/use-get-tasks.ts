@@ -13,23 +13,11 @@ interface useGetTasksProps {
 
 export function useGetHomePageTasks({
   workspaceId,
-  status = undefined,
-  assigneeId,
-  projectId,
-  dueDate,
 }: {
   workspaceId: Id<"workspaces">;
-  status?: StatusSchemaType;
-  assigneeId?: Id<"users">;
-  projectId?: Id<"projects">;
-  dueDate?: string;
 }) {
   const tasks = useQuery(api.tasks.get, {
     workspaceId,
-    status: status === "ALL" ? undefined : status,
-    assigneeId: assigneeId,
-    projectId: projectId,
-    dueDate,
   });
 
   return {
@@ -37,15 +25,6 @@ export function useGetHomePageTasks({
     taskIsPending: tasks === undefined,
     taskIsError: tasks === null,
   };
-  // return useSuspenseQuery(
-  //   convexQuery(api.tasks.get, {
-  //     workspaceId,
-  //     status: status === "ALL" ? undefined : status,
-  //     assigneeId: assigneeId as Id<"users"> | undefined,
-  //     projectId: projectId as Id<"projects"> | undefined,
-  //     dueDate,
-  //   })
-  // );
 }
 
 // export function useGetHomePageTasks({ workspaceId }: useGetTasksProps) {

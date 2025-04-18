@@ -1,6 +1,7 @@
 import {
   authenticatedUserMutation,
   authenticatedUserQuery,
+  authorizedWorkspaceMutation,
 } from "./middleware";
 import { ConvexError, v } from "convex/values";
 
@@ -38,7 +39,7 @@ export const get = authenticatedUserQuery({
   },
 });
 
-export const remove = authenticatedUserMutation({
+export const remove = authorizedWorkspaceMutation({
   args: {
     memberId: v.id("members"),
   },
@@ -53,8 +54,8 @@ export const remove = authenticatedUserMutation({
       .query("members")
       .withIndex("by_userId_by_workspaceId", (q) =>
         q
-          .eq("userId", ctx.userId)
-          .eq("workspaceId", memberToBeDeleted.workspaceId)
+          .eq("userId", ctx.member.userId)
+          .eq("workspaceId", ctx.member.workspaceId)
       )
       .unique();
     if (!userMember) throw new ConvexError("Unauthorized");
@@ -83,7 +84,7 @@ export const remove = authenticatedUserMutation({
   },
 });
 
-export const updateRole = authenticatedUserMutation({
+export const updateRole = authorizedWorkspaceMutation({
   args: {
     memberRole: v.union(v.literal("admin"), v.literal("member")),
     memberId: v.id("members"),
@@ -94,29 +95,31 @@ export const updateRole = authenticatedUserMutation({
     if (!memberToBeEdited)
       throw new ConvexError("User is not a member of the workspace");
 
-    //     grab the users member data
-    const userMember = await ctx.db
-      .query("members")
-      .withIndex("by_userId_by_workspaceId", (q) =>
-        q
-          .eq("userId", ctx.userId)
-          .eq("workspaceId", memberToBeEdited.workspaceId)
-      )
-      .unique();
-    if (!userMember) throw new ConvexError("Unauthorized");
+    // // grab the users member data
+    // const userMember = await ctx.db
+    //   .query("members")
+    //   .withIndex("by_userId_by_workspaceId", (q) =>
+    //     q
+    //       .eq("userId", ctx.member.userId)
+    //       .eq("workspaceId", memberToBeEdited.workspaceId)
+    //   )
+    //   .unique();
+    // if (!userMember) throw new ConvexError("Unauthorized");
 
     //     grab the length of all the members in the workspace
     const allMembers = await ctx.db
       .query("members")
-      .withIndex("by_workspaceId", (q) =>
-        q.eq("workspaceId", memberToBeEdited.workspaceId)
-      )
+      .withIndex("by_workspaceId", (q) => q.eq("workspaceId", args.workspaceId))
       .collect();
 
-    // if we are trying to update our role to member, there must at least 1 admin in the workspace
-
     //     if we are trying to update another user, we must be admins
-    if (userMember.role !== "admin") throw new ConvexError("Unauthorized");
+    if (ctx.member.role !== "admin") throw new ConvexError("Unauthorized");
+
+    console.log(ctx.member.role);
+    // emsure there is at least 1 admin in the workspace
+    const admins = allMembers.filter((member) => member.role === "admin");
+    if (admins.length === 1 && args.memberRole === "member")
+      throw new ConvexError("There must be at least 1 admin in the workspace");
 
     // prevent user from updating  his role to member if he is the last member in the workspace
     if (allMembers.length <= 1 && args.memberRole === "member")

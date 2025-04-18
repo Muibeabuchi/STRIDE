@@ -112,6 +112,15 @@ export const CreateTaskForm = ({
                 workspaceId,
                 taskId,
               },
+              // search: (search) => {
+              //   return {
+              //     ...search,
+              //     status: values.status,
+              //     assigneeId: values.assigneeId,
+              //     projectId: values.projectId,
+              //     dueDate: values.dueDate,
+              //   };
+              // },
             });
           });
         },
@@ -298,7 +307,7 @@ export const CreateTaskForm = ({
                 Cancel
               </Button>
               <Button
-                disabled={form.formState.isSubmitting}
+                disabled={form.formState.isSubmitting || isCreatingTask}
                 type="submit"
                 size="lg"
               >

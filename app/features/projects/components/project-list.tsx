@@ -1,6 +1,5 @@
 import { Id } from "convex/_generated/dataModel";
-import { formatDistanceToNow } from "date-fns";
-import { PlusIcon, CalendarIcon, SettingsIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
@@ -17,6 +16,7 @@ interface ProjectListProps {
 const ProjectList = ({ workspaceId }: ProjectListProps) => {
   const { data: projects } = useGetWorkspaceProjects(workspaceId);
   const { open } = useProjectModalStore();
+
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-white border rounded-lg p-4">
@@ -39,7 +39,7 @@ const ProjectList = ({ workspaceId }: ProjectListProps) => {
                   workspaceId: project.workspaceId,
                 }}
               >
-                <Card className="shadow-none rounded-lg hover:opacity-75 transition">
+                <Card className="shadow-none rounded-lg hover:opacity-75 transition p-0">
                   <CardContent className="p-4 flex items-center gap-x-2.5">
                     <ProjectAvatar
                       className="size-12"

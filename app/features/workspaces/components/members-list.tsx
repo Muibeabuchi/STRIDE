@@ -1,8 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, MoreVerticalIcon } from "lucide-react";
-import { getRouteApi, Link } from "@tanstack/react-router";
 import { DottedSeparator } from "@/components/doted-separator";
 import { useGetUserWorkspaceIdMembers } from "@/features/members/api/use-get-members";
 import { Fragment } from "react";
@@ -19,6 +17,10 @@ import { Id } from "convex/_generated/dataModel";
 import { useUpdateMember } from "@/features/members/api/use-update-member";
 import { useConfirm } from "@/hooks/use-confirm";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 export const MembersList = ({
   workspaceId,
@@ -26,6 +28,7 @@ export const MembersList = ({
   workspaceId: Id<"workspaces">;
 }) => {
   const { data: members } = useGetUserWorkspaceIdMembers(workspaceId);
+  const navigate = useNavigate();
 
   const { mutate: removeMember, isPending: isRemovingMember } =
     useDeleteMember();
@@ -41,9 +44,18 @@ export const MembersList = ({
 
   const handleUpdateMember = (
     memberId: Id<"members">,
-    role: "admin" | "member"
+    role: "admin" | "member",
+    memberRole: "admin" | "member"
   ) => {
-    updateMember({ memberId, memberRole: role });
+    if (role === memberRole) {
+      toast(
+        `The user is  already ${
+          memberRole === "admin" ? "an" : "a"
+        } ${memberRole} `
+      );
+      return;
+    }
+    updateMember({ memberId, memberRole: role, workspaceId });
   };
 
   const handleRemoveMember = async (memberId: Id<"members">) => {
@@ -52,6 +64,13 @@ export const MembersList = ({
     if (!ok) return;
     removeMember({
       memberId,
+      workspaceId,
+    });
+    navigate({
+      to: "/workspaces/$workspaceId",
+      params: {
+        workspaceId,
+      },
     });
   };
 
@@ -99,6 +118,18 @@ export const MembersList = ({
                   </p>
                 </div>
 
+                {/* create a badge for displaying the members role */}
+                <Badge
+                  variant={"outline"}
+                  className={cn(
+                    "ml-3 self-end",
+                    member.role === "admin" && "bg-green-500",
+                    member.role === "member" && "bg-gray-500"
+                  )}
+                >
+                  {member.role}
+                </Badge>
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -118,14 +149,18 @@ export const MembersList = ({
                   >
                     <DropdownMenuItem
                       className={"font-medium cursor-pointer"}
-                      onClick={() => handleUpdateMember(member._id, "admin")}
+                      onClick={() =>
+                        handleUpdateMember(member._id, "admin", member.role)
+                      }
                       disabled={isUpdatingMember}
                     >
                       Set as Administrator
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className={"font-medium cursor-pointer"}
-                      onClick={() => handleUpdateMember(member._id, "member")}
+                      onClick={() =>
+                        handleUpdateMember(member._id, "member", member.role)
+                      }
                       disabled={isUpdatingMember}
                     >
                       Set as Member

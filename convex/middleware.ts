@@ -7,6 +7,7 @@ import { mutation, query, QueryCtx } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { getCurrentUser } from "./users";
 import { Id } from "./_generated/dataModel";
+import { TriggerMutation } from "./trigger";
 
 // !MIDDLEWARES
 
@@ -41,7 +42,7 @@ export const authorizedWorkspaceQuery = customQuery(query, {
   },
 });
 
-export const authorizedWorkspaceMutation = customMutation(mutation, {
+export const authorizedWorkspaceMutation = customMutation(TriggerMutation, {
   args: {
     workspaceId: v.id("workspaces"),
   },
@@ -81,6 +82,6 @@ export const authenticatedUserMutation = customMutation(mutation, {
 
     if (!user) throw new ConvexError("Unauthorized");
 
-    return { ctx: { userId: user._id }, args: {} };
+    return { ctx: { userId: user._id, user }, args: {} };
   },
 });

@@ -363,6 +363,12 @@ export const join = authenticatedUserMutation({
       userId: ctx.userId,
     });
 
+    // change the workspace joincode
+
+    await ctx.db.patch(args.workspaceId, {
+      workspaceInviteCode: generateInviteCode(10),
+    });
+
     return workspace;
   },
 });

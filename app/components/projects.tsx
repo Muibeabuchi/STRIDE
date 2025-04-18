@@ -1,4 +1,4 @@
-import { PlusCircle } from "lucide-react";
+import { ChevronDown, ChevronUp, PlusCircle } from "lucide-react";
 import { useGetWorkspaceProjects } from "@/features/projects/api/use-get-projects";
 import { cn } from "@/lib/utils";
 import { useCreateProjectModal } from "@/features/projects/hooks/use-create-project-modal";
@@ -6,6 +6,8 @@ import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { Link, useParams } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
+import { Button } from "./ui/button";
+import { useState } from "react";
 
 const Projects = () => {
   // ? INVESTIGATE THE ROUTE OF THIS HOOK
@@ -14,6 +16,10 @@ const Projects = () => {
   const { open } = useCreateProjectModal();
 
   const { data: projects } = useGetWorkspaceProjects(workspaceId);
+
+  const [showAllProjects, setShowAllProjects] = useState(false);
+
+  const renderedProjects = showAllProjects ? projects : projects?.slice(0, 4);
 
   return (
     <div className="flex flex-col gap-y-2">
@@ -25,7 +31,7 @@ const Projects = () => {
         />
       </div>
       {projects && projects.length > 0 ? (
-        projects.map((project) => {
+        renderedProjects.map((project) => {
           const href = `/workspaces/${workspaceId}/projects/${project._id}`;
           return (
             <Link
@@ -65,6 +71,23 @@ const Projects = () => {
             Click the + icon to create your first project
           </p>
         </div>
+      )}
+      {/* button to render the remaining projects that were sliced */}
+      {projects && projects.length > 4 && (
+        // Add more styling to this button
+        // add an icon to this button
+        <Button
+          variant={"secondary"}
+          className="w-full items-center cursor-pointer text-stone-800"
+          onClick={() => setShowAllProjects(!showAllProjects)}
+        >
+          {showAllProjects ? "Show less" : "Show all projects"}
+          {showAllProjects ? (
+            <ChevronUp className="size-4 ml-2" />
+          ) : (
+            <ChevronDown className="size-4 ml-2" />
+          )}
+        </Button>
       )}
     </div>
   );

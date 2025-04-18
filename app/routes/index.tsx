@@ -1,8 +1,10 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Loader } from "@/components/Loader";
 import { convexQuery } from "@convex-dev/react-query";
 import { api } from "convex/_generated/api";
 import { fetchClerkAuth } from "@/utils/auth";
+import { useGetUserWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
+import { Id } from "convex/_generated/dataModel";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ context: { queryClient, convexQueryClient } }) => {
@@ -42,3 +44,28 @@ export const Route = createFileRoute("/")({
     }
   },
 });
+
+// add a route coponent to watch and check if the workspace exists
+
+export function useWorkspaceExists(workspaceId?: Id<"workspaces">) {
+  // execute the same logic in the loader in this component
+
+  const navigate = useNavigate();
+
+  const { data: workspaces } = useGetUserWorkspaces();
+
+  if (!workspaces || workspaces.length === 0) {
+    navigate({
+      to: "/workspaces/create",
+    });
+  } else {
+    navigate({
+      to: "/workspaces/$workspaceId",
+      params: {
+        workspaceId: workspaceId || workspaces[0]._id,
+      },
+    });
+  }
+}
+
+// hook to check if the workspace exists, if it doesnt, we navihgate to a create workspace page
