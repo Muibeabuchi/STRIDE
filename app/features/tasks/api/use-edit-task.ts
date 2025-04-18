@@ -5,43 +5,23 @@ export const useEditTask = () => {
   const editTask = useMutation(api.tasks.edit).withOptimisticUpdate(
     (
       localStore,
-      {
-        workspaceId,
-        taskId,
-        taskPosition,
-        dueDate,
-        assigneeId,
-        projectId,
-        taskName,
-        taskStatus,
-        taskDescription,
-      }
+      { workspaceId, taskId, taskPosition, projectId, taskStatus }
     ) => {
-      console.log("fired optimistic update");
-      console.log("projectId", projectId);
-      console.log("workspaceId", workspaceId);
       const tasks = localStore.getQuery(api.tasks.get, {
         workspaceId,
-        // dueDate,
-        // assigneeId,
-        // projectId,
-        // status: taskStatus,
       });
 
       if (!tasks) {
-        console.log("optimistic update from projectsId page fired");
         const tasksFromProjects = localStore.getQuery(api.tasks.get, {
           workspaceId,
           projectId,
         });
-        console.log("tasksFromProjects", tasksFromProjects);
         if (!tasksFromProjects) return;
 
         // grab the task we wanna edit
         const taskToEdit = tasksFromProjects.find(
           (task) => task._id === taskId
         );
-        console.log("taskToEdit", taskToEdit);
         if (!taskToEdit) return;
 
         const newTaskToEdit: typeof taskToEdit = {
@@ -53,7 +33,6 @@ export const useEditTask = () => {
         const optimisticTasks = tasksFromProjects.map((task) => {
           return task._id === taskToEdit._id ? newTaskToEdit : task;
         });
-        console.log("optimisticTasks", optimisticTasks);
 
         localStore.setQuery(
           api.tasks.get,
@@ -62,14 +41,11 @@ export const useEditTask = () => {
         );
       }
 
-      console.log("tasks from local store", tasks);
       if (!tasks) return;
 
       // grab the task we wanna edit
       const taskToEdit = tasks.find((task) => task._id === taskId);
       if (!taskToEdit) return;
-
-      console.log("taskToEdit", taskToEdit);
 
       const newTaskToEdit: typeof taskToEdit = {
         ...taskToEdit,
@@ -87,8 +63,6 @@ export const useEditTask = () => {
       const optimisticTasks = tasks.map((task) => {
         return task._id === taskToEdit._id ? newTaskToEdit : task;
       });
-
-      console.log("optimistic tasks", optimisticTasks);
 
       localStore.setQuery(api.tasks.get, { workspaceId }, optimisticTasks);
     }

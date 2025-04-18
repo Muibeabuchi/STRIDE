@@ -115,10 +115,9 @@ export const updateRole = authorizedWorkspaceMutation({
     //     if we are trying to update another user, we must be admins
     if (ctx.member.role !== "admin") throw new ConvexError("Unauthorized");
 
-    console.log(ctx.member.role);
     // emsure there is at least 1 admin in the workspace
     const admins = allMembers.filter((member) => member.role === "admin");
-    if (admins.length === 1 && args.memberRole === "member")
+    if (admins.length === 1)
       throw new ConvexError("There must be at least 1 admin in the workspace");
 
     // prevent user from updating  his role to member if he is the last member in the workspace

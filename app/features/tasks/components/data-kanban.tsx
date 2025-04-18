@@ -41,15 +41,12 @@ const DataKanban = ({ data }: DataKanbanProps) => {
     return acc;
   }, kanbanTasks);
 
-  //   data.forEach((task) => {
-  //     kanbanTasks[task.status as TaskStatus].push(task);
-  //   });
+
 
   Object.keys(tasks).map((status) => {
     tasks[status as TaskStatus].sort((a, b) => a.position - b.position);
   });
 
-  // console.log(tasks);
 
   const editTask = useEditTask();
 
@@ -74,7 +71,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
       // ! Check if the destination index  is 0 and the destination task  is undefined, this means the column is empty
       if (destination.index === 0 && !destinationColumn[destination.index]) {
-        console.log("fired - first card and there exist no card");
 
         await editTask({
           taskId: sourceTask._id,
@@ -87,7 +83,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       }
       //!  Check if the destination index is 0 and  the first card exists
       if (destination.index === 0 && destinationColumn[destination.index]) {
-        console.log("fired - first card and there exist a card");
         // ? set the source position to the destination card divided by 2
         const destTaskPosition = destinationColumn[destination.index].position;
         await editTask({
@@ -102,11 +97,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
       // ! Check if the destination card is the last card
       if (destinationColumn[destination.index] === undefined) {
-        console.log(
-          "why is this not undefined",
-          destinationColumn[destination.index + 2]
-        );
-        console.log("fired -last card");
+        
         // ? set the source position to the destination card + 1000
         const destTaskPosition =
           destinationColumn[destination.index - 1].position + 1000;
@@ -120,7 +111,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
         return;
       }
 
-      console.log("fired- in between");
 
       // ! If the destination card is neither of these,then it must be a middle placement
       // TODO: Write logic to enforce that the destination card is between two cards
@@ -134,8 +124,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
       //   ? set the  position of the source card to the average of the top card and bottom card(destination card) minus the destination card position
 
-      console.log("top-card", topDestinationCard);
-      console.log("bottom-card", destTask);
+     
       const newPosition =
         destTask.position -
         (destTask.position - topDestinationCard.position) / 2;
