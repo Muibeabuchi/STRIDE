@@ -5,6 +5,9 @@ export default defineConfig({
   tsr: {
     appDirectory: "app",
   },
+  server: {
+    preset: "netlify",
+  },
   vite: {
     plugins: [
       tsConfigPaths({

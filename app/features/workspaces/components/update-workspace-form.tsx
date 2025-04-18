@@ -4,7 +4,7 @@ import { ArrowLeftIcon, CopyIcon, ImageIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { useCopyToClipboard } from "@uidotdev/usehooks";
+import { useCopyToClipboard } from "usehooks-ts";
 import { Doc, Id } from "convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DottedSeparator } from "@/components/doted-separator";
@@ -236,9 +236,10 @@ export const UpdateWorkspaceForm = ({
                                 size="xs"
                                 className="w-fit mt-2"
                                 onClick={() => {
-                                  field.onChange(null);
+                                  field.onChange(initialValues.workspaceImage);
                                   if (inputRef.current) {
-                                    inputRef.current.value = "";
+                                    inputRef.current.value =
+                                      initialValues.workspaceImage;
                                   }
                                   if (workspaceImageRef.current) {
                                     URL.revokeObjectURL(
