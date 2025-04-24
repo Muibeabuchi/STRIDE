@@ -6,6 +6,7 @@ import {
   ErrorComponent,
   Link,
   Outlet,
+  redirect,
 } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
@@ -14,6 +15,20 @@ export const Route = createFileRoute(
   component: StandaloneLayout,
   errorComponent: ErrorComponent,
   pendingComponent: PendingComponent,
+  beforeLoad: async ({ context: { queryClient } }) => {
+    const user:
+      | {
+          userId: string | null;
+          token: string | null;
+        }
+      | undefined = await queryClient.getQueryData(["user"]);
+
+    if (!user || !user.userId) {
+      return redirect({
+        to: "/sign-in/$",
+      });
+    }
+  },
 });
 
 function StandaloneLayout() {

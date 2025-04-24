@@ -22,7 +22,7 @@ export const upsertFromClerk = internalMutation({
     if (user === null) {
       await ctx.db.insert("users", {
         id: data.id,
-        name: data.username!,
+        name: data.username || data.first_name || data.last_name || "User",
         email: data.email_addresses[0].email_address,
         profilePicture: data.image_url,
       });

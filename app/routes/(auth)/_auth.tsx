@@ -1,10 +1,12 @@
 import { fetchClerkAuth } from "@/utils/auth";
+import { useQuery } from "@tanstack/react-query";
 import {
   createFileRoute,
   Link,
   Outlet,
   redirect,
   useMatch,
+  useRouteContext,
 } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(auth)/_auth")({
@@ -19,12 +21,35 @@ export const Route = createFileRoute("/(auth)/_auth")({
     //     return auth;
     //   },
     // });
-    const user:
-      | {
-          userId: string | null;
-          token: string | null;
+
+    // await queryClient.fetchQuery({
+    //   staleTime: 1000 * 60 * 2,
+    //   queryKey: ["user"],
+    //   queryFn: async () => {
+    //     const auth = await fetchClerkAuth();
+    //     if (auth?.token) {
+    //       convexQueryClient.serverHttpClient?.setAuth(auth.token);
+    //     }
+    //     return auth;
+    //   },
+    // });
+    // const user:
+    //   | {
+    //       userId: string | null;
+    //       token: string | null;
+    //     }
+    //   | undefined = await queryClient.getQueryData(["user"]);
+
+    const user = await queryClient.fetchQuery({
+      queryKey: ["user"],
+      queryFn: async () => {
+        const auth = await fetchClerkAuth();
+        if (auth?.token) {
+          convexQueryClient.serverHttpClient?.setAuth(auth.token);
         }
-      | undefined = await queryClient.getQueryData(["user"]);
+        return auth;
+      },
+    });
     if (user && user.userId) {
       throw redirect({
         to: "/",
@@ -34,7 +59,47 @@ export const Route = createFileRoute("/(auth)/_auth")({
   component: RouteComponent,
 });
 
+type UserData =
+  | {
+      userId: string | null;
+      token: string | null;
+    }
+  | undefined;
+
 function RouteComponent() {
+  const { convexQueryClient, queryClient } = Route.useRouteContext();
+  const navigate = Route.useNavigate();
+
+  const { data: userData } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const auth = await fetchClerkAuth();
+      if (auth?.token) {
+        convexQueryClient.serverHttpClient?.setAuth(auth.token);
+      }
+      return auth;
+    },
+  });
+
+  async function reload() {
+    await queryClient.invalidateQueries({
+      queryKey: ["user"],
+    });
+    return redirect({
+      to: "/",
+    });
+  }
+
+  if (userData && !userData?.userId) {
+    reload();
+  }
+
+  if (userData && userData?.userId) {
+    navigate({
+      to: "/",
+    });
+  }
+
   const signInPageMatch = useMatch({
     from: "/(auth)/_auth/sign-in/$",
     shouldThrow: false,

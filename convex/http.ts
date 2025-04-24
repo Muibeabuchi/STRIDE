@@ -29,16 +29,16 @@ app.post("/clerk-users-webhook", async (c) => {
         break;
 
       // handle sessions
-      case "session.created": {
-        const clerkSessionId = event.data.id!;
-        const clerkUserId = event.data.user_id!;
-        await c.env.runAction(internal.clerkSessions.clearClerkSessions, {
-          userId: clerkUserId,
-          sessionId: clerkSessionId,
-        });
+      // case "session.created": {
+      //   const clerkSessionId = event.data.id!;
+      //   const clerkUserId = event.data.user_id!;
+      //   await c.env.runAction(internal.clerkSessions.clearClerkSessions, {
+      //     userId: clerkUserId,
+      //     sessionId: clerkSessionId,
+      //   });
 
-        break;
-      }
+      //   break;
+      // }
 
       case "user.deleted": {
         const clerkUserId = event.data.id!;

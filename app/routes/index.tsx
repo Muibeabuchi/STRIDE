@@ -8,18 +8,24 @@ import { Id } from "convex/_generated/dataModel";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ context: { queryClient, convexQueryClient } }) => {
-    const user:
-      | {
-          userId: string | null;
-          token: string | null;
+    const user = await queryClient.ensureQueryData({
+      queryKey: ["user"],
+      queryFn: async () => {
+        const auth = await fetchClerkAuth();
+        if (auth?.token) {
+          convexQueryClient.serverHttpClient?.setAuth(auth.token);
         }
-      | undefined = await queryClient.getQueryData(["user"]);
+        return auth;
+      },
+    });
 
+    // console.log("user", user);
     if (!user) {
       throw redirect({
         to: "/sign-in/$",
       });
     }
+
     if (!user.userId) {
       throw redirect({
         to: "/sign-in/$",

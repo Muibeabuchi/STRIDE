@@ -6,6 +6,7 @@ import {
   Scripts,
   useRouteContext,
   useRouterState,
+  redirect,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import * as React from "react";
@@ -76,6 +77,34 @@ export const Route = createRootRouteWithContext<{
         return auth;
       },
     });
+
+    // const user:
+    //   | {
+    //       userId: string | null;
+    //       token: string | null;
+    //     }
+    //   | undefined = await ctx.context.queryClient.getQueryData(["user"]);
+
+    // console.log("user", user);
+    // if (user && user.userId) {
+    //   redirect({
+    //     to: "/",
+    //   });
+
+    //   return;
+    // }
+    // if (!user) {
+    //   redirect({
+    //     to: "/sign-in/$",
+    //   });
+    //   return;
+    // }
+    // if (!user.userId) {
+    //   redirect({
+    //     to: "/sign-in/$",
+    //   });
+    //   return;
+    // }
   },
 
   errorComponent: (props) => {
