@@ -15,8 +15,15 @@ interface MemberListProps {
 }
 
 const MemberList = ({ workspaceId }: MemberListProps) => {
-  const { data: members } = useGetUserWorkspaceIdMembers(workspaceId);
+  const {
+    data: members,
+    isLoading,
+    isPending,
+  } = useGetUserWorkspaceIdMembers(workspaceId);
 
+  if (isLoading || isPending || members === undefined) {
+    return <PeopleListSkeleton />;
+  }
   // function that truuncates a text if the lenght is longer than 15
   const truncateText = (text: string, length: number = 20) => {
     if (text.length > length) {
@@ -49,10 +56,13 @@ const MemberList = ({ workspaceId }: MemberListProps) => {
             <li key={member._id}>
               <Card className="shadow-none rounded-lg overflow-hidden">
                 <CardContent className="p-3 flex flex-col items-center gap-x-2">
-                  <MemberAvatar className="size-12" name={member.userName} />
+                  <MemberAvatar
+                    className="size-12"
+                    name={member.userName ?? ""}
+                  />
                   <div className="flex items-center overflow-hidden flex-col">
                     <p className="font-medium text-[9px] truncate line-clamp-1 sm:hidden lg:block">
-                      {truncateText(member.userEmail)}
+                      {truncateText(member?.userEmail ?? "")}
                       {/* <span className="text-xs text-muted-foreground">
                         {member.userEmail.split("@")[1]}
                       </span> */}

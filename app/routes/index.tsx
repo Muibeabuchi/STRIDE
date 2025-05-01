@@ -41,8 +41,11 @@ export function IndexRoute() {
 export const useWorkspaceExists = (workspaceId: Id<"workspaces">) => {
   const navigate = useNavigate();
 
-  const { data: workspaces } = useGetUserWorkspaces();
+  const { data: workspaces, isPending } = useGetUserWorkspaces();
 
+  if (isPending || workspaces == undefined) {
+    return null;
+  }
   if (!workspaces || workspaces.length === 0) {
     navigate({
       to: "/workspaces/create",

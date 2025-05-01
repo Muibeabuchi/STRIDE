@@ -8,15 +8,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useGetWorkspaceProjects } from "../api/use-get-projects";
 import { useProjectModalStore } from "@/store/project-modal-store";
 import { ProjectAvatar } from "./project-avatar";
+import ProjectListSkeleton from "./project-list-component";
 
 interface ProjectListProps {
   workspaceId: Id<"workspaces">;
 }
 
 const ProjectList = ({ workspaceId }: ProjectListProps) => {
-  const { data: projects } = useGetWorkspaceProjects(workspaceId);
+  const {
+    data: projects,
+    isLoading,
+    isPending,
+  } = useGetWorkspaceProjects(workspaceId);
   const { open } = useProjectModalStore();
 
+  if (isLoading || isPending || projects === undefined) {
+    return <ProjectListSkeleton />;
+  }
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-white border rounded-lg p-4">

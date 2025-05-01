@@ -9,7 +9,6 @@ import TaskList from "@/features/tasks/components/task-list";
 import { useGetTasks } from "@/features/tasks/hooks/use-get-tasks";
 import { MembersList } from "@/features/workspaces/components/members-list";
 import WorkspaceAnalytics from "@/features/workspaces/components/workspace-analytics";
-import WorkspaceAnalyticsSkeleton from "@/features/workspaces/components/workspace-analytics-skeleton";
 import { useTaskModalStore } from "@/store/store";
 import { convexQuery } from "@convex-dev/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
@@ -29,29 +28,6 @@ export const Route = createFileRoute(
       };
     },
   },
-  loader: async ({ context, params }) => {
-    // ? Why was i prefetching this data
-    context.queryClient.prefetchQuery(
-      convexQuery(api.members.get, { workspaceId: params.workspaceId })
-    );
-
-    context.queryClient.prefetchQuery(
-      convexQuery(api.workspaces.getUserWorkspaces, {
-        workspaceId: params.workspaceId,
-      })
-    );
-    context.queryClient.prefetchQuery(
-      convexQuery(api.projects.get, {
-        workspaceId: params.workspaceId,
-      })
-    );
-
-    await context.queryClient.prefetchQuery(
-      convexQuery(api.workspaces.getWorkspaceAnalytics, {
-        workspaceId: params.workspaceId,
-      })
-    );
-  },
 });
 
 function RouteComponent() {
@@ -61,17 +37,11 @@ function RouteComponent() {
 
   return (
     <div className="h-full space-y-4 flex flex-col ">
-      <Suspense fallback={<WorkspaceAnalyticsSkeleton />}>
-        <WorkspaceAnalytics workspaceId={workspaceId} />
-      </Suspense>
+      <WorkspaceAnalytics workspaceId={workspaceId} />
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <TaskList workspaceId={workspaceId} />
-        <Suspense fallback={<ProjectListSkeleton />}>
-          <ProjectList workspaceId={workspaceId} />
-        </Suspense>
-        <Suspense fallback={<PeopleListSkeleton />}>
-          <MemberList workspaceId={workspaceId} />
-        </Suspense>
+        <ProjectList workspaceId={workspaceId} />
+        <MemberList workspaceId={workspaceId} />
       </div>
     </div>
   );
