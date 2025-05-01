@@ -54,7 +54,7 @@ export const TaskViewSwitcher = ({
   onProjectIdChange,
   onStatusChange,
 }: TaskViewSwitcherProps) => {
-  const { tasks, taskIsError, taskIsPending } = useGetTasks({
+  const { tasks } = useGetTasks({
     workspaceId,
     status,
     assigneeId: assigneeId as Id<"users">,
@@ -64,11 +64,11 @@ export const TaskViewSwitcher = ({
 
   const { open } = useTaskModalStore();
 
-  if (taskIsPending || tasks === undefined) {
+  if (tasks === undefined) {
     return <TaskViewSwitcherSkeleton />;
   }
 
-  if (taskIsError || tasks === null) {
+  if (tasks === null) {
     return <p>Task Errored out</p>;
   }
   return (

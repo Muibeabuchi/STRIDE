@@ -26,16 +26,5 @@ export function useGetTasks({
 
   return {
     tasks,
-    taskIsPending: tasks === undefined,
-    taskIsError: tasks === null,
   };
-  // return useSuspenseQuery(
-  //   convexQuery(api.tasks.get, {
-  //     workspaceId,
-  //     status: status === "ALL" ? undefined : status,
-  //     assigneeId: assigneeId as Id<"users"> | undefined,
-  //     projectId: projectId as Id<"projects"> | undefined,
-  //     dueDate,
-  //   })
-  // );
 }

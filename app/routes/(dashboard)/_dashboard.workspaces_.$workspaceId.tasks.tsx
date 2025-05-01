@@ -28,16 +28,6 @@ export const Route = createFileRoute(
   loaderDeps: ({ search }) => ({
     ...search,
   }),
-  // loader: async ({ params, deps, context }) => {
-  //   // const { status, assigneeId, dueDate, projectId } = deps;
-  //   // await context.convexClient.query(api.tasks.get, {
-  //   //   workspaceId: params.workspaceId,
-  //   //   status: status === "ALL" ? undefined : status,
-  //   //   assigneeId: assigneeId as Id<"users">,
-  //   //   dueDate,
-  //   //   projectId: projectId as Id<"projects">,
-  //   // });
-  // },
 });
 
 function TasksPage() {
