@@ -64,8 +64,11 @@ export function SignInCard() {
           variant="secondary"
           size="lg"
           className="w-full"
-          disabled={false}
-          onClick={() => void signIn("google")}
+          disabled={isSigningIn}
+          onClick={() => {
+            setIsSigningIn(true);
+            void signIn("google");
+          }}
         >
           <FcGoogle className="mr-2 size-5" />
           Log In with Google
@@ -74,8 +77,11 @@ export function SignInCard() {
           variant="secondary"
           size="lg"
           className="w-full"
-          disabled={false}
-          onClick={() => void signIn("github")}
+          disabled={isSigningIn}
+          onClick={() => {
+            setIsSigningIn(true);
+            void signIn("github");
+          }}
         >
           <FaGithub className="mr-2 size-5" />
           Log In with Github

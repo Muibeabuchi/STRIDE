@@ -27,7 +27,11 @@ export const MembersList = ({
 }: {
   workspaceId: Id<"workspaces">;
 }) => {
-  const { data: members } = useGetUserWorkspaceIdMembers(workspaceId);
+  const {
+    data: members,
+    isPending,
+    isLoading,
+  } = useGetUserWorkspaceIdMembers(workspaceId);
   const navigate = useNavigate();
 
   const { mutate: removeMember, isPending: isRemovingMember } =
@@ -74,7 +78,11 @@ export const MembersList = ({
     });
   };
 
-  if (!members) {
+  if (isLoading || isPending || members === undefined) {
+    return <MemberListSkeleton />;
+  }
+
+  if (members === null) {
     return <p>No members found for this workspace</p>;
   }
 
