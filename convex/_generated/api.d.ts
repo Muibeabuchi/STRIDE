@@ -13,7 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as clerkSessions from "../clerkSessions.js";
+import type * as auth from "../auth.js";
 import type * as http from "../http.js";
 import type * as members from "../members.js";
 import type * as middleware from "../middleware.js";
@@ -36,7 +36,7 @@ import type * as workspaces from "../workspaces.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  clerkSessions: typeof clerkSessions;
+  auth: typeof auth;
   http: typeof http;
   members: typeof members;
   middleware: typeof middleware;

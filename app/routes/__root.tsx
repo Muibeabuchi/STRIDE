@@ -15,17 +15,15 @@ import { DefaultCatchBoundary } from "@/components/DefaultCatchBoundary";
 import { NotFound } from "@/components/NotFound";
 import { seo } from "@/utils/seo";
 import appCss from "@/styles/app.css?url";
-import { ClerkProvider, useAuth } from "@clerk/tanstack-react-start";
-import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { ConvexReactClient } from "convex/react";
 import { ConvexQueryClient } from "@convex-dev/react-query";
-import { fetchClerkAuth } from "@/utils/auth";
 import { Toaster } from "sonner";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   convexClient: ConvexReactClient;
   convexQueryClient: ConvexQueryClient;
+  // authToken: string | null;
 }>()({
   head: () => ({
     meta: [
@@ -65,48 +63,6 @@ export const Route = createRootRouteWithContext<{
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),
-  beforeLoad: async (ctx) => {
-    await ctx.context.queryClient.fetchQuery({
-      staleTime: 1000 * 60 * 2,
-      queryKey: ["user"],
-      queryFn: async () => {
-        const auth = await fetchClerkAuth();
-        if (auth?.token) {
-          ctx.context.convexQueryClient.serverHttpClient?.setAuth(auth.token);
-        }
-        return auth;
-      },
-    });
-
-    // const user:
-    //   | {
-    //       userId: string | null;
-    //       token: string | null;
-    //     }
-    //   | undefined = await ctx.context.queryClient.getQueryData(["user"]);
-
-    // console.log("user", user);
-    // if (user && user.userId) {
-    //   redirect({
-    //     to: "/",
-    //   });
-
-    //   return;
-    // }
-    // if (!user) {
-    //   redirect({
-    //     to: "/sign-in/$",
-    //   });
-    //   return;
-    // }
-    // if (!user.userId) {
-    //   redirect({
-    //     to: "/sign-in/$",
-    //   });
-    //   return;
-    // }
-  },
-
   errorComponent: (props) => {
     return (
       <RootDocument>
@@ -119,17 +75,10 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootComponent() {
-  const context = useRouteContext({ from: Route.id });
-
-  const pk = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
   return (
-    <ClerkProvider publishableKey={pk!}>
-      <ConvexProviderWithClerk useAuth={useAuth} client={context.convexClient}>
-        <RootDocument>
-          <Outlet />
-        </RootDocument>
-      </ConvexProviderWithClerk>
-    </ClerkProvider>
+    <RootDocument>
+      <Outlet />
+    </RootDocument>
   );
 }
 

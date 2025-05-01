@@ -15,23 +15,24 @@ export const Route = createFileRoute(
   component: StandaloneLayout,
   errorComponent: ErrorComponent,
   pendingComponent: PendingComponent,
-  beforeLoad: async ({ context: { queryClient } }) => {
-    const user:
-      | {
-          userId: string | null;
-          token: string | null;
-        }
-      | undefined = await queryClient.getQueryData(["user"]);
+  // beforeLoad: async ({ context: { queryClient } }) => {
+  //   const user:
+  //     | {
+  //         userId: string | null;
+  //         token: string | null;
+  //       }
+  //     | undefined = await queryClient.getQueryData(["user"]);
 
-    if (!user || !user.userId) {
-      return redirect({
-        to: "/sign-in/$",
-      });
-    }
-  },
+  //   if (!user || !user.userId) {
+  //     return redirect({
+  //       to: "/sign-in/$",
+  //     });
+  //   }
+  // },
 });
 
 function StandaloneLayout() {
+  // Todo: Write redirect logic
   return (
     <main className="bg-neutral-100 min-h-screen ">
       <div className="mx-auto max-w-screen-2xl p-4">

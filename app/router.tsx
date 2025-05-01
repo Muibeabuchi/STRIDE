@@ -12,7 +12,10 @@ import { routeTree } from "./routeTree.gen";
 import { DefaultCatchBoundary } from "./components/DefaultCatchBoundary";
 import { NotFound } from "./components/NotFound";
 
+import { ConvexAuthProvider, useAuthToken } from "@convex-dev/auth/react";
+
 export function createRouter() {
+  // const token = useAuthToken();
   if (typeof document !== "undefined") {
     notifyManager.setScheduler(window.requestAnimationFrame);
   }
@@ -44,17 +47,22 @@ export function createRouter() {
   });
   convexQueryClient.connect(queryClient);
 
+  // console.log("auth-Token", token);
+
   const router = routerWithQueryClient(
     createTanStackRouter({
       routeTree,
       defaultPreload: "intent",
       defaultErrorComponent: DefaultCatchBoundary,
       defaultNotFoundComponent: () => <NotFound />,
-      context: { queryClient, convexQueryClient, convexClient: convex },
+      context: {
+        queryClient,
+        convexQueryClient,
+        convexClient: convex,
+        // authToken: token,
+      },
       Wrap: ({ children }) => (
-        <ConvexProvider client={convexQueryClient.convexClient}>
-          {children}
-        </ConvexProvider>
+        <ConvexAuthProvider client={convex}>{children}</ConvexAuthProvider>
       ),
       scrollRestoration: true,
     }),

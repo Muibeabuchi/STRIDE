@@ -2,6 +2,7 @@ import { defineSchema, defineTable } from "convex/server";
 import { type Infer, v } from "convex/values";
 import { Doc } from "./_generated/dataModel";
 import { api } from "./_generated/api";
+import { authTables } from "@convex-dev/auth/server";
 
 export const taskStatusValidator = v.union(
   v.literal("BACKLOG"),
@@ -12,14 +13,7 @@ export const taskStatusValidator = v.union(
 );
 
 const schema = defineSchema({
-  users: defineTable({
-    // Clerk user Id
-    id: v.string(),
-    // Username from the clerk Object
-    name: v.string(),
-    email: v.string(),
-    profilePicture: v.optional(v.string()),
-  }).index("id", ["id"]),
+  ...authTables,
   workspaces: defineTable({
     workspaceName: v.string(),
     workspaceCreator: v.id("users"),
@@ -71,7 +65,8 @@ export const taskValidator = schema.tables.tasks.validator.fields;
 export type Tasks = Doc<"tasks">;
 export type PaginatedTasksResponse = (typeof api.tasks.get._returnType)[number];
 export type getTaskByIdResponse = typeof api.tasks.getById._returnType;
-export type getProjectAnalytics = typeof api.projects.getProjectAnalytics._returnType;
+export type getProjectAnalytics =
+  typeof api.projects.getProjectAnalytics._returnType;
 
 // const board = schema.tables.boards.validator;
 // const board = schema.tables.boards.validator;

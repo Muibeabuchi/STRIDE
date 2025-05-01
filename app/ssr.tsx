@@ -4,7 +4,6 @@ import {
   defaultStreamHandler,
 } from "@tanstack/react-start/server";
 import { getRouterManifest } from "@tanstack/react-start/router-manifest";
-import { createClerkHandler } from "@clerk/tanstack-react-start/server";
 import { createRouter } from "./router";
 
 const handler = createStartHandler({
@@ -12,6 +11,4 @@ const handler = createStartHandler({
   getRouterManifest,
 });
 
-const clerkHandler = createClerkHandler(handler);
-
-export default clerkHandler(defaultStreamHandler);
+export default handler(defaultStreamHandler);

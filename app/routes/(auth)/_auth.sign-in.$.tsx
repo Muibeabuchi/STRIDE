@@ -1,4 +1,4 @@
-import { SignIn } from "@clerk/tanstack-react-start";
+import { SignInCard } from "@/features/auth/components/sign-in-card";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/(auth)/_auth/sign-in/$")({
@@ -6,5 +6,5 @@ export const Route = createFileRoute("/(auth)/_auth/sign-in/$")({
 });
 
 function Page() {
-  return <SignIn fallbackRedirectUrl={"/"} />;
+  return <SignInCard />;
 }

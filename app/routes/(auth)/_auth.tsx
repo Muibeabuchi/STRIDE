@@ -1,104 +1,19 @@
-import { fetchClerkAuth } from "@/utils/auth";
-import { useQuery } from "@tanstack/react-query";
 import {
   createFileRoute,
   Link,
   Outlet,
   redirect,
   useMatch,
-  useRouteContext,
 } from "@tanstack/react-router";
+import { useConvexAuth } from "convex/react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/(auth)/_auth")({
-  beforeLoad: async ({ context: { convexQueryClient, queryClient } }) => {
-    // const user = await queryClient.ensureQueryData({
-    //   queryKey: ["user"],
-    //   queryFn: async () => {
-    //     const auth = await fetchClerkAuth();
-    //     if (auth?.token) {
-    //       convexQueryClient.serverHttpClient?.setAuth(auth.token);
-    //     }
-    //     return auth;
-    //   },
-    // });
-
-    // await queryClient.fetchQuery({
-    //   staleTime: 1000 * 60 * 2,
-    //   queryKey: ["user"],
-    //   queryFn: async () => {
-    //     const auth = await fetchClerkAuth();
-    //     if (auth?.token) {
-    //       convexQueryClient.serverHttpClient?.setAuth(auth.token);
-    //     }
-    //     return auth;
-    //   },
-    // });
-    // const user:
-    //   | {
-    //       userId: string | null;
-    //       token: string | null;
-    //     }
-    //   | undefined = await queryClient.getQueryData(["user"]);
-
-    const user = await queryClient.fetchQuery({
-      queryKey: ["user"],
-      queryFn: async () => {
-        const auth = await fetchClerkAuth();
-        if (auth?.token) {
-          convexQueryClient.serverHttpClient?.setAuth(auth.token);
-        }
-        return auth;
-      },
-    });
-    if (user && user.userId) {
-      throw redirect({
-        to: "/",
-      });
-    }
-  },
   component: RouteComponent,
 });
 
-type UserData =
-  | {
-      userId: string | null;
-      token: string | null;
-    }
-  | undefined;
-
 function RouteComponent() {
-  const { convexQueryClient, queryClient } = Route.useRouteContext();
-  const navigate = Route.useNavigate();
-
-  const { data: userData } = useQuery({
-    queryKey: ["user"],
-    queryFn: async () => {
-      const auth = await fetchClerkAuth();
-      if (auth?.token) {
-        convexQueryClient.serverHttpClient?.setAuth(auth.token);
-      }
-      return auth;
-    },
-  });
-
-  async function reload() {
-    await queryClient.invalidateQueries({
-      queryKey: ["user"],
-    });
-    return redirect({
-      to: "/",
-    });
-  }
-
-  if (userData && !userData?.userId) {
-    reload();
-  }
-
-  if (userData && userData?.userId) {
-    navigate({
-      to: "/",
-    });
-  }
+  const { isAuthenticated, isLoading } = useConvexAuth();
 
   const signInPageMatch = useMatch({
     from: "/(auth)/_auth/sign-in/$",
@@ -108,6 +23,19 @@ function RouteComponent() {
     from: "/(auth)/_auth/sign-up/$",
     shouldThrow: false,
   });
+
+  // Todo: Write logic that redirects the user to the index page if they are authenticated
+  useEffect(
+    function () {
+      if (isAuthenticated) {
+        redirect({
+          to: "/",
+        });
+      }
+    },
+    [isAuthenticated]
+  );
+
   return (
     <main className="bg-neutral-100 min-h-screen w-full">
       <div className="mx-auto max-w-screen-2xl p-4 h-full">

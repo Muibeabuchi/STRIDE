@@ -11,31 +11,32 @@ import { EditTaskModal } from "@/features/tasks/components/edit-task-modal";
 
 export const Route = createFileRoute("/(dashboard)/_dashboard")({
   component: DashboardLayout,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(
-      convexQuery(api.workspaces.getUserWorkspaces, {})
-    );
-  },
-  beforeLoad: async ({ context: { queryClient } }) => {
-    const user:
-      | {
-          userId: string | null;
-          token: string | null;
-        }
-      | undefined = await queryClient.getQueryData(["user"]);
+  // loader: async ({ context }) => {
+  //   await context.queryClient.ensureQueryData(
+  //     convexQuery(api.workspaces.getUserWorkspaces, {})
+  //   );
+  // },
+  // beforeLoad: async ({ context: { queryClient } }) => {
+  //   const user:
+  //     | {
+  //         userId: string | null;
+  //         token: string | null;
+  //       }
+  //     | undefined = await queryClient.getQueryData(["user"]);
 
-    if (!user || !user.userId) {
-      return redirect({
-        to: "/sign-in/$",
-      });
-    }
-  },
+  //   if (!user || !user.userId) {
+  //     return redirect({
+  //       to: "/sign-in/$",
+  //     });
+  //   }
+  // },
   // search: {
   //   middlewares: [stripSearchParams(true)],
   // },
 });
 
 function DashboardLayout() {
+  // TODO: Write redirect logic in component.....Abstract it into a hook to be shared by other routes
   return (
     <div className="min-h-screen w-full">
       <CreateWorkspaceModal />
