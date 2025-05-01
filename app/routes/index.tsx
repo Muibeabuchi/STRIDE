@@ -22,7 +22,7 @@ export function IndexRoute() {
   if (isError) {
     return <p>Error loading the users workspaces</p>;
   }
-  if (workspaces.length === 0) {
+  if (!loadingUserWorkspaces && !isError && workspaces.length === 0) {
     navigate({
       to: "/workspaces/create",
     });
