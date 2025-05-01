@@ -18,10 +18,9 @@ export const UserButton = () => {
   const { signOut } = useAuthActions();
   const navigate = useNavigate();
 
-  // Todo: Fetch the user data here
   const { data: user, isPending: loadingUser } = useCurrentUser();
 
-  if (loadingUser) {
+  if (loadingUser || user === undefined) {
     return (
       <div className="size-10 rounded-full flex items-center justify-center bg-neutral-200 border border-neutral-300">
         <Loader className="size-4 animate-spin text-muted-foreground" />

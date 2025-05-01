@@ -1,5 +1,6 @@
 import { Loader as PendingComponent } from "@/components/Loader";
 import { UserButton } from "@/components/userButton";
+import { useProtectAuthPage } from "@/hooks/use-protect-auth-page";
 // import { UserButton } from "@clerk/tanstack-react-start";
 import {
   createFileRoute,
@@ -15,24 +16,11 @@ export const Route = createFileRoute(
   component: StandaloneLayout,
   errorComponent: ErrorComponent,
   pendingComponent: PendingComponent,
-  // beforeLoad: async ({ context: { queryClient } }) => {
-  //   const user:
-  //     | {
-  //         userId: string | null;
-  //         token: string | null;
-  //       }
-  //     | undefined = await queryClient.getQueryData(["user"]);
-
-  //   if (!user || !user.userId) {
-  //     return redirect({
-  //       to: "/sign-in/$",
-  //     });
-  //   }
-  // },
 });
 
 function StandaloneLayout() {
-  // Todo: Write redirect logic
+  const { showAuthContent } = useProtectAuthPage();
+  if (!showAuthContent) return null;
   return (
     <main className="bg-neutral-100 min-h-screen ">
       <div className="mx-auto max-w-screen-2xl p-4">

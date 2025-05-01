@@ -1,42 +1,28 @@
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 import { CreateWorkspaceModal } from "@/features/workspaces/components/create-workspace-modal";
-import { convexQuery } from "@convex-dev/react-query";
-import { Outlet, redirect, stripSearchParams } from "@tanstack/react-router";
+import { convexQuery, useConvexAuth } from "@convex-dev/react-query";
+import {
+  Outlet,
+  redirect,
+  stripSearchParams,
+  useNavigate,
+} from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { CreateProjectModal } from "@/features/projects/components/create-project-modal";
 import { CreateTaskModal } from "@/features/tasks/components/create-task-modal";
 import { EditTaskModal } from "@/features/tasks/components/edit-task-modal";
+import { useEffect, useState } from "react";
+import { useProtectAuthPage } from "@/hooks/use-protect-auth-page";
 
 export const Route = createFileRoute("/(dashboard)/_dashboard")({
   component: DashboardLayout,
-  // loader: async ({ context }) => {
-  //   await context.queryClient.ensureQueryData(
-  //     convexQuery(api.workspaces.getUserWorkspaces, {})
-  //   );
-  // },
-  // beforeLoad: async ({ context: { queryClient } }) => {
-  //   const user:
-  //     | {
-  //         userId: string | null;
-  //         token: string | null;
-  //       }
-  //     | undefined = await queryClient.getQueryData(["user"]);
-
-  //   if (!user || !user.userId) {
-  //     return redirect({
-  //       to: "/sign-in/$",
-  //     });
-  //   }
-  // },
-  // search: {
-  //   middlewares: [stripSearchParams(true)],
-  // },
 });
 
 function DashboardLayout() {
-  // TODO: Write redirect logic in component.....Abstract it into a hook to be shared by other routes
+  const { showAuthContent } = useProtectAuthPage();
+  if (!showAuthContent) return null;
   return (
     <div className="min-h-screen w-full">
       <CreateWorkspaceModal />

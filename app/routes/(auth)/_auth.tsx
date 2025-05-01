@@ -40,7 +40,7 @@ function RouteComponent() {
         setShowAuthPage(true);
       }
     },
-    [isAuthenticated]
+    [isAuthenticated, isLoading]
   );
 
   if (isLoading || !showAuthPage) {
