@@ -38,31 +38,6 @@ export const Route = createFileRoute(
     ...search,
   }),
   component: RouteComponent,
-  loader: async (ctx) => {
-    const {
-      params,
-      deps: { status, assigneeId, dueDate, projectId },
-    } = ctx;
-
-    // prefetch other data that might be needed in this route-----------------
-    ctx.context.queryClient.prefetchQuery(
-      convexQuery(api.members.get, { workspaceId: params.workspaceId })
-    );
-
-    ctx.context.queryClient.prefetchQuery(
-      convexQuery(api.projects.getProjectAnalytics, {
-        workspaceId: params.workspaceId,
-        projectId: params.projectId,
-      })
-    );
-
-    await ctx.context.queryClient.ensureQueryData(
-      convexQuery(api.projects.getById, {
-        projectId: params.projectId,
-        workspaceId: params.workspaceId,
-      })
-    );
-  },
 });
 
 function RouteComponent() {
@@ -70,10 +45,18 @@ function RouteComponent() {
   const { status, taskView, assigneeId, dueDate, projectId } =
     Route.useSearch();
   const navigate = Route.useNavigate();
-  const { data: project } = useGetProjectById({
+  const {
+    data: project,
+    isLoading,
+    isPending,
+  } = useGetProjectById({
     projectId: projId,
     workspaceId,
   });
+
+  if (project === undefined || isLoading || isPending) {
+    return null;
+  }
 
   const handleTaskViewChange = (tab: string) => {
     navigate({
@@ -153,9 +136,7 @@ function RouteComponent() {
         </div>
       </div>
       {/* Analytics component */}
-      <Suspense fallback={<p>Loading Project Analytics page</p>}>
-        <ProjectAnalytics workspaceId={workspaceId} projectId={projId} />
-      </Suspense>
+      <ProjectAnalytics workspaceId={workspaceId} projectId={projId} />
       <TaskViewSwitcher
         projectId={projectId}
         workspaceId={workspaceId}

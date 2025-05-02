@@ -22,7 +22,7 @@ const TaskDescription = ({ task }: TaskDescriptionProps) => {
       setIsSavingDescription(true);
       await editTaskDescription({
         taskId: task._id,
-        taskDescription: description,
+        taskDescription: description?.trim(),
         workspaceId: task.workspaceId,
       });
 
@@ -32,6 +32,7 @@ const TaskDescription = ({ task }: TaskDescriptionProps) => {
       console.error("Failed to edit the description");
     } finally {
       setIsSavingDescription(false);
+      setIsEditingDescription(false);
     }
   };
 

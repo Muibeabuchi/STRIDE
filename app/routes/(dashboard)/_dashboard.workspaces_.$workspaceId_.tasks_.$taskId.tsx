@@ -29,15 +29,6 @@ export const Route = createFileRoute(
       workspaceId: params.workspaceId as Id<"workspaces">,
     }),
   },
-
-  loader: async ({ context, params }) => {
-    await context.queryClient.ensureQueryData(
-      convexQuery(api.tasks.getById, {
-        taskId: params.taskId,
-      })
-    );
-  },
-
   pendingComponent: () => <p>Loading the taskId route</p>,
 });
 

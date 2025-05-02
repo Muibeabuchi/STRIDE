@@ -1,9 +1,9 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { getProjectAnalytics } from "convex/schema";
 import { useGetProjectAnalytics } from "../api/use-get-project-analytics";
 import { Id } from "convex/_generated/dataModel";
 import AnalyticsCard from "@/components/analytics-card";
 import { DottedSeparator } from "@/components/doted-separator";
+import AnalyticsCardsSkeleton from "@/features/workspaces/components/workspace-analytics-skeleton";
 
 interface ProjectAnalyticsProps {
   workspaceId: Id<"workspaces">;
@@ -14,10 +14,18 @@ const ProjectAnalytics = ({
   projectId,
   workspaceId,
 }: ProjectAnalyticsProps) => {
-  const { data: dataAnalyticsData } = useGetProjectAnalytics({
+  const {
+    data: dataAnalyticsData,
+    isLoading,
+    isPending,
+  } = useGetProjectAnalytics({
     projectId,
     workspaceId,
   });
+
+  if (isLoading || isPending || dataAnalyticsData === undefined) {
+    return <AnalyticsCardsSkeleton />;
+  }
   return (
     <ScrollArea className="border rounded-lg w-full whitespace-nowrap shrink-0">
       <div className="w-full flex flex-row">
