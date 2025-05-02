@@ -21,6 +21,7 @@ import {
 import { Suspense } from "react";
 import Analytics from "@/features/projects/components/project-analytics";
 import ProjectAnalytics from "@/features/projects/components/project-analytics";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute(
   "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId"
@@ -40,6 +41,15 @@ export const Route = createFileRoute(
   component: RouteComponent,
 });
 
+function ProjectInfoSkeleton() {
+  return (
+    <div className="flex items-center gap-x-2 animate-pulse">
+      <Skeleton className="size-8 rounded-md" />
+      <Skeleton className="h-6 w-40" />
+    </div>
+  );
+}
+
 function RouteComponent() {
   const { projectId: projId, workspaceId } = Route.useParams();
   const { status, taskView, assigneeId, dueDate, projectId } =
@@ -53,10 +63,6 @@ function RouteComponent() {
     projectId: projId,
     workspaceId,
   });
-
-  if (project === undefined || isLoading || isPending) {
-    return null;
-  }
 
   const handleTaskViewChange = (tab: string) => {
     navigate({
@@ -112,14 +118,18 @@ function RouteComponent() {
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-x-2">
-          <ProjectAvatar
-            name={project.projectName}
-            image={project.projectImage}
-            className="size-8"
-          />
-          <p className="text-lg font-semibold">{project.projectName}</p>
-        </div>
+        {project === undefined || isLoading || isPending ? (
+          <ProjectInfoSkeleton />
+        ) : (
+          <div className="flex items-center gap-x-2">
+            <ProjectAvatar
+              name={project.projectName}
+              image={project.projectImage}
+              className="size-8"
+            />
+            <p className="text-lg font-semibold">{project.projectName}</p>
+          </div>
+        )}
         <div className="">
           <Button size="sm" asChild variant={"secondary"}>
             <Link
