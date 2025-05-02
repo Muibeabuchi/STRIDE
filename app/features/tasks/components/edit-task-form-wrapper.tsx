@@ -5,6 +5,7 @@ import { api } from "convex/_generated/api";
 import { useGetWorkspaceTasksById } from "../api/use-get-tasks-byId";
 import { EditTaskForm } from "./edit-task-form";
 import { Id } from "convex/_generated/dataModel";
+import { EditTaskFormSkeleton } from "./edit-task-form-skeleton";
 
 interface EditTaskFormWrapperProps {
   taskId: Id<"tasks">;
@@ -41,9 +42,8 @@ export const useGetTaskFormData = () => {
   // });
 };
 
-// TODO: create SkeletonLoading component using AI
 export function EditTaskFormWrapperSkeleton() {
-  return <p>Loading...</p>;
+  return <EditTaskFormSkeleton />;
 }
 
 export function EditTaskFormWrapper({
@@ -67,7 +67,6 @@ export function EditTaskFormWrapper({
 
   if (projects.isError || members.isError || taskByIdIsError) throw error;
   if (isLoading) return <EditTaskFormWrapperSkeleton />;
-
   const projectOptions = projects.data.map((project) => ({
     id: project._id,
     name: project.projectName,

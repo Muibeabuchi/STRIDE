@@ -2,7 +2,8 @@ import { DottedSeparator } from "@/components/doted-separator";
 import { LogoLoader } from "@/components/Loader";
 import TaskBreadCrumbs from "@/features/tasks/components/task-breadcrumbs";
 import TaskDescription from "@/features/tasks/components/task-description";
-import TaskIdRouteSkeleton from "@/features/tasks/components/task-id-route-Skeleton";
+import TaskIdRouteSkeleton from "@/features/tasks/components/task-id-route-skeleton";
+// import TaskIdRouteSkeleton from "@/features/tasks/components/task-id-route-Skeleton";
 import TaskOverview from "@/features/tasks/components/task-overview";
 import { convexQuery } from "@convex-dev/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -42,8 +43,6 @@ function RouteComponent() {
       taskId,
     })
   );
-
-  return <TaskIdRouteSkeleton />;
 
   return (
     <div className="flex flex-col ">

@@ -47,7 +47,7 @@ interface EditTaskFormProps {
   }[];
   memberOptions: {
     id: Id<"users">;
-    name: string;
+    name: string | undefined;
   }[];
   initialValues: getTaskByIdResponse;
 }
@@ -166,7 +166,7 @@ export const EditTaskForm = ({
                             <SelectItem key={member.id} value={member.id}>
                               <div className="flex items-center gap-x-2">
                                 <MemberAvatar
-                                  name={member.name}
+                                  name={member.name ?? ""}
                                   className="size-6"
                                 />
                                 {member.name}
