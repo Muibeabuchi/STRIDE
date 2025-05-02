@@ -1,7 +1,8 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useGetUserWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
 import { Id } from "convex/_generated/dataModel";
-import { Loader, LogoLoader } from "@/components/Loader";
+import { LogoLoader } from "@/components/Loader";
+import { useProtectAuthPage } from "@/hooks/use-protect-auth-page";
 
 export const Route = createFileRoute("/")({
   component: IndexRoute,
@@ -9,6 +10,7 @@ export const Route = createFileRoute("/")({
 
 export function IndexRoute() {
   const navigate = useNavigate();
+  const { showAuthContent } = useProtectAuthPage();
 
   const {
     data: workspaces,
@@ -34,6 +36,7 @@ export function IndexRoute() {
       },
     });
   }
+  if (!showAuthContent) return null;
 
   return <LogoLoader />;
 }
