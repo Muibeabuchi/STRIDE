@@ -70,6 +70,7 @@ export const CreateTaskForm = ({
 
   // pass true if the route is /workspaces/$workspaceId/tasks
   const projectId = useProjectId(!!isTaskPage || !!isHomePage);
+
   const { taskStatus } = useTaskModalStore();
   const { mutate: createTask, isPending: isCreatingTask } = useCreateTask();
   const form = useForm<z.infer<typeof createTaskSchema>>({
@@ -104,7 +105,7 @@ export const CreateTaskForm = ({
       {
         onSuccess(taskId) {
           onCancel?.();
-          form.reset();
+          // form.reset();
           setTimeout(() => {
             navigate({
               to: "/workspaces/$workspaceId/tasks/$taskId",
@@ -122,7 +123,7 @@ export const CreateTaskForm = ({
               //   };
               // },
             });
-          });
+          }, 1000);
         },
       }
     );
