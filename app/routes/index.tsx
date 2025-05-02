@@ -22,7 +22,7 @@ export function IndexRoute() {
     return <LogoLoader />;
   }
   if (isError) {
-    return <p>Error loading the users workspaces</p>;
+    return <LogoLoader />;
   }
   if (!loadingUserWorkspaces && !isError && workspaces.length === 0) {
     navigate({
