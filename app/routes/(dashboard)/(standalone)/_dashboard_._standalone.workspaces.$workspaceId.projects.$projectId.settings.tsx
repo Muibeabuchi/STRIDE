@@ -1,5 +1,6 @@
 import { useGetProjectById } from "@/features/projects/api/use-get-projects-by-id";
 import { UpdateProjectForm } from "@/features/projects/components/update-project-form";
+import ProjectSettingsSkeleton from "@/features/projects/components/update-project-skeleton";
 import { createFileRoute } from "@tanstack/react-router";
 import { Id } from "convex/_generated/dataModel";
 
@@ -20,7 +21,19 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { projectId, workspaceId } = Route.useParams();
-  const { data: project } = useGetProjectById({ projectId, workspaceId });
+  const {
+    data: project,
+    isLoading,
+    isPending,
+  } = useGetProjectById({ projectId, workspaceId });
+
+  if (project === undefined || isPending || isLoading) {
+    return (
+      <div className="w-full lg:max-w-xl">
+        <ProjectSettingsSkeleton />;
+      </div>
+    );
+  }
   return (
     <div className="w-full lg:max-w-xl">
       <UpdateProjectForm

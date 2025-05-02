@@ -43,7 +43,7 @@ interface CreateTaskFormProps {
   }[];
   memberOptions: {
     id: Id<"users">;
-    name: string;
+    name: string | undefined;
   }[];
 }
 
@@ -195,7 +195,7 @@ export const CreateTaskForm = ({
                             <SelectItem key={member.id} value={member.id}>
                               <div className="flex items-center gap-x-2">
                                 <MemberAvatar
-                                  name={member.name}
+                                  name={member?.name ?? ""}
                                   className="size-6"
                                 />
                                 {member.name}
@@ -272,20 +272,26 @@ export const CreateTaskForm = ({
                         </FormControl>
                         <FormMessage />
                         <SelectContent>
-                          {ProjectOptionsToRender.map((project) => {
-                            return (
-                              <SelectItem key={project.id} value={project.id}>
-                                <div className="flex items-center gap-x-2">
-                                  <ProjectAvatar
-                                    name={project.name}
-                                    className="size-6"
-                                    image={project.imageUrl}
-                                  />
-                                  {project.name}
-                                </div>
-                              </SelectItem>
-                            );
-                          })}
+                          {ProjectOptionsToRender.length > 0 ? (
+                            ProjectOptionsToRender.map((project) => {
+                              return (
+                                <SelectItem key={project.id} value={project.id}>
+                                  <div className="flex items-center gap-x-2">
+                                    <ProjectAvatar
+                                      name={project.name}
+                                      className="size-6"
+                                      image={project.imageUrl}
+                                    />
+                                    {project.name}
+                                  </div>
+                                </SelectItem>
+                              );
+                            })
+                          ) : (
+                            <p className="text-sm bg-accent p-1 ">
+                              No projects{" "}
+                            </p>
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />

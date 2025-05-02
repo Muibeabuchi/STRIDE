@@ -178,3 +178,20 @@
 .rbc-month-row {
   @apply min-h-[180px] text-sm border-t border-x;
 }
+
+@keyframes enhancedPulse {
+  0% {
+    background-color: rgba(226, 232, 240, 0.3);
+  }
+  50% {
+    background-color: rgba(203, 213, 225, 0.8); /* 30% more saturated/intense */
+  }
+  100% {
+    background-color: rgba(226, 232, 240, 0.3);
+  }
+}
+
+.enhanced-skeleton {
+  border-radius: 0.25rem;
+  animation: enhancedPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

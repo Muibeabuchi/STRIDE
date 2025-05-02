@@ -4,6 +4,7 @@ import { useQuery, useSuspenseQueries } from "@tanstack/react-query";
 import { api } from "convex/_generated/api";
 import { CreateTaskForm } from "./create-task-form";
 import { useTaskModalStore } from "@/store/store";
+import CreateTaskSkeleton from "./create-task-form-skeleton";
 
 export const useGetTaskFormData = () => {
   const workspaceId = useWorkspaceId();
@@ -21,9 +22,8 @@ export const useGetTaskFormData = () => {
   return [projects, members] as const;
 };
 
-// TODO: create SkeletonLoading component using AI
 export function CreateTaskFormWrapperSkeleton() {
-  return <p>Loading...</p>;
+  return <CreateTaskSkeleton />;
 }
 
 export function CreateTaskFormWrapper() {

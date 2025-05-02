@@ -2,6 +2,7 @@ import { UpdateWorkspaceForm } from "@/features/workspaces/components/update-wor
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Id } from "convex/_generated/dataModel";
 import useGetWorkSpaceById from "@/features/workspaces/api/use-get-workspace-by-id";
+import WorkspaceSettingsSkeleton from "@/features/workspaces/components/update-workspace-form-skeleton";
 
 export const Route = createFileRoute(
   "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings"
@@ -27,7 +28,19 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const { workspaceId } = Route.useParams();
-  const { data: workspace } = useGetWorkSpaceById(workspaceId);
+  const {
+    data: workspace,
+    isPending,
+    isLoading,
+  } = useGetWorkSpaceById(workspaceId);
+
+  if (workspace === undefined || isPending || isLoading) {
+    return (
+      <div className="w-full lg:max-w-xl">
+        <WorkspaceSettingsSkeleton />;
+      </div>
+    );
+  }
   return (
     <div className="w-full lg:max-w-xl">
       <UpdateWorkspaceForm

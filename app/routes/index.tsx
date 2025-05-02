@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useGetUserWorkspaces } from "@/features/workspaces/api/use-get-workspaces";
 import { Id } from "convex/_generated/dataModel";
-import { Loader } from "@/components/Loader";
+import { Loader, LogoLoader } from "@/components/Loader";
 
 export const Route = createFileRoute("/")({
   component: IndexRoute,
@@ -17,7 +17,7 @@ export function IndexRoute() {
   } = useGetUserWorkspaces();
 
   if (loadingUserWorkspaces) {
-    return <Loader />;
+    return <LogoLoader />;
   }
   if (isError) {
     return <p>Error loading the users workspaces</p>;
@@ -35,7 +35,7 @@ export function IndexRoute() {
     });
   }
 
-  return <div className="">Home Route</div>;
+  return <LogoLoader />;
 }
 
 export const useWorkspaceExists = (workspaceId: Id<"workspaces">) => {

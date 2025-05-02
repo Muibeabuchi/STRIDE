@@ -130,7 +130,8 @@ export function SignInCard() {
             <Button
               disabled={true}
               size="lg"
-              className="w-full disabled:bg-red-500"
+              className="w-full "
+              variant={"primary"}
             >
               Sign In
             </Button>

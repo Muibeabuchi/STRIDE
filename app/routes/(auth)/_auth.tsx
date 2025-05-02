@@ -1,4 +1,4 @@
-import { Loader } from "@/components/Loader";
+import { Loader, LogoLoader } from "@/components/Loader";
 import {
   createFileRoute,
   Link,
@@ -44,7 +44,7 @@ function RouteComponent() {
   );
 
   if (isLoading || !showAuthPage) {
-    return <Loader />;
+    return <LogoLoader />;
   }
   if (showAuthPage) {
     return (
