@@ -1,8 +1,5 @@
 import { UpdateWorkspaceForm } from "@/features/workspaces/components/update-workspace-form";
-import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import useGetWorkSpaceById from "@/features/workspaces/api/use-get-workspace-by-id";
 
@@ -26,13 +23,6 @@ export const Route = createFileRoute(
     },
   },
   component: RouteComponent,
-  loader: async ({ context, params }) => {
-    await context.queryClient.ensureQueryData(
-      convexQuery(api.workspaces.getWorkspaceById, {
-        workspaceId: params.workspaceId as Id<"workspaces">,
-      })
-    );
-  },
 });
 
 function RouteComponent() {

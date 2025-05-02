@@ -6,7 +6,7 @@ import { Id } from "convex/_generated/dataModel";
 const useGetWorkSpaceById = (workspaceId: Id<"workspaces">) => {
   return useSuspenseQuery(
     convexQuery(api.workspaces.getWorkspaceById, {
-      workspaceId: workspaceId as Id<"workspaces">,
+      workspaceId: workspaceId,
     })
   );
 };
