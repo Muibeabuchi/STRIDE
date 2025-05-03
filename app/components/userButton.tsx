@@ -28,14 +28,14 @@ export const UserButton = () => {
     );
   }
 
-  const logOut = async () => {
+  const logOut = () => {
     // ? I don't think i need to store the user in the queryCache anymore
-    await signOut();
-    setTimeout(() => {
-      navigate({
-        to: "/sign-in/$",
-      });
-    }, 100);
+    // setTimeout(() => {
+    signOut();
+    navigate({
+      to: "/sign-in/$",
+    });
+    // }, 600);
   };
 
   const avatarCallback = user?.name

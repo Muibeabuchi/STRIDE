@@ -25,5 +25,6 @@ export const useProtectAuthPage = () => {
   return {
     showAuthContent,
     setShowAuthContent,
+    isAuthenticated,
   };
 };

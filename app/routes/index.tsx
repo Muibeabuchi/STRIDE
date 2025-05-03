@@ -3,6 +3,7 @@ import { useGetUserWorkspaces } from "@/features/workspaces/api/use-get-workspac
 import { Id } from "convex/_generated/dataModel";
 import { LogoLoader } from "@/components/Loader";
 import { useProtectAuthPage } from "@/hooks/use-protect-auth-page";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/")({
   component: IndexRoute,
@@ -10,34 +11,42 @@ export const Route = createFileRoute("/")({
 
 export function IndexRoute() {
   const navigate = useNavigate();
-  const { showAuthContent } = useProtectAuthPage();
+  const { showAuthContent, isAuthenticated } = useProtectAuthPage();
 
   const {
     data: workspaces,
     isError,
     isPending: loadingUserWorkspaces,
-  } = useGetUserWorkspaces();
+  } = useGetUserWorkspaces(isAuthenticated);
+
+  useEffect(
+    function () {
+      if (!loadingUserWorkspaces && !isError && workspaces.length === 0) {
+        navigate({
+          to: "/workspaces/create",
+        });
+      }
+      if (workspaces && workspaces.length > 0) {
+        navigate({
+          to: "/workspaces/$workspaceId",
+          params: {
+            workspaceId: workspaces[0]._id,
+          },
+        });
+      }
+    },
+    [loadingUserWorkspaces, isError, workspaces]
+  );
 
   if (loadingUserWorkspaces) {
     return <LogoLoader />;
   }
-  if (isError) {
-    return <LogoLoader />;
-  }
-  if (!loadingUserWorkspaces && !isError && workspaces.length === 0) {
-    navigate({
-      to: "/workspaces/create",
-    });
-  } else {
-    navigate({
-      to: "/workspaces/$workspaceId",
-      params: {
-        workspaceId: workspaces[0]._id,
-      },
-    });
-  }
+
   if (!showAuthContent) return null;
 
+  if (workspaces === null || isError) {
+    return <p>Error Occured</p>;
+  }
   return <LogoLoader />;
 }
 
