@@ -39,8 +39,12 @@ export const create = authorizedWorkspaceMutation({
     const tasks = await ctx.db
       .query("tasks")
       .withIndex(
-        "by_workspaceId_by_status",
-        (q) => q.eq("workspaceId", args.workspaceId).eq("status", args.status)
+        "by_workspaceId_by_projectId_by_status",
+        (q) =>
+          q
+            .eq("workspaceId", args.workspaceId)
+            .eq("projectId", args.projectId)
+            .eq("status", args.status)
         //   .eq("position", args.position)
       )
       .collect();

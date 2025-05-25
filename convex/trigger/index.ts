@@ -13,6 +13,7 @@ import { mutation as rawMutation } from "../_generated/server";
 const triggers = new Triggers<DataModel>();
 
 triggers.register("members", async (ctx, change) => {
+  // Todo: Grab all the tasks associated with the workspace, remove them
   // grab the deletedMembers user data
   if (change.operation === "delete") {
     // Using relationships.ts helpers for succinctness.
@@ -20,8 +21,8 @@ triggers.register("members", async (ctx, change) => {
       await getManyFrom(
         ctx.db,
         "tasks",
-        "by_assigneeId",
-        change.oldDoc.userId
+        "by_workspaceId",
+        change.oldDoc.workspaceId
         // "assigneeId"
       ),
       (task) => ctx.db.delete(task._id)

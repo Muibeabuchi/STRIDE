@@ -9,7 +9,7 @@ export function Loader() {
 export function LogoLoader() {
   return (
     <div className="flex items-center justify-center h-screen w-ful animate-pulse">
-      <img src="/logo.svg" width={270} height={270} />;
+      <img src="/logo.svg" width={270} height={270} />
     </div>
   );
 }
