@@ -45,8 +45,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
     return tasks[status as TaskStatus].sort((a, b) => a.position - b.position);
   });
 
-  console.log("tasks", tasks);
-
   const editTask = useEditTask();
 
   const onDragEnd = async (result: DropResult) => {
@@ -54,8 +52,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
     const { source, destination } = result;
 
-    console.log("source", source);
-    console.log("destination", destination);
     const sourceStatus = source.droppableId as taskStatus;
     const destinationStatus = destination.droppableId as taskStatus;
 
@@ -129,12 +125,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       //     ? destination.index + 1 === destinationColumn.length
       //     : !!destinationColumn[destination.index + 2];
 
-      // console.log("isBotomCard", isBottomCard);
 
       // if (!isTopCard && !isBottomCard) {
-      console.log(
-        "This only runs when the card destination is between two cards"
-      );
 
       // const topToBottom = destination.index < source.index;
 
@@ -172,7 +164,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
     if (sourceStatus === destinationStatus) {
       // const [sourceTask] = sourceColumn.slice(source.index, source.index + 1);
       const sourceTask = sourceColumn[source.index];
-      // console.log("sTask", sTask);
 
       // TODO: Check if the top most task is 1000 when moving a task to the top and halve it, or just halve the position of the top most task and assign it to the incoming task
       if (!sourceTask) return;
@@ -205,7 +196,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       }
 
       // ! Check if the destination card is the last card
-      // console.log("last task", destinationColumn[destination.index + 1]);
       if (destinationColumn[destination.index + 1] === undefined) {
         // ? set the source position to the destination card + 1000
         const newSourceTaskPosition =
@@ -233,10 +223,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       const destTask = destinationColumn[destination.index];
 
       if (!isTopCard && !isBottomCard) {
-        console.log(
-          "This only runs when the card destination is between two cards"
-        );
-
+        
         const topToBottom = destination.index < source.index;
 
         const newPosition = topToBottom
@@ -261,9 +248,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
         return;
       }
 
-      console.log(
-        "This only runs when the card destination is between two cards"
-      );
+      co
       //   ? set the  position of the source card to the average of the top card and bottom card(destination card) minus the destination card position
 
       // const newPosition =

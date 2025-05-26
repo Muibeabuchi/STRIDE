@@ -47,7 +47,6 @@ export function createRouter() {
   });
   convexQueryClient.connect(queryClient);
 
-  // console.log("auth-Token", token);
 
   const router = routerWithQueryClient(
     createTanStackRouter({
