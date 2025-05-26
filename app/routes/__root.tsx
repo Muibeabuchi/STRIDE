@@ -32,7 +32,8 @@ export const Route = createRootRouteWithContext<{
       },
       {
         name: "viewport",
-        content: "width=device-width, initial-scale=1",
+        content:
+          "width=device-width, initial-scale=1 , maximum-scale=1.0, user-scalable=no",
       },
       ...seo({
         title:
@@ -44,8 +45,8 @@ export const Route = createRootRouteWithContext<{
       { rel: "stylesheet", href: appCss },
       {
         rel: "apple-touch-icon",
-        sizes: "180x180",
-        href: "/apple-touch-icon.png",
+        sizes: "192x192",
+        href: "/icons/icon-192x192.png",
       },
       {
         rel: "icon",
@@ -60,7 +61,7 @@ export const Route = createRootRouteWithContext<{
         href: "/favicon-16x16.png",
       },
       { rel: "manifest", href: "/site.webmanifest", color: "#fffff" },
-      { rel: "icon", href: "/favicon.ico" },
+      { rel: "icon", href: "/logo.svg" },
     ],
   }),
   errorComponent: (props) => {
