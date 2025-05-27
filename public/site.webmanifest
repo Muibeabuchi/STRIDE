@@ -60,7 +60,8 @@
   "name":"Create New Workspace",
   "short_name":"Create",
   "description":"Create a New Workspace",
-  "url":"/workspaces/create"
+  "url":"/workspaces/create",
+  "icons":[{"src":"icons/icon-192x192.png","sizes":"192x192"}]
     }
   ],
   "start_url": "/",

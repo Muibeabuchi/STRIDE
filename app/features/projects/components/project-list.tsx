@@ -23,7 +23,7 @@ const ProjectList = ({ workspaceId }: ProjectListProps) => {
   const { open } = useProjectModalStore();
 
   if (isLoading || isPending || projects === undefined) {
-    return <ProjectListSkeleton />;
+  return <ProjectListSkeleton />;
   }
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
