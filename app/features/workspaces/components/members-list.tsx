@@ -21,6 +21,18 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useGetMember } from "@/features/members/api/use-get-member";
+import { useLeaveWorkspace } from "../api/use-leave-workspace";
+
+type MemberType = {
+  userName: string | undefined;
+  userEmail: string | undefined;
+  _id: Id<"members">;
+  _creationTime: number;
+  userId: Id<"users">;
+  workspaceId: Id<"workspaces">;
+  role: "admin" | "member";
+};
 
 export const MembersList = ({
   workspaceId,
@@ -36,13 +48,22 @@ export const MembersList = ({
 
   const { mutate: removeMember, isPending: isRemovingMember } =
     useDeleteMember();
+  const { mutateAsync: leaveWorkspace, isPending: leavingWorkspace } =
+    useLeaveWorkspace();
   const { mutate: updateMember, isPending: isUpdatingMember } =
     useUpdateMember();
+  const { data: workspaceMember, isLoading: LoadingMember } =
+    useGetMember(workspaceId);
 
   const [confirmRemoveMember, RemoveMemberConfirmationModal] = useConfirm({
     title: "Remove this member",
     description:
       "This will permanently remove this member from this workspace ",
+    variant: "destructive",
+  });
+  const [confirmLeaveWorkspace, LeaveWorkspaceConfirmationModal] = useConfirm({
+    title: "Leave Workspace",
+    description: "This will permanently remove you from this workspace ",
     variant: "destructive",
   });
 
@@ -78,7 +99,27 @@ export const MembersList = ({
     });
   };
 
-  if (isLoading || isPending || members === undefined) {
+  const handleLeaveWorkspace = async (workspaceId: Id<"workspaces">) => {
+    const ok = await confirmLeaveWorkspace();
+
+    if (!ok) return;
+    const { success } = await leaveWorkspace({
+      workspaceId,
+    });
+    if (success) {
+      navigate({
+        to: "/",
+      });
+    }
+  };
+
+  if (
+    isLoading ||
+    isPending ||
+    members === undefined ||
+    LoadingMember ||
+    workspaceMember === undefined
+  ) {
     return <MemberListSkeleton />;
   }
 
@@ -86,9 +127,60 @@ export const MembersList = ({
     return <p>No members found for this workspace</p>;
   }
 
+  // if a user is an admin, we show  the dropdown menu with the option of downgrading themselves to a member and an option to push other members to admin
+  // also they cannot remove themselves unless they are members. Therefore we only show the "remove member" option for non-admins
+  // Basically, before  you remove a member, you must demote them to member role
+  // if the user is a member, they can only see the option to leave the workspace and no other option
+
+  const memberRole = workspaceMember.role;
+
+  function renderOptions(member: MemberType) {
+    const memberIsNotAdmin = member.role === "member";
+    if (memberRole === "member") {
+      return (
+        <DropdownMenuItem
+          className={"font-medium cursor-pointer"}
+          onClick={() => handleLeaveWorkspace(workspaceId)}
+          disabled={leavingWorkspace}
+        >
+          Leave Workspace
+        </DropdownMenuItem>
+      );
+    } else if (memberRole === "admin") {
+      return (
+        <>
+          <DropdownMenuItem
+            className={"font-medium cursor-pointer"}
+            onClick={() =>
+              handleUpdateMember(member._id, "member", member.role)
+            }
+            disabled={isUpdatingMember}
+          >
+            {/* {member._id === workspaceMember?._id &&
+              "Downgrade Yourself to Member"} */}
+            {member._id !== workspaceMember?._id && memberIsNotAdmin
+              ? "Upgrade to Admin"
+              : "Downgrade to Member"}
+          </DropdownMenuItem>
+          {member.role === "member" && (
+            <DropdownMenuItem
+              className={
+                "font-medium text-amber-700 cursor-pointer focus:text-amber-700 "
+              }
+              onClick={() => handleRemoveMember(member._id)}
+              disabled={isRemovingMember}
+            >
+              Remove {member.userName}
+            </DropdownMenuItem>
+          )}
+        </>
+      );
+    }
+  }
   return (
     <>
       <RemoveMemberConfirmationModal />
+      <LeaveWorkspaceConfirmationModal />
       <Card className={"w-full h-full border-none shadow-none"}>
         <CardHeader className=" flex flex-row  gap-x-4 space-y-0 p-7 items-center ">
           <Button size={"sm"} variant={"secondary"} asChild>
@@ -138,24 +230,50 @@ export const MembersList = ({
                   {member.role}
                 </Badge>
 
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant={"secondary"}
-                      className={"ml-auto"}
-                      size={"icon"}
+                {memberRole === "member" &&
+                  member._id === workspaceMember._id && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant={"secondary"}
+                          className={"ml-auto"}
+                          size={"icon"}
+                        >
+                          <MoreVerticalIcon
+                            className={"size-4 text-muted-foreground"}
+                          />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className={""}
+                        side={"bottom"}
+                        align={"end"}
+                      >
+                        {renderOptions(member)}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+
+                {memberRole === "admin" && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant={"secondary"}
+                        className={"ml-auto"}
+                        size={"icon"}
+                      >
+                        <MoreVerticalIcon
+                          className={"size-4 text-muted-foreground"}
+                        />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      className={""}
+                      side={"bottom"}
+                      align={"end"}
                     >
-                      <MoreVerticalIcon
-                        className={"size-4 text-muted-foreground"}
-                      />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    className={""}
-                    side={"bottom"}
-                    align={"end"}
-                  >
-                    <DropdownMenuItem
+                      {renderOptions(member)}
+                      {/* <DropdownMenuItem
                       className={"font-medium cursor-pointer"}
                       onClick={() =>
                         handleUpdateMember(member._id, "admin", member.role)
@@ -181,9 +299,10 @@ export const MembersList = ({
                       disabled={isRemovingMember}
                     >
                       Remove {member.userName}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                    </DropdownMenuItem> */}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </div>
               {index < members.length - 1 && <Separator className={"my-2.5"} />}
             </Fragment>

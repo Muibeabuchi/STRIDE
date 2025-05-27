@@ -9,9 +9,10 @@ import {
   authorizedWorkspaceQuery,
 } from "./middleware";
 import { generateInviteCode } from "./utils";
-import { query } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { endOfMonth, startOfMonth, subMonths } from "date-fns";
 import { filter } from "convex-helpers/server/filter";
+import { getCurrentUser } from "./users";
 
 // ! DATABASE QUERIES
 export const getUserWorkspaces = authenticatedUserQuery({
@@ -282,6 +283,67 @@ export const update = authorizedWorkspaceMutation({
       workspaceAvatar: args.workspaceImageId,
     });
     return args.workspaceId;
+  },
+});
+
+export const leave = mutation({
+  args: { workspaceId: v.id("workspaces") },
+  async handler(ctx, args) {
+    const user = await getCurrentUser(ctx);
+
+    if (!user) throw new ConvexError("Unauthorized");
+
+    // TODO: check if the user is also an member and admin
+
+    // check if the user is a member of the workspace
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_userId_by_workspaceId", (q) =>
+        q.eq("userId", user._id).eq("workspaceId", args.workspaceId)
+      )
+      .unique();
+    if (!member) throw new ConvexError("Unauthorized");
+    // remove the user from the workspace member
+
+    // move all tasks associated with the member to the admin of the workspace
+    // This is to prevent dangling tasks that have no connection to a member
+
+    //? grab the  creator or the first available admin of the workspace
+
+    const workspaceCreator = await ctx.db.get(member.workspaceId);
+    const workspaceAdmin = await ctx.db
+      .query("members")
+      .withIndex("by_workspaceId", (q) => q.eq("workspaceId", args.workspaceId))
+      .first();
+
+    if (!workspaceAdmin) throw new ConvexError("THere was no Admin");
+
+    const newTaskOwner =
+      workspaceCreator?.workspaceCreator ?? workspaceAdmin.userId;
+
+    //? grab all the tasks the member has in the workspace
+    const memberTasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_WorkspaceId_assigneeId", (q) =>
+        q.eq("workspaceId", args.workspaceId).eq("assigneeId", member.userId)
+      )
+      .collect();
+
+    await Promise.all(
+      memberTasks.map(async (task) => {
+        await ctx.db.patch(task._id, {
+          // ? Move the status of the task back to "TODO"
+          status: "TODO",
+          assigneeId: newTaskOwner,
+        });
+      })
+    );
+
+    await ctx.db.delete(member._id);
+
+    return {
+      success: true,
+    };
   },
 });
 

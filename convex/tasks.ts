@@ -1,4 +1,4 @@
-import { DataModel, Id } from "./_generated/dataModel.d";
+import { DataModel } from "./_generated/dataModel.d";
 import { taskStatusValidator } from "./schema";
 import {
   authenticatedUserQuery,
@@ -6,12 +6,7 @@ import {
   authorizedWorkspaceQuery,
 } from "./middleware";
 import { ConvexError, v } from "convex/values";
-import {
-  QueryInitializer,
-  Query,
-  OrderedQuery,
-  paginationOptsValidator,
-} from "convex/server";
+import { QueryInitializer, Query, OrderedQuery } from "convex/server";
 
 import { filter } from "convex-helpers/server/filter";
 import {
@@ -19,7 +14,7 @@ import {
   populateProject,
   populateProjectWithImage,
 } from "./model/projects";
-import { mutation, query, QueryCtx } from "./_generated/server";
+import { mutation } from "./_generated/server";
 import { ensureTaskExists, validateTaskWorkspace } from "./model/tasks";
 
 export const create = authorizedWorkspaceMutation({

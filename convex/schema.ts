@@ -46,10 +46,15 @@ const schema = defineSchema({
     position: v.number(),
     // min position = 1000,max position = 1000000
   })
-    .index("by_workspaceId_by_projectId_by_status", ["workspaceId","projectId","status"])
+    .index("by_workspaceId_by_projectId_by_status", [
+      "workspaceId",
+      "projectId",
+      "status",
+    ])
     .index("by_assigneeId", ["assigneeId"])
     .index("by_workspaceId", ["workspaceId"])
     .index("by_WorkspaceId_ProjectId", ["workspaceId", "projectId"])
+    .index("by_WorkspaceId_assigneeId", ["workspaceId", "assigneeId"])
     .searchIndex("by_description_by_taskName", {
       searchField: "taskName",
       filterFields: ["workspaceId", "description", "status"],
