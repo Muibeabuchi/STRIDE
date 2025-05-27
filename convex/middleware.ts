@@ -3,11 +3,9 @@ import {
   customMutation,
   customQuery,
 } from "convex-helpers/server/customFunctions";
-import { mutation, query, QueryCtx } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { getCurrentUser } from "./users";
-import { Id } from "./_generated/dataModel";
-import { TriggerMutation } from "./trigger";
 
 // !MIDDLEWARES
 
@@ -42,7 +40,7 @@ export const authorizedWorkspaceQuery = customQuery(query, {
   },
 });
 
-export const authorizedWorkspaceMutation = customMutation(TriggerMutation, {
+export const authorizedWorkspaceMutation = customMutation(mutation, {
   args: {
     workspaceId: v.id("workspaces"),
   },

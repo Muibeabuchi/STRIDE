@@ -21,7 +21,6 @@ import type * as model_projects from "../model/projects.js";
 import type * as model_tasks from "../model/tasks.js";
 import type * as projects from "../projects.js";
 import type * as tasks from "../tasks.js";
-import type * as trigger_index from "../trigger/index.js";
 import type * as upload from "../upload.js";
 import type * as users from "../users.js";
 import type * as utils_index from "../utils/index.js";
@@ -44,7 +43,6 @@ declare const fullApi: ApiFromModules<{
   "model/tasks": typeof model_tasks;
   projects: typeof projects;
   tasks: typeof tasks;
-  "trigger/index": typeof trigger_index;
   upload: typeof upload;
   users: typeof users;
   "utils/index": typeof utils_index;

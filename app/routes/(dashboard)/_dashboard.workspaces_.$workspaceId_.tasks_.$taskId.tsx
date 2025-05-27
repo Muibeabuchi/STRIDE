@@ -6,7 +6,7 @@ import TaskIdRouteSkeleton from "@/features/tasks/components/task-id-route-skele
 // import TaskIdRouteSkeleton from "@/features/tasks/components/task-id-route-Skeleton";
 import TaskOverview from "@/features/tasks/components/task-overview";
 import { convexQuery } from "@convex-dev/react-query";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";

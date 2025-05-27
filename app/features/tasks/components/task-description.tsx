@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { getTaskByIdResponse } from "convex/schema";
 import { PencilIcon, XIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useEditTask } from "../api/use-edit-task";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ const TaskDescription = ({ task }: TaskDescriptionProps) => {
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [description, setDescription] = useState(task.description);
   const [isSavingDescription, setIsSavingDescription] = useState(false);
+  const textAreRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleEditDescription = async () => {
     try {
@@ -36,12 +37,27 @@ const TaskDescription = ({ task }: TaskDescriptionProps) => {
     }
   };
 
+  useEffect(
+    function () {
+      if (isEditingDescription) {
+        if (textAreRef.current) {
+          textAreRef.current?.focus();
+        }
+      }
+    },
+    [isEditingDescription]
+  );
+
   return (
     <div className="p-4 border rounded-lg">
       <div className="flex items-center justify-between">
         <p className="text-lg font-semibold">Overview</p>
         <Button
-          onClick={() => setIsEditingDescription((prev) => !prev)}
+          onClick={() => {
+            setIsEditingDescription((prev) => !prev);
+            // if (!isEditingDescription && textAreRef.current) {
+            // }
+          }}
           size={"sm"}
           variant={"secondary"}
         >
@@ -58,6 +74,7 @@ const TaskDescription = ({ task }: TaskDescriptionProps) => {
         <div className="flex flex-col gap-y-4">
           <Textarea
             value={description}
+            ref={textAreRef}
             className="resize-none"
             rows={4}
             placeholder="Add a description to this task"

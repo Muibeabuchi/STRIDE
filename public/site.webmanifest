@@ -1,9 +1,8 @@
 
 
-
 {
-  "name": "Chiki Teams",
-  "short_name": "ChikiTeams",
+  "name": "Stride",
+  "short_name": "Stride",
   "icons": [
     {
       "src": "icons/icon-48x48.png",
@@ -58,6 +57,6 @@
   ],
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#175cff",
+  "background_color": "#000",
   "theme_color": "#000000"
 }

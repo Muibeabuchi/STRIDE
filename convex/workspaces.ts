@@ -304,6 +304,17 @@ export const remove = authorizedWorkspaceMutation({
         await ctx.db.delete(member._id);
       })
     );
+    // remove all tasks associated with the workspace
+    const workspaceTasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_workspaceId", (q) => q.eq("workspaceId", args.workspaceId))
+      .collect();
+
+    await Promise.all(
+      workspaceTasks.map(async (task) => {
+        await ctx.db.delete(task._id);
+      })
+    );
 
     await ctx.db.delete(args.workspaceId);
     return args.workspaceId;

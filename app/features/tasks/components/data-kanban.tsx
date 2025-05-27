@@ -125,7 +125,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       //     ? destination.index + 1 === destinationColumn.length
       //     : !!destinationColumn[destination.index + 2];
 
-
       // if (!isTopCard && !isBottomCard) {
 
       // const topToBottom = destination.index < source.index;
@@ -223,7 +222,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       const destTask = destinationColumn[destination.index];
 
       if (!isTopCard && !isBottomCard) {
-        
         const topToBottom = destination.index < source.index;
 
         const newPosition = topToBottom
@@ -248,7 +246,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
         return;
       }
 
-      co
       //   ? set the  position of the source card to the average of the top card and bottom card(destination card) minus the destination card position
 
       // const newPosition =
