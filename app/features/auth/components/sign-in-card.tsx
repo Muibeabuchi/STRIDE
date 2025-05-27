@@ -61,7 +61,7 @@ export function SignInCard() {
 
       <CardContent className="flex flex-col p-7 gap-y-4">
         <Button
-          variant="secondary"
+          variant="outline"
           size="lg"
           className="w-full"
           disabled={isSigningIn}
@@ -74,7 +74,7 @@ export function SignInCard() {
           Log In with Google
         </Button>
         <Button
-          variant="secondary"
+          variant="outline"
           size="lg"
           className="w-full"
           disabled={isSigningIn}
@@ -90,7 +90,7 @@ export function SignInCard() {
       <div className="px-7">
         <DottedSeparator />
       </div>
-      <CardContent className="p-7">
+      {/* <CardContent className="p-7">
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
@@ -137,10 +137,10 @@ export function SignInCard() {
             </Button>
           </form>
         </Form>
-      </CardContent>
-      <div className="px-7">
+      </CardContent> */}
+      {/* <div className="px-7">
         <DottedSeparator />
-      </div>
+      </div> */}
       <CardContent className="p-7 flex items-center justify-center">
         <p className="">
           Don&apos;t have an account?

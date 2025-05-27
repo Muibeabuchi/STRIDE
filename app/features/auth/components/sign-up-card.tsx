@@ -64,7 +64,7 @@ export function SignUpCard() {
     <Card className="w-full h-full md:w-[486px] border-none shadow-none ">
       <CardHeader className="flex flex-col items-center justify-center text-center p-7">
         <CardTitle className="text-2xl">Sign Up</CardTitle>
-        <CardDescription className="text-2xl">
+        {/* <CardDescription className="text-2xl">
           By signing up you agree to our {""}
           <Link to=".">
             <span className="text-blue-700">Privacy policy</span>
@@ -73,14 +73,14 @@ export function SignUpCard() {
           <Link to=".">
             <span className="text-blue-700">Terms of Service</span>
           </Link>
-        </CardDescription>
+        </CardDescription> */}
       </CardHeader>
       <div className="px-7 ">
         <DottedSeparator />
       </div>
       <CardContent className="flex flex-col p-7 gap-y-4">
         <Button
-          variant="secondary"
+          variant="outline"
           size="lg"
           className="w-full"
           disabled={false}
@@ -89,12 +89,7 @@ export function SignUpCard() {
           <FcGoogle className="mr-2 size-5" />
           Log In with Google
         </Button>
-        <Button
-          variant="secondary"
-          size="lg"
-          className="w-full"
-          disabled={false}
-        >
+        <Button variant="outline" size="lg" className="w-full" disabled={false}>
           <FaGithub className="mr-2 size-5" />
           Log In with Github
         </Button>
@@ -102,7 +97,7 @@ export function SignUpCard() {
       <div className="px-7">
         <DottedSeparator />
       </div>
-      <CardContent className="p-7">
+      {/* <CardContent className="p-7">
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
@@ -164,7 +159,7 @@ export function SignUpCard() {
       </CardContent>
       <div className="px-7">
         <DottedSeparator />
-      </div>
+      </div> */}
 
       <CardContent className="p-7 flex items-center justify-center">
         <p className="">
