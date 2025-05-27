@@ -55,6 +55,14 @@
       "type": "image/png"
     }
   ],
+  "shortcuts":[
+    {
+  "name":"Create New Workspace",
+  "short_name":"Create",
+  "description":"Create a New Workspace",
+  "url":"/workspaces/create"
+    }
+  ],
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000",
