@@ -11,8 +11,8 @@ function Sidebar() {
   return (
     <aside className="h-full bg-neutral-100 p-4 w-full ">
       <Link to="/" className="flex items-center gap-x-2">
+        <p className="font-bold text-muted-foreground text-2xl">Stride</p>
         <img src="/logo.svg" alt="logo" width={50} height={50} />
-        <p>INRI-TEAM</p>
       </Link>
       <DottedSeparator className="my-4" />
       <Suspense fallback={<WorkspaceSwitcherSkeleton />}>

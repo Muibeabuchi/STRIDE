@@ -1,7 +1,7 @@
 import {
-  authenticatedUserMutation,
   authenticatedUserQuery,
   authorizedWorkspaceMutation,
+  authorizedWorkspaceQuery,
 } from "./middleware";
 import { ConvexError, v } from "convex/values";
 
@@ -36,6 +36,13 @@ export const get = authenticatedUserQuery({
         };
       })
     );
+  },
+});
+
+export const getMember = authorizedWorkspaceQuery({
+  args: {},
+  async handler(ctx) {
+    return ctx.member;
   },
 });
 

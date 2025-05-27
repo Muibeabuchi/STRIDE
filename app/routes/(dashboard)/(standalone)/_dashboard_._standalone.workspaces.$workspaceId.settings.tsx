@@ -1,8 +1,10 @@
 import { UpdateWorkspaceForm } from "@/features/workspaces/components/update-workspace-form";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Id } from "convex/_generated/dataModel";
 import useGetWorkSpaceById from "@/features/workspaces/api/use-get-workspace-by-id";
 import WorkspaceSettingsSkeleton from "@/features/workspaces/components/update-workspace-form-skeleton";
+import { useGetMember } from "@/features/members/api/use-get-member";
+import Unauthorized from "@/components/unauthorized";
 
 export const Route = createFileRoute(
   "/(dashboard)/(standalone)/_dashboard_/_standalone/workspaces/$workspaceId/settings"
@@ -34,13 +36,36 @@ function RouteComponent() {
     isLoading,
   } = useGetWorkSpaceById(workspaceId);
 
-  if (workspace === undefined || isPending || isLoading) {
+  const navigate = useNavigate();
+  const { data: workspaceMember, isLoading: loadingMember } =
+    useGetMember(workspaceId);
+
+  if (
+    workspace === undefined ||
+    isPending ||
+    isLoading ||
+    loadingMember ||
+    workspaceMember === undefined
+  ) {
     return (
       <div className="w-full lg:max-w-xl">
         <WorkspaceSettingsSkeleton />;
       </div>
     );
   }
+  if (workspaceMember.role === "member") {
+    return (
+      <Unauthorized
+        showBackButton={false}
+        onHomeClick={() =>
+          navigate({
+            to: "/",
+          })
+        }
+      />
+    );
+  }
+
   return (
     <div className="w-full lg:max-w-xl">
       <UpdateWorkspaceForm

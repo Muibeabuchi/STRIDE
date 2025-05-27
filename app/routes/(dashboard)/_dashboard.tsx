@@ -1,19 +1,11 @@
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 import { CreateWorkspaceModal } from "@/features/workspaces/components/create-workspace-modal";
-import { convexQuery, useConvexAuth } from "@convex-dev/react-query";
-import {
-  Outlet,
-  redirect,
-  stripSearchParams,
-  useNavigate,
-} from "@tanstack/react-router";
-import { api } from "convex/_generated/api";
+import { Outlet } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { CreateProjectModal } from "@/features/projects/components/create-project-modal";
 import { CreateTaskModal } from "@/features/tasks/components/create-task-modal";
 import { EditTaskModal } from "@/features/tasks/components/edit-task-modal";
-import { useEffect, useState } from "react";
 import { useProtectAuthPage } from "@/hooks/use-protect-auth-page";
 
 export const Route = createFileRoute("/(dashboard)/_dashboard")({
