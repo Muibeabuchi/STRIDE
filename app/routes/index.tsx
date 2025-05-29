@@ -47,7 +47,7 @@ export function IndexRoute() {
         //   ? (lastWorkspace as Id<"workspaces">)
         //   : workspaces[0]._id;
 
-        setLastWorkspace(workspaces[0]._id);
+        setLastWorkspace(validWorkspace);
 
         navigate({
           to: "/workspaces/$workspaceId",
