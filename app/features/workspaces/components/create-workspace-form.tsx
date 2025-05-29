@@ -24,6 +24,8 @@ import { createWorkspaceSchema } from "../schema";
 import { useCreateWorkspace } from "../api/use-create-workspace";
 import { useGenerateUploadUrl } from "@/hooks/use-generate-image-upload-url";
 import { useRouter } from "@tanstack/react-router";
+import { useLocalStorage } from "usehooks-ts";
+import { lastWorkspaceLocalStorageKey } from "@/routes";
 
 interface createWorkspaceFormProps {
   onCancel?: () => void;
@@ -35,6 +37,11 @@ export const CreateWorkspaceForm = ({ onCancel }: createWorkspaceFormProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { mutate: createWorkspace, isPending: isCreatingWorkspace } =
     useCreateWorkspace();
+
+  const [lastWorkspace, setLastWorkspace] = useLocalStorage(
+    lastWorkspaceLocalStorageKey,
+    ""
+  );
   const { handleSendImage } = useGenerateUploadUrl();
   const form = useForm<z.infer<typeof createWorkspaceSchema>>({
     defaultValues: {
@@ -58,6 +65,9 @@ export const CreateWorkspaceForm = ({ onCancel }: createWorkspaceFormProps) => {
         },
         {
           onSuccess(data) {
+            // Todo: Add the newWorkspace to LocalStorage
+            setLastWorkspace(data);
+
             form.reset();
             onCancel?.();
             router.navigate({

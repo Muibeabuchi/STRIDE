@@ -13,6 +13,9 @@ import { useCreateWorkspaceModal } from "@/features/workspaces/hooks/use-create-
 import { useNavigate } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
+import { use } from "react";
+import { useLocalStorage } from "usehooks-ts";
+import { lastWorkspaceLocalStorageKey } from "@/routes";
 
 export function WorkspaceSwitcherSkeleton() {
   return (
@@ -29,11 +32,17 @@ export function WorkspaceSwitcherSkeleton() {
 export default function WorkspaceSwitcher() {
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
+  const [lastWorkspace, setLastWorkspace] = useLocalStorage(
+    lastWorkspaceLocalStorageKey,
+    ""
+  );
 
   const { data: workspaces } = useGetUserWorkspaces();
   const { open } = useCreateWorkspaceModal();
 
   const onSelect = (workspaceId: Id<"workspaces">) => {
+    // Todo: Add the selected workspace to localStorage
+    setLastWorkspace(workspaceId);
     navigate({
       to: `/workspaces/$workspaceId`,
       params: { workspaceId },

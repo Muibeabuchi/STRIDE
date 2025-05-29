@@ -4,6 +4,9 @@ import { Id } from "convex/_generated/dataModel";
 import { LogoLoader } from "@/components/Loader";
 import { useProtectAuthPage } from "@/hooks/use-protect-auth-page";
 import { useEffect } from "react";
+import { useLocalStorage } from "usehooks-ts";
+
+export const lastWorkspaceLocalStorageKey = "stride-user-last-workspace";
 
 export const Route = createFileRoute("/")({
   component: IndexRoute,
@@ -12,6 +15,10 @@ export const Route = createFileRoute("/")({
 export function IndexRoute() {
   const navigate = useNavigate();
   const { showAuthContent, isAuthenticated } = useProtectAuthPage();
+  const [lastWorkspace, setLastWorkspace] = useLocalStorage(
+    lastWorkspaceLocalStorageKey,
+    ""
+  );
 
   const {
     data: workspaces,
@@ -27,10 +34,25 @@ export function IndexRoute() {
         });
       }
       if (workspaces && workspaces.length > 0) {
+        // Todo: First check in local storage if there is a value for the last workspace the user visited
+        // Todo: If it exists, check if it exists in the user workspaces and  navigate the user to the workspace, else navigate to the first workspace they belong to
+
+        const isLocalStorageWorkspaceValid = workspaces.find(
+          (workspace) => workspace._id === lastWorkspace
+        );
+        const validWorkspace = isLocalStorageWorkspaceValid
+          ? (isLocalStorageWorkspaceValid._id as Id<"workspaces">)
+          : workspaces[0]._id;
+        // const WorkspaceToRedirect = lastWorkspace
+        //   ? (lastWorkspace as Id<"workspaces">)
+        //   : workspaces[0]._id;
+
+        setLastWorkspace(workspaces[0]._id);
+
         navigate({
           to: "/workspaces/$workspaceId",
           params: {
-            workspaceId: workspaces[0]._id,
+            workspaceId: validWorkspace,
           },
         });
       }
