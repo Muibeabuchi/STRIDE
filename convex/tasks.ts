@@ -21,10 +21,10 @@ export const create = authorizedWorkspaceMutation({
   args: {
     status: taskStatusValidator,
     taskName: v.string(),
-    // TODO: Refactor to accept and store the memberId instead of the userId
     assigneeId: v.id("users"),
     projectId: v.id("projects"),
     dueDate: v.string(),
+    copy: v.optional(v.boolean()),
   },
   async handler(ctx, args) {
     // only admin members of the workspace and  are allowed to create tasks
@@ -62,6 +62,55 @@ export const create = authorizedWorkspaceMutation({
       dueDate: args.dueDate,
       assigneeId: args.assigneeId,
       position: newPosition,
+    });
+  },
+});
+
+export const copy = authorizedWorkspaceMutation({
+  args: {
+    taskId: v.id("tasks"),
+  },
+  async handler(ctx, args) {
+    //? Grab the task tok be copied
+    const taskToBeCopied = await ctx.db.get(args.taskId);
+    if (!taskToBeCopied)
+      throw new ConvexError("Task to be copied does not exist");
+
+    // It will be nice when a task is copied, the new task appears right below it
+    // ?Grab the task right below this task,If it doesn't exist, it means its the last in the list and we just add 1000 to the position
+    const projectTasks = await ctx.db
+      .query("tasks")
+      .withIndex("by_workspaceId_by_projectId_by_status", (q) =>
+        q
+          .eq("workspaceId", args.workspaceId)
+          .eq("projectId", taskToBeCopied.projectId)
+          .eq("status", taskToBeCopied.status)
+      )
+      .collect();
+
+    let newPosition: number;
+
+    const sortedTasks = projectTasks
+      .filter((task) => task.position > taskToBeCopied.position)
+      .sort((a, b) => a.position - b.position);
+
+    const nextTask = sortedTasks[0];
+
+    console.log("sortedTasks", sortedTasks);
+    console.log("nextTask", nextTask);
+
+    if (!nextTask) {
+      newPosition = taskToBeCopied.position + 1000;
+    } else {
+      newPosition = (taskToBeCopied.position + nextTask.position) / 2;
+    }
+
+    const { _id, _creationTime, description, ...rest } = taskToBeCopied;
+
+    await ctx.db.insert("tasks", {
+      ...rest,
+      position: newPosition,
+      taskName: `${taskToBeCopied.taskName}-Copy`,
     });
   },
 });
@@ -217,7 +266,11 @@ export const getById = authenticatedUserQuery({
 });
 
 export const remove = mutation({
-  args: { taskId: v.id("tasks") },
+  args: {
+    taskId: v.id("tasks"),
+    workspaceId: v.id("workspaces"),
+    projectId: v.id("projects"),
+  },
   async handler(ctx, args) {
     const task = await ensureTaskExists(ctx, args.taskId);
     if (!task) throw new ConvexError("Failed to confirm if the task is exists");
