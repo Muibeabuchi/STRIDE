@@ -321,7 +321,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                 {(prop) => {
                   return (
                     <div
-                      className="min-h-[200px] py-1.5"
+                      className="min-h-[200px] max-h-[600px] overflow-y-auto py-1.5"
                       {...prop.droppableProps}
                       ref={prop.innerRef}
                     >
@@ -338,7 +338,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                                   {...prop.draggableProps}
                                   {...prop.dragHandleProps}
                                   ref={prop.innerRef}
-                                  className=""
+                                  className="overflow-y-auto"
                                 >
                                   <KanbanCard task={task} />
                                 </div>

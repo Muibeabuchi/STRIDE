@@ -18,6 +18,12 @@ import { useNavigate } from "@tanstack/react-router";
 import { useEditTaskModalStore } from "@/store/store";
 import { useCopyTask } from "../api/use-copy-task";
 
+import {
+  getRouteApi,
+  useLocation,
+  useMatchRoute,
+} from "@tanstack/react-router";
+
 interface TaskActionProps {
   id: Id<"tasks">;
   projectId: Id<"projects">;
@@ -42,6 +48,11 @@ const TaskActions = ({
 
   const { mutate: removeTask, isPending: deletingTask } = useDeleteTask();
   const { mutate: CopyTask, isPending: CopyingTask } = useCopyTask();
+
+  const matchRoute = useMatchRoute();
+  const params = matchRoute({
+    to: "/workspaces/$workspaceId/projects/$projectId",
+  });
 
   const onDeleteTask = async () => {
     const ok = await confirm();
@@ -95,13 +106,15 @@ const TaskActions = ({
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuItem
-            onClick={onOpenProject}
-            className="font-medium p-[10px]"
-          >
-            <ExternalLinkIcon className="size-4 mr-w stroke-2" />
-            Open Project
-          </DropdownMenuItem>
+          {params === false ? (
+            <DropdownMenuItem
+              onClick={onOpenProject}
+              className="font-medium p-[10px]"
+            >
+              <ExternalLinkIcon className="size-4 mr-w stroke-2" />
+              Open Project
+            </DropdownMenuItem>
+          ) : null}
           <DropdownMenuItem onClick={openTask} className="font-medium p-[10px]">
             <ExternalLinkIcon className="size-4 mr-w stroke-2" />
             Task Details
