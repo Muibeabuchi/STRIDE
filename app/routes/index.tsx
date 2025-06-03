@@ -34,8 +34,8 @@ export function IndexRoute() {
         });
       }
       if (workspaces && workspaces.length > 0) {
-        // Todo: First check in local storage if there is a value for the last workspace the user visited
-        // Todo: If it exists, check if it exists in the user workspaces and  navigate the user to the workspace, else navigate to the first workspace they belong to
+        //  First check in local storage if there is a value for the last workspace the user visited
+        //  If it exists, check if it exists in the user workspaces and  navigate the user to the workspace, else navigate to the first workspace they belong to
 
         const isLocalStorageWorkspaceValid = workspaces.find(
           (workspace) => workspace._id === lastWorkspace
@@ -67,29 +67,7 @@ export function IndexRoute() {
   if (!showAuthContent) return null;
 
   if (workspaces === null || isError) {
-    return <p>Error Occured</p>;
+    return <p>Error Occurred</p>;
   }
   return <LogoLoader />;
 }
-
-export const useWorkspaceExists = (workspaceId: Id<"workspaces">) => {
-  const navigate = useNavigate();
-
-  const { data: workspaces, isPending } = useGetUserWorkspaces();
-
-  if (isPending || workspaces == undefined) {
-    return null;
-  }
-  if (!workspaces || workspaces.length === 0) {
-    navigate({
-      to: "/workspaces/create",
-    });
-  } else {
-    navigate({
-      to: "/workspaces/$workspaceId",
-      params: {
-        workspaceId: workspaceId || workspaces[0]._id,
-      },
-    });
-  }
-};

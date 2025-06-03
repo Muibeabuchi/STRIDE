@@ -8,7 +8,7 @@ import { Row } from "react-day-picker";
 import TaskDate from "./task-date";
 import { Badge } from "@/components/ui/badge";
 import { snakeCaseToTitleCase } from "@/lib/utils";
-import { TaskStatus } from "../schema";
+// import { TaskStatus } from "../schema";
 import TaskActions from "./task-actions";
 
 export const columns: ColumnDef<PaginatedTasksResponse>[] = [
@@ -95,11 +95,7 @@ export const columns: ColumnDef<PaginatedTasksResponse>[] = [
     cell: ({ row }) => {
       const status = row.original.status;
 
-      return (
-        <Badge variant={TaskStatus[status]}>
-          {snakeCaseToTitleCase(status)}
-        </Badge>
-      );
+      return <Badge>{snakeCaseToTitleCase(status)}</Badge>;
     },
   },
   {

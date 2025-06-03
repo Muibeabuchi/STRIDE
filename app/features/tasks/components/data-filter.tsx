@@ -18,7 +18,7 @@ import {
 import {
   StatusSchema,
   StatusSchemaType,
-  TaskStatus,
+  // TaskStatus,
   taskViewSearchType,
 } from "../schema";
 import useTaskFilters from "../hooks/use-task-filters";
@@ -67,20 +67,22 @@ const DataFilter = ({
     name: member.userName,
   }));
 
+  const projectTaskStatus = projects.data[0]?.projectTaskStatus;
+
   return (
     <div className="flex flex-col lg:flex-row gap-2">
       <Select
         defaultValue={status || "ALL"}
         value={status}
         onValueChange={(value) => {
-          try {
-            const parsedStatus = StatusSchema.parse(value);
-            onStatusChange(parsedStatus);
-          } catch (error) {
-            console.error(
-              "Error parsing the value of status from the select component"
-            );
-          }
+          // try {
+          const parsedStatus = StatusSchema.parse(value);
+          onStatusChange(parsedStatus);
+          // } catch (error) {
+          //   console.error(
+          //     "Error parsing the value of status from the select component"
+          //   );
+          // }
         }}
       >
         <SelectTrigger className="w-full lg:w-auto h-8">
@@ -89,15 +91,20 @@ const DataFilter = ({
             <SelectValue placeholder="All Statuses" />
           </div>
         </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ALL">All Statuses</SelectItem>
-          <SelectSeparator />
-          <SelectItem value={TaskStatus.BACKLOG}>BACKLOG</SelectItem>
-          <SelectItem value={TaskStatus.DONE}>DONE</SelectItem>
-          <SelectItem value={TaskStatus.IN_PROGRESS}>IN PROGRESS</SelectItem>
-          <SelectItem value={TaskStatus.IN_REVIEW}>IN REVIEW</SelectItem>
-          <SelectItem value={TaskStatus.TODO}>TODO</SelectItem>
-        </SelectContent>
+        {projectTaskStatus === null ? null : (
+          <SelectContent>
+            <SelectItem value="ALL">All Task Status</SelectItem>
+            <SelectSeparator />
+            {/*TODO: Fix this Later after migrations */}
+            {projectTaskStatus?.map((status) => (
+              <SelectItem value={status}>{status}</SelectItem>
+            ))}
+            {/* <SelectItem value={TaskStatus.DONE}>DONE</SelectItem>
+            <SelectItem value={TaskStatus.IN_PROGRESS}>IN PROGRESS</SelectItem>
+            <SelectItem value={TaskStatus.IN_REVIEW}>IN REVIEW</SelectItem>
+            <SelectItem value={TaskStatus.TODO}>TODO</SelectItem> */}
+          </SelectContent>
+        )}
       </Select>
 
       <Select

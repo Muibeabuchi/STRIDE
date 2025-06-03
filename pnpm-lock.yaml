@@ -14,6 +14,9 @@ importers:
       '@convex-dev/auth':
         specifier: ^0.0.82
         version: 0.0.82(@auth/core@0.37.0)(convex@1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+      '@convex-dev/migrations':
+        specifier: ^0.2.8
+        version: 0.2.8(convex@1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@convex-dev/react-query':
         specifier: 0.0.0-alpha.8
         version: 0.0.0-alpha.8(@tanstack/react-query@5.74.4(react@19.1.0))(convex@1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
@@ -406,6 +409,11 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
+
+  '@convex-dev/migrations@0.2.8':
+    resolution: {integrity: sha512-Hf/UNzbhEG0QOt2O08eshN+reQ/TsZLS3QUq+wwKK+KimmqFJ+NPHxlCkTZelITFVYeJtRKGwyXcAfp+zFdc8g==}
+    peerDependencies:
+      convex: ~1.16.5 || >=1.17.0 <1.35.0
 
   '@convex-dev/react-query@0.0.0-alpha.8':
     resolution: {integrity: sha512-Rv/q7/CplU75f7ckBd2vh+HoeeQ0tOrjwMl14Hk7D/03e55oUIU0TV5JYYzC79ZQyyAtoj7CmCo5ZxcmtKNv1Q==}
@@ -5293,6 +5301,10 @@ snapshots:
       server-only: 0.0.1
     optionalDependencies:
       react: 19.1.0
+
+  '@convex-dev/migrations@0.2.8(convex@1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
+    dependencies:
+      convex: 1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
 
   '@convex-dev/react-query@0.0.0-alpha.8(@tanstack/react-query@5.74.4(react@19.1.0))(convex@1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
     dependencies:

@@ -1,11 +1,11 @@
-import { PaginatedTasksResponse, taskStatus } from "convex/schema";
+import { PaginatedTasksResponse } from "convex/schema";
 import {
   DragDropContext,
   Draggable,
   Droppable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { TaskStatus } from "../schema";
+// import { TaskStatus } from "../schema";
 import KanbanColumnHeader from "./kanban-column-header";
 import KanbanCard from "./kanban-card";
 import { useCallback } from "react";
@@ -16,33 +16,74 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 interface DataKanbanProps {
   data: PaginatedTasksResponse[];
 }
-const boards = [
-  TaskStatus.BACKLOG,
-  TaskStatus.DONE,
-  TaskStatus.IN_PROGRESS,
-  TaskStatus.IN_REVIEW,
-  TaskStatus.TODO,
-] as const;
+// const boards = [
+//   TaskStatus.BACKLOG,
+//   TaskStatus.DONE,
+//   TaskStatus.IN_PROGRESS,
+//   TaskStatus.IN_REVIEW,
+//   TaskStatus.TODO,
+// ] as const;
 
-type TaskState = {
-  [key in taskStatus]: PaginatedTasksResponse[];
-};
+type TaskState = Record<string, PaginatedTasksResponse[]>;
 
 const DataKanban = ({ data }: DataKanbanProps) => {
-  const kanbanTasks: TaskState = {
-    [TaskStatus.BACKLOG]: [],
-    [TaskStatus.DONE]: [],
-    [TaskStatus.IN_PROGRESS]: [],
-    [TaskStatus.IN_REVIEW]: [],
-    [TaskStatus.TODO]: [],
-  };
+  // const kanbanTasks: TaskState = {
+  //   [TaskStatus.BACKLOG]: [],
+  //   [TaskStatus.DONE]: [],
+  //   [TaskStatus.IN_PROGRESS]: [],
+  //   [TaskStatus.IN_REVIEW]: [],
+  //   [TaskStatus.TODO]: [],
+  // };
+  // data[0].
+
+  let kanbanTasks: TaskState = {};
+
+  const kanbanTasksStatus = data[0]?.taskProject.projectTaskStatus ?? [];
+  console.log(data);
+  console.log(kanbanTasksStatus);
+
+  kanbanTasksStatus.map((task) => {
+    kanbanTasks[task] = [];
+  });
+
+  // const boards = Object.keys(kanbanBoards?.[0]);
+  const boards = data[0].taskProject?.projectTaskStatus ?? [];
+
+  console.log("boards", boards);
   const tasks = data.reduce((acc, currentTask) => {
-    acc[currentTask.status as TaskStatus].push(currentTask);
+    // check if the status of task is equal to key of the board
+    const status = currentTask.status;
+    console.log("status", status);
+
+    // const taskStatusKey = Object.keys(acc[0]);
+    // console.log("taskStatusKey", taskStatusKey);
+    const taskKey = boards.find((key) => key === status);
+    console.log("taskKey", taskKey);
+    if (!taskKey) throw new Error("Key does not match");
+    console.log(acc[0]);
+    console.log(acc);
+    if (taskKey === status) {
+      console.log(acc[taskKey]);
+      acc[taskKey].push(currentTask);
+    }
+
+    // currentTask.taskProject.projectTaskStatus?.map((task) => {
+    //   // get the key of the object
+    //   const taskStatusKey = Object.keys(acc[0]);
+    //   const taskKey = taskStatusKey.find(key=>key === status);
+    //   if(!taskKey) throw new Error("Key does not match")
+    //     acc[0][taskKey].push(currentTask)
+    //   // const taskStatusKey = acc[0][status];
+    //   // if (taskStatusKey === task) {
+    //   //   return acc[0][task].push(currentTask);
+    //   // }
+    // });
+
     return acc;
   }, kanbanTasks);
 
   Object.keys(tasks).map((status) => {
-    return tasks[status as TaskStatus].sort((a, b) => a.position - b.position);
+    return tasks[status].sort((a, b) => a.position - b.position);
   });
 
   const editTask = useEditTask();
@@ -52,8 +93,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
     const { source, destination } = result;
 
-    const sourceStatus = source.droppableId as taskStatus;
-    const destinationStatus = destination.droppableId as taskStatus;
+    const sourceStatus = source.droppableId;
+    const destinationStatus = destination.droppableId;
 
     const sourceColumn = tasks[sourceStatus];
     const destinationColumn = tasks[destinationStatus];
@@ -273,7 +314,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
               key={board}
             >
               <KanbanColumnHeader
-                taskCount={kanbanTasks[board].length}
+                taskCount={tasks[board].length}
                 board={board}
               />
               <Droppable droppableId={board}>
@@ -284,7 +325,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                       {...prop.droppableProps}
                       ref={prop.innerRef}
                     >
-                      {kanbanTasks[board].map((task, index) => {
+                      {tasks[board].map((task, index) => {
                         return (
                           <Draggable
                             key={task._id}

@@ -27,18 +27,18 @@ const ProjectAnalytics = ({
     return <AnalyticsCardsSkeleton />;
   }
   return (
-    <ScrollArea className="border rounded-lg w-full whitespace-nowrap shrink-0">
-      <div className="w-full flex flex-row">
-        <div className="flex w-full items-center flex-1 shrink-0 ">
+    <ScrollArea className=" rounded-lg w-full whitespace-nowrap shrink-0">
+      <div className="w-full flex flex-row gap-x-2">
+        <div className="flex w-full border rounded-xl items-center flex-1 shrink-0 ">
           <AnalyticsCard
             title="Total Tasks"
             value={dataAnalyticsData.taskCount}
             variant={dataAnalyticsData.taskDifference > 0 ? "up" : "down"}
             increaseValue={dataAnalyticsData.taskDifference}
           />
-          <DottedSeparator direction="vertical" />
+          {/* <DottedSeparator direction="vertical" /> */}
         </div>
-        <div className="flex w-full items-center flex-1">
+        <div className="flex border rounded-xl w-full items-center flex-1">
           <AnalyticsCard
             title="Assigned Tasks"
             value={dataAnalyticsData.assignedTaskCount}
@@ -47,10 +47,10 @@ const ProjectAnalytics = ({
             }
             increaseValue={dataAnalyticsData.assignedTaskDifference}
           />
-          <DottedSeparator direction="vertical" />
+          {/* <DottedSeparator direction="vertical" /> */}
         </div>
 
-        <div className="flex w-full items-center flex-1">
+        {/* <div className="flex w-full items-center flex-1">
           <AnalyticsCard
             title="Completed Tasks"
             value={dataAnalyticsData.completedTaskCount}
@@ -81,7 +81,7 @@ const ProjectAnalytics = ({
             }
             increaseValue={dataAnalyticsData.overdueTaskDifference}
           />
-        </div>
+        </div> */}
       </div>
       <ScrollBar orientation="horizontal" />
     </ScrollArea>

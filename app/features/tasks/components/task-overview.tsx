@@ -8,7 +8,7 @@ import { getTaskByIdResponse } from "convex/schema";
 import TaskDate from "./task-date";
 import { Badge } from "@/components/ui/badge";
 import { snakeCaseToTitleCase } from "@/lib/utils";
-import { TaskStatus } from "../schema";
+// import { TaskStatus } from "../schema";
 import { useEditTask } from "../api/use-edit-task";
 import { useEditTaskModalStore } from "@/store/store";
 
@@ -42,9 +42,7 @@ const TaskOverview = ({ task }: TaskOverviewProps) => {
             <TaskDate value={task.dueDate} className="text-sm font-medium" />
           </OverviewProperty>
           <OverviewProperty label="Due Date">
-            <Badge variant={TaskStatus[task.status]}>
-              {snakeCaseToTitleCase(task.status)}
-            </Badge>
+            <Badge>{snakeCaseToTitleCase(task.status)}</Badge>
           </OverviewProperty>
         </div>
       </div>

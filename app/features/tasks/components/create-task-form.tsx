@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 
-import { createTaskSchema, TaskStatus } from "../schema";
+import { createTaskSchema } from "../schema";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useMatchRoute, useNavigate } from "@tanstack/react-router";
 import { useCreateTask } from "../api/use-create-task";
@@ -45,12 +45,14 @@ interface CreateTaskFormProps {
     id: Id<"users">;
     name: string | undefined;
   }[];
+  projectTaskStatus: string[] | null;
 }
 
 export const CreateTaskForm = ({
   onCancel,
   memberOptions,
   projectOptions,
+  projectTaskStatus,
 }: CreateTaskFormProps) => {
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
@@ -211,47 +213,43 @@ export const CreateTaskForm = ({
                 }}
               />
 
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>Select Status</FormLabel>
-                      <Select
-                        defaultValue={
-                          taskStatus === "ALL" || taskStatus === null
-                            ? undefined
-                            : taskStatus
-                        }
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Status" />
-                          </SelectTrigger>
-                        </FormControl>
+              {projectTaskStatus && (
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormLabel>Select Status</FormLabel>
+                        <Select
+                          defaultValue={
+                            taskStatus === "ALL" || taskStatus === null
+                              ? undefined
+                              : taskStatus
+                          }
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <FormMessage />
+                          <SelectContent>
+                            {projectTaskStatus.map((task) => (
+                              <SelectItem value={task} key={task}>
+                                {task.toLocaleUpperCase()}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
-                        <SelectContent>
-                          <SelectItem value={TaskStatus.BACKLOG}>
-                            BACKLOG
-                          </SelectItem>
-                          <SelectItem value={TaskStatus.DONE}>DONE</SelectItem>
-                          <SelectItem value={TaskStatus.IN_PROGRESS}>
-                            IN PROGRESS
-                          </SelectItem>
-                          <SelectItem value={TaskStatus.IN_REVIEW}>
-                            IN REVIEW
-                          </SelectItem>
-                          <SelectItem value={TaskStatus.TODO}>TODO</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
+                      </FormItem>
+                    );
+                  }}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="projectId"

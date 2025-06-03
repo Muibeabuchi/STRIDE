@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 
-import { createTaskSchema, TaskStatus } from "../schema";
+import { createTaskSchema } from "../schema";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useNavigate } from "@tanstack/react-router";
 import { useCreateTask } from "../api/use-create-task";
@@ -50,6 +50,7 @@ interface EditTaskFormProps {
     name: string | undefined;
   }[];
   initialValues: getTaskByIdResponse;
+  projectTaskStatus: string[] | null;
 }
 
 export const EditTaskForm = ({
@@ -58,6 +59,7 @@ export const EditTaskForm = ({
   projectOptions,
   taskId,
   initialValues,
+  projectTaskStatus,
 }: EditTaskFormProps) => {
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
@@ -70,7 +72,7 @@ export const EditTaskForm = ({
       dueDate: new Date(initialValues.dueDate),
       projectId: initialValues.projectId,
       //! Watch out for this typescript assertion
-      status: initialValues.status as TaskStatus,
+      status: initialValues.status,
       taskName: initialValues.taskName,
     },
   });
@@ -181,7 +183,7 @@ export const EditTaskForm = ({
                 }}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="status"
                 render={({ field }) => {
@@ -216,7 +218,46 @@ export const EditTaskForm = ({
                     </FormItem>
                   );
                 }}
-              />
+              /> */}
+
+              {projectTaskStatus && (
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormLabel>Select Status</FormLabel>
+                        <Select
+                          // defaultValue={
+                          //   taskStatus === "ALL" || taskStatus === null
+                          //     ? undefined
+                          //     : taskStatus
+                          // }
+
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <FormMessage />
+                          <SelectContent>
+                            {projectTaskStatus.map((task) => (
+                              <SelectItem value={task}>
+                                {task.toLocaleUpperCase()}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="projectId"

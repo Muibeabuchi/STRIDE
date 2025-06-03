@@ -10,6 +10,26 @@ export async function ensureTaskExists(ctx: QueryCtx, taskId: Id<"tasks">) {
   return task;
 }
 
+export const ensureProjectTaskStatus = async ({
+  ctx,
+  status,
+  projectId,
+}: {
+  ctx: QueryCtx;
+  status: string | undefined;
+  projectId: Id<"projects">;
+}) => {
+  if (!status) return undefined;
+
+  const project = await ctx.db.get(projectId);
+  if (!project) throw new ConvexError("Project does not exist");
+  if (!project.projectTaskStatus)
+    throw new ConvexError("ProjectTaskStatus does not exist");
+
+  // check if the status is defined in  the project
+  return project.projectTaskStatus.find((s) => s === status);
+};
+
 export const validateTaskWorkspace = async (
   ctx: QueryCtx,
   workspaceId: Id<"workspaces">

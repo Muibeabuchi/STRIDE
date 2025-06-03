@@ -4,14 +4,6 @@ import { Doc } from "./_generated/dataModel";
 import { api } from "./_generated/api";
 import { authTables } from "@convex-dev/auth/server";
 
-export const taskStatusValidator = v.union(
-  v.literal("BACKLOG"),
-  v.literal("TODO"),
-  v.literal("IN_PROGRESS"),
-  v.literal("DONE"),
-  v.literal("IN_REVIEW")
-);
-
 const schema = defineSchema({
   ...authTables,
   workspaces: defineTable({
@@ -32,9 +24,12 @@ const schema = defineSchema({
     projectImage: v.optional(v.id("_storage")),
     projectName: v.string(),
     workspaceId: v.id("workspaces"),
+    // Project status can either be an array of strings or  null
+    projectTaskStatus: v.optional(v.union(v.array(v.string()), v.null())),
   })
     .index("by_workspaceId", ["workspaceId"])
-    .index("by_projectName", ["projectName"]),
+    .index("by_projectName", ["projectName"])
+    .index("by_Status", ["projectTaskStatus"]),
   tasks: defineTable({
     workspaceId: v.id("workspaces"),
     projectId: v.id("projects"),
@@ -42,9 +37,9 @@ const schema = defineSchema({
     assigneeId: v.id("users"),
     description: v.optional(v.string()),
     dueDate: v.string(),
-    status: taskStatusValidator,
+    // ? A task must always have a status
+    status: v.string(),
     position: v.number(),
-    // min position = 1000,max position = 1000000
   })
     .index("by_workspaceId_by_projectId_by_status", [
       "workspaceId",
@@ -62,9 +57,11 @@ const schema = defineSchema({
 });
 export default schema;
 
-export type taskStatus = Infer<typeof taskStatusValidator>;
+// export type taskStatus = Infer<typeof taskStatusValidator>;
 
 export const taskValidator = schema.tables.tasks.validator.fields;
+
+// export const TaskKanbanData =
 
 // export type TasksArguments = Infer<typeof schema.tables.tasks.validator>;
 export type Tasks = Doc<"tasks">;
@@ -72,47 +69,3 @@ export type PaginatedTasksResponse = (typeof api.tasks.get._returnType)[number];
 export type getTaskByIdResponse = typeof api.tasks.getById._returnType;
 export type getProjectAnalytics =
   typeof api.projects.getProjectAnalytics._returnType;
-
-// const board = schema.tables.boards.validator;
-// const board = schema.tables.boards.validator;
-// const column = schema.tables.columns.validator;
-// const item = schema.tables.items.validator;
-
-// export const updateBoardSchema = v.object({
-//   id: board.fields.id,
-//   name: v.optional(board.fields.name),
-//   color: v.optional(v.string()),
-// });
-
-// export const updateColumnSchema = v.object({
-//   id: column.fields.id,
-//   boardId: column.fields.boardId,
-//   name: v.optional(column.fields.name),
-//   order: v.optional(column.fields.order),
-// });
-
-// export const deleteItemSchema = v.object({
-//   id: item.fields.id,
-//   boardId: item.fields.boardId,
-// });
-// const { order, id, ...rest } = column.fields;
-// export const newColumnsSchema = v.object(rest);
-// export const deleteColumnSchema = v.object({
-//   boardId: column.fields.boardId,
-//   id: column.fields.id,
-// });
-
-// export type Board = Infer<typeof board>;
-// export type Column = Infer<typeof column>;
-// export type Item = Infer<typeof item>;
-
-// import { Doc } from "@/convex/_generated/dataModel";
-// import { defineSchema, defineTable } from "convex/server";
-// import { authTables } from "@convex-dev/auth/server";
-// import { Infer, v } from "convex/values";
-
-// const schema = defineSchema({
-//   ...authTables,
-
-//   // Your other tables...
-// });
