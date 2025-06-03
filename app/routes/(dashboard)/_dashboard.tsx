@@ -7,6 +7,8 @@ import { CreateProjectModal } from "@/features/projects/components/create-projec
 import { CreateTaskModal } from "@/features/tasks/components/create-task-modal";
 import { EditTaskModal } from "@/features/tasks/components/edit-task-modal";
 import { useProtectAuthPage } from "@/hooks/use-protect-auth-page";
+import { AdvancedSidebar } from "@/components/advanced-sidebar";
+import { SidebarInset } from "@/components/ui/sidebar";
 
 export const Route = createFileRoute("/(dashboard)/_dashboard")({
   component: DashboardLayout,
@@ -22,17 +24,20 @@ function DashboardLayout() {
       <CreateTaskModal />
       <EditTaskModal />
       <div className="flex w-full h-full">
-        <div className="fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-y-auto">
-          <Sidebar />
-        </div>
-        <div className="lg:pl-[264px] w-full">
+        {/* <div className="fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-y-auto"> */}
+        {/* <Sidebar /> */}
+        <AdvancedSidebar />
+        {/* </div> */}
+        {/* <div className="lg:pl-[264px] w-full"> */}
+        <SidebarInset className="flex-1 flex flex-col min-w-0">
           <div className="mx-auto max-w-screen-2xl w-full h-full">
             <Navbar />
             <main className="h-full w-full py-8 px-6 flex flex-col">
               <Outlet />
             </main>
           </div>
-        </div>
+        </SidebarInset>
+        {/* </div> */}
       </div>
     </div>
   );

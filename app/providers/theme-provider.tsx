@@ -1,6 +1,6 @@
 import { ReactNode } from "@tanstack/react-router";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import type { ThemeProviderProps } from "next-themes";
+// import type { ThemeProviderProps } from "next-themes";
 import { type Attribute } from "next-themes";
 
 export function ThemeProvider({
