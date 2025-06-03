@@ -1,7 +1,9 @@
+import Unauthorized from "@/components/unauthorized";
+import { useGetMember } from "@/features/members/api/use-get-member";
 import { useGetProjectById } from "@/features/projects/api/use-get-projects-by-id";
 import { UpdateProjectForm } from "@/features/projects/components/update-project-form";
 import ProjectSettingsSkeleton from "@/features/projects/components/update-project-skeleton";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Id } from "convex/_generated/dataModel";
 
 export const Route = createFileRoute(
@@ -26,12 +28,35 @@ function RouteComponent() {
     isLoading,
     isPending,
   } = useGetProjectById({ projectId, workspaceId });
+  const navigate = useNavigate();
 
-  if (project === undefined || isPending || isLoading) {
+  const { data: workspaceMember, isLoading: loadingMember } =
+    useGetMember(workspaceId);
+
+  if (
+    project === undefined ||
+    isPending ||
+    isLoading ||
+    loadingMember ||
+    workspaceMember === undefined
+  ) {
     return (
       <div className="w-full lg:max-w-xl">
         <ProjectSettingsSkeleton />;
       </div>
+    );
+  }
+
+  if (workspaceMember.role === "member") {
+    return (
+      <Unauthorized
+        showBackButton={false}
+        onHomeClick={() =>
+          navigate({
+            to: "/",
+          })
+        }
+      />
     );
   }
   return (

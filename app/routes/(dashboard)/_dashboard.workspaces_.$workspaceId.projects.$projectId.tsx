@@ -19,9 +19,9 @@ import {
   taskViewSearchSchema,
 } from "../../features/tasks/schema";
 import { Suspense } from "react";
-import Analytics from "@/features/projects/components/project-analytics";
 import ProjectAnalytics from "@/features/projects/components/project-analytics";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useGetMember } from "@/features/members/api/use-get-member";
 
 export const Route = createFileRoute(
   "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId"
@@ -63,6 +63,9 @@ function RouteComponent() {
     projectId: projId,
     workspaceId,
   });
+
+  const { data: workspaceMember, isLoading: isLoadingWorkspaceMember } =
+    useGetMember(workspaceId);
 
   const handleTaskViewChange = (tab: string) => {
     navigate({
@@ -120,7 +123,11 @@ function RouteComponent() {
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex items-center justify-between">
-        {project === undefined || isLoading || isPending ? (
+        {project === undefined ||
+        isLoading ||
+        isPending ||
+        workspaceMember === undefined ||
+        isLoadingWorkspaceMember ? (
           <ProjectInfoSkeleton />
         ) : (
           <div className="flex items-center gap-x-2">
@@ -133,7 +140,7 @@ function RouteComponent() {
           </div>
         )}
         {/* Todo: Hide this buttonLink for non-admin users */}
-        <div className="">
+        {workspaceMember?.role === "admin" && (
           <Button size="sm" asChild variant={"secondary"}>
             <Link
               to={"/workspaces/$workspaceId/projects/$projectId/settings"}
@@ -146,7 +153,7 @@ function RouteComponent() {
               Edit Project
             </Link>
           </Button>
-        </div>
+        )}
       </div>
       {/* Analytics component */}
       <ProjectAnalytics workspaceId={workspaceId} projectId={projId} />
