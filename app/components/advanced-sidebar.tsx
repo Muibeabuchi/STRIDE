@@ -20,8 +20,11 @@ import {
   Plus,
   Settings,
 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { useTheme } from "next-themes";
 
 export function AdvancedSidebar() {
+  const { theme } = useTheme();
   return (
     <Sidebar
       variant="sidebar"
@@ -29,7 +32,7 @@ export function AdvancedSidebar() {
       className="bg-secondary border-r border-border"
     >
       <SidebarHeader className="border-b border-border p-4">
-        <div className="flex items-center space-x-3">
+        {/* <div className="flex items-center space-x-3">
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
             <span className="text-primary-foreground font-semibold text-sm">
               P
@@ -38,7 +41,29 @@ export function AdvancedSidebar() {
           <span className="font-semibold text-lg text-sidebar-foreground">
             ProjectHub
           </span>
-        </div>
+        </div> */}
+        <Link to="/" className="flex items-center gap-x-2">
+          {/* {theme === "light" ? (
+            <img
+              src="/public/stride_dark_mode_512x512.png"
+              alt="logo"
+              width={50}
+              height={50}
+              className="hidden lg:block"
+            />
+          ) : (
+            <img
+              src="/public/ChatGPT Image May 26, 2025, 01_40_32 AM.png"
+              alt="logo"
+              className="hidden lg:block"
+              width={50}
+              height={50}
+            />
+          )} */}
+          <p className="font-bold text-muted-foreground text-2xl px-2 font-cursive">
+            Stride
+          </p>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent className="p-2">
