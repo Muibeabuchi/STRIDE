@@ -70,6 +70,10 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
                 workspaceId,
                 projectId,
               },
+              search: (search) => ({
+                ...search,
+                projectId,
+              }),
             });
           },
         }
@@ -158,7 +162,7 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
                               type="button"
                               disabled={form.formState.isSubmitting}
                               variant="destructive"
-                              size="xs"
+                              size="default"
                               className="w-fit mt-2"
                               onClick={() => {
                                 field.onChange(null);
@@ -178,8 +182,8 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
                             <Button
                               type="button"
                               disabled={form.formState.isSubmitting}
-                              variant="territory"
-                              size="xs"
+                              // variant=""
+                              // size="xs"
                               className="w-fit mt-2"
                               onClick={() => inputRef.current?.click?.()}
                             >

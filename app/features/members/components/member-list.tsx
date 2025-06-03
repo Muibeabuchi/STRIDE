@@ -34,10 +34,10 @@ const MemberList = ({ workspaceId }: MemberListProps) => {
 
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-white border rounded-lg p-4">
+      <div className="space-y-5 bg-muted border rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">People ({members.length})</p>
-          <Button variant="secondary" size="icon">
+          <Button variant="outline" size="icon">
             <Link
               to="/workspaces/$workspaceId/members"
               params={{
@@ -48,8 +48,6 @@ const MemberList = ({ workspaceId }: MemberListProps) => {
             </Link>
           </Button>
         </div>
-
-        <DottedSeparator className="my-4" />
 
         <ul className="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 gap-4">
           {members.map((member) => (

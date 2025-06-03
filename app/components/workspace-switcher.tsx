@@ -62,7 +62,7 @@ export default function WorkspaceSwitcher() {
       {/* The user should always have a workspace */}
       {workspaces && workspaces.length > 0 ? (
         <Select value={workspaceId} onValueChange={onSelect}>
-          <SelectTrigger className="w-full h-9 font-medium bg-neutral-200">
+          <SelectTrigger className="w-full h-9 font-medium">
             <SelectValue placeholder="No workspace selected" className="py-4" />
           </SelectTrigger>
           <SelectContent>

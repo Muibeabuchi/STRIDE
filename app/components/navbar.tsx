@@ -28,7 +28,7 @@ function Navbar() {
 
   return (
     <div className="w-full items-center flex justify-between">
-      <SidebarTrigger className="ml-2 z-50 mt-4" />
+      <SidebarTrigger className="ml-5.5 p-4 z-50 mt-4" />
       <nav className="pt-4 w-full px-6 flex items-center justify-between">
         <div className="lg:flex hidden flex-col">
           <h1 className="text-2xl font-semibold">

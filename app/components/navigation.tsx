@@ -4,6 +4,7 @@ import { Routes } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
 
 function Navigation() {
   const [routes, setRoutes] = useState(Routes);
@@ -30,42 +31,46 @@ function Navigation() {
   }
 
   return (
-    <ul className="flex flex-col gap-y-2">
-      {routes.map(({ FilledIcon, Icon, label, to }) => {
-        const fullHref = `/workspaces/${workspaceId}${to}`;
+    <SidebarMenu>
+      <SidebarMenuItem className="flex cursor-pointer flex-col gap-y-2">
+        {routes.map(({ FilledIcon, Icon, label, to }) => {
+          const fullHref = `/workspaces/${workspaceId}${to}`;
 
-        return (
-          <Link
-            key={label}
-            to={fullHref}
-            activeOptions={{ exact: true, includeSearch: false }}
-            // search={(search) => ({
-            //   ...search,
-            //   taskView: "kanban",
-            // })}
-          >
-            {({ isActive }) => {
-              return (
-                <div
-                  className={cn(
-                    "flex items-center gap-2.5 p-2.5 font-medium transition rounded-md hover:text-primary text-neutral-500",
-                    isActive &&
-                      "bg-white shadow-sm hover:opacity-100 text-primary"
-                  )}
-                >
-                  {isActive ? (
-                    <FilledIcon className="size-5" />
-                  ) : (
-                    <Icon className="size-5 text-neutral-500" />
-                  )}
-                  {label}
-                </div>
-              );
-            }}
-          </Link>
-        );
-      })}
-    </ul>
+          return (
+            <Link
+              key={label}
+              to={fullHref}
+              activeOptions={{ exact: true, includeSearch: false }}
+              // search={(search) => ({
+              //   ...search,
+              //   taskView: "kanban",
+              // })}
+              className="cursor-pointer"
+            >
+              {({ isActive }) => {
+                return (
+                  <SidebarMenuButton
+                    tooltip={label}
+                    className={cn(
+                      "flex items-center gap-2.5 p-2.5  cursor-pointer  font-medium transition rounded-md ",
+                      isActive &&
+                        "shadow-sm text-background hover:text-background hover:bg-primary bg-primary  "
+                    )}
+                  >
+                    {isActive ? (
+                      <FilledIcon className="size-5" />
+                    ) : (
+                      <Icon className="size-5 " />
+                    )}
+                    {label}
+                  </SidebarMenuButton>
+                );
+              }}
+            </Link>
+          );
+        })}
+      </SidebarMenuItem>
+    </SidebarMenu>
   );
 }
 

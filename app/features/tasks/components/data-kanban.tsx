@@ -47,7 +47,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
   });
 
   // const boards = Object.keys(kanbanBoards?.[0]);
-  const boards = data[0].taskProject?.projectTaskStatus ?? [];
+  const boards = data[0]?.taskProject?.projectTaskStatus ?? [];
 
   console.log("boards", boards);
   const tasks = data.reduce((acc, currentTask) => {

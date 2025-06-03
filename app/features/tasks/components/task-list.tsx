@@ -27,15 +27,15 @@ const TaskList = ({ workspaceId }: TaskListProps) => {
 
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-muted rounded-lg p-4">
-        <div className="flex items-center justify-between">
+      <div className="bg-muted rounded-lg p-4 space-y-5">
+        <div className="flex items-center  justify-between">
           <p className="text-lg font-semibold">Tasks ({homeTasks.length})</p>
-          <Button variant={"muted"} size="icon" onClick={() => open("ALL")}>
+          <Button variant={"outline"} size="icon" onClick={() => open("ALL")}>
             <PlusIcon className="size-4 text-neutral-400" />
           </Button>
         </div>
 
-        <DottedSeparator className="my-4" />
+        {/* <DottedSeparator className="my-4" /> */}
 
         <ul className="flex flex-col gap-y-4">
           {homeTasks.slice(0, 4).map((task) => (
@@ -73,7 +73,7 @@ const TaskList = ({ workspaceId }: TaskListProps) => {
           </li>
         </ul>
         {homeTasks.length > 0 && (
-          <Button variant={"muted"} className="mt-4 w-full" asChild>
+          <Button variant={"ghost"} className="mt-4 w-full" asChild>
             <Link
               to="/workspaces/$workspaceId/tasks"
               params={{
