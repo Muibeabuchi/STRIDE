@@ -69,7 +69,9 @@ function RouteComponent() {
       to: ".",
       search: {
         taskView: tabSchema.parse(tab),
-        projectId,
+
+        //? What does this change
+        projectId: projId,
         // projectId,
       },
     });
@@ -130,6 +132,7 @@ function RouteComponent() {
             <p className="text-lg font-semibold">{project.projectName}</p>
           </div>
         )}
+        {/* Todo: Hide this buttonLink for non-admin users */}
         <div className="">
           <Button size="sm" asChild variant={"secondary"}>
             <Link
@@ -148,7 +151,8 @@ function RouteComponent() {
       {/* Analytics component */}
       <ProjectAnalytics workspaceId={workspaceId} projectId={projId} />
       <TaskViewSwitcher
-        projectId={projectId}
+        // ? Changing this has what effect?
+        projectId={projId}
         workspaceId={workspaceId}
         hideProjectFilter={true}
         status={status}
