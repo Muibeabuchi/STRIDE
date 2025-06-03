@@ -13,6 +13,7 @@ import { Authenticated, AuthLoading } from "convex/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useCurrentUser } from "@/features/auth/api/get-current-user";
+import { AdvancedThemeToggle } from "./theme-toggle";
 
 export const UserButton = () => {
   const { signOut } = useAuthActions();
@@ -83,6 +84,10 @@ export const UserButton = () => {
                 </p>
               </div>
             </div>
+            <DottedSeparator className="mb-1" />
+            {/* <DropdownMenuItem> */}
+            <AdvancedThemeToggle />
+            {/* </DropdownMenuItem> */}
             <DottedSeparator className="mb-1" />
             <DropdownMenuItem
               className="h-10 items-center justify-center flex text-amber-700 font-medium cursor-pointer"
