@@ -28,6 +28,7 @@ import WorkspaceSwitcher, {
 import { DottedSeparator } from "./doted-separator";
 import Navigation from "./navigation";
 import Projects from "./projects";
+import { UserButton } from "./userButton";
 
 export function AdvancedSidebar() {
   return (
@@ -86,7 +87,7 @@ export function AdvancedSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="border-t border-border p-4">
-        <div className="flex items-center space-x-3">
+        {/* <div className="flex items-center space-x-3">
           <Avatar className="h-8 w-8">
             <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
             <AvatarFallback className="bg-primary text-primary-foreground">
@@ -99,7 +100,8 @@ export function AdvancedSidebar() {
             </p>
             <p className="text-xs text-muted-foreground truncate">Admin</p>
           </div>
-        </div>
+        </div> */}
+        <UserButton />
       </SidebarFooter>
     </Sidebar>
   );

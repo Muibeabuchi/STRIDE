@@ -162,7 +162,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           </div>
         </div>
         <ReactQueryDevtools position="bottom" />
-        <TanStackRouterDevtools position="bottom-left" />
+        <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
       </body>
     </html>

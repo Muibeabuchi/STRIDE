@@ -7,8 +7,11 @@ import {
 import { useConfirm } from "@/hooks/use-confirm";
 import { Id } from "convex/_generated/dataModel";
 import {
+  ArrowBigRight,
+  ArrowUpRightFromSquare,
   CopyIcon,
   ExternalLinkIcon,
+  InfoIcon,
   PencilIcon,
   TrashIcon,
 } from "lucide-react";
@@ -111,12 +114,12 @@ const TaskActions = ({
               onClick={onOpenProject}
               className="font-medium p-[10px]"
             >
-              <ExternalLinkIcon className="size-4 mr-w stroke-2" />
-              Open Project
+              <ArrowBigRight className="size-4 mr-w stroke-2" />
+              Go To Project
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuItem onClick={openTask} className="font-medium p-[10px]">
-            <ExternalLinkIcon className="size-4 mr-w stroke-2" />
+            <InfoIcon className="size-4 mr-w stroke-2" />
             Task Details
           </DropdownMenuItem>
           <DropdownMenuItem

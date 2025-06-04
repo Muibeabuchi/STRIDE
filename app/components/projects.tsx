@@ -40,6 +40,7 @@ import { Id } from "convex/_generated/dataModel";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { FaEye, FaRegEye } from "react-icons/fa";
 import { CustomToolTip } from "./custom-tooltip";
+import { truncateString } from "@/utils/truncate-words";
 
 const Projects = () => {
   // ? INVESTIGATE THE ROUTE OF THIS HOOK
@@ -69,7 +70,7 @@ const Projects = () => {
       <SidebarGroupLabel className="flex  mb-2 items-center justify-between text-xs font-medium text-muted-foreground uppercase tracking-wider px-2">
         Projects
         <div className="flex items-center gap-1">
-          <CustomToolTip content="Open">
+          <CustomToolTip content="New">
             <PlusCircle
               onClick={open}
               className="size-5 cursor-pointer hover:opacity-75 transition"
@@ -115,7 +116,7 @@ const Projects = () => {
                           setOpenPopover(false);
                         }}
                       >
-                        {project.projectName}
+                        {truncateString(project.projectName)}
                       </CommandItem>
                     ))}
                   </CommandGroup>

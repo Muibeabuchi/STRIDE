@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { snakeCaseToTitleCase } from "@/lib/utils";
 // import { TaskStatus } from "../schema";
 import TaskActions from "./task-actions";
+import { truncateString } from "@/utils/truncate-words";
 
 export const columns: ColumnDef<PaginatedTasksResponse>[] = [
   {
@@ -28,7 +29,9 @@ export const columns: ColumnDef<PaginatedTasksResponse>[] = [
     cell: ({ row }) => {
       const name = row.original.taskName;
 
-      return <p className="line-clamp-1">{name}</p>;
+      return (
+        <p className="line-clamp-1 pl-2">{truncateString(name, 10, 30)}</p>
+      );
     },
   },
   {
@@ -40,7 +43,7 @@ export const columns: ColumnDef<PaginatedTasksResponse>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Project
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2  h-4 w-4" />
         </Button>
       );
     },
@@ -52,9 +55,9 @@ export const columns: ColumnDef<PaginatedTasksResponse>[] = [
           <ProjectAvatar
             name={project.projectName}
             image={project.projectImage}
-            className="size-6"
+            className="size-6  ml-3"
           />
-          <p className="line-clamp-1"> {project.projectName}</p>
+          <p className="line-clamp-1"> {truncateString(project.projectName)}</p>
         </div>
       );
     },

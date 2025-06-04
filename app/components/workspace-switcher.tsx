@@ -16,6 +16,9 @@ import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { use } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { lastWorkspaceLocalStorageKey } from "@/routes";
+import CustomToolBar from "@/features/tasks/components/custom-tool-bar";
+import { CustomToolTip } from "./custom-tooltip";
+import { truncateString } from "@/utils/truncate-words";
 
 export function WorkspaceSwitcherSkeleton() {
   return (
@@ -53,10 +56,12 @@ export default function WorkspaceSwitcher() {
     <div className="flex flex-col gap-y-2">
       <div className="flex items-center justify-between">
         <p className="text-xs uppercase text-neutral-500">Workspaces</p>
-        <PlusCircle
-          onClick={open}
-          className="size-5 text-neutral-500 cursor-pointer hover:opacity-75 transition"
-        />
+        <CustomToolTip content="New">
+          <PlusCircle
+            onClick={open}
+            className="size-5 text-neutral-500 cursor-pointer hover:opacity-75 transition"
+          />
+        </CustomToolTip>
       </div>
 
       {/* The user should always have a workspace */}
@@ -70,10 +75,12 @@ export default function WorkspaceSwitcher() {
               <SelectItem key={workspace._id} value={workspace._id}>
                 <div className="flex items-center justify-start gap-3 font-medium ">
                   <WorkspaceAvatar
-                    name={workspace.workspaceName}
+                    name={truncateString(workspace.workspaceName, 1, 10)}
                     image={workspace.workspaceAvatar ?? ""}
                   />
-                  <span className="truncate">{workspace.workspaceName}</span>
+                  <span className="truncate">
+                    {truncateString(workspace.workspaceName, 1, 10)}
+                  </span>
                 </div>
               </SelectItem>
             ))}

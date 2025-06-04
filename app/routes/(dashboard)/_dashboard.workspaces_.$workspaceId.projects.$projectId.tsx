@@ -22,6 +22,8 @@ import { Suspense } from "react";
 import ProjectAnalytics from "@/features/projects/components/project-analytics";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMember } from "@/features/members/api/use-get-member";
+import { truncateString } from "@/utils/truncate-words";
+// import { truncateWords } from "@/utils/truncate-words";
 
 export const Route = createFileRoute(
   "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId"
@@ -136,7 +138,9 @@ function RouteComponent() {
               image={project.projectImage}
               className="size-8"
             />
-            <p className="text-lg font-semibold">{project.projectName}</p>
+            <p className="text-lg font-semibold">
+              {truncateString(project.projectName)}
+            </p>
           </div>
         )}
         {/* Todo: Hide this buttonLink for non-admin users */}
@@ -156,7 +160,7 @@ function RouteComponent() {
         )}
       </div>
       {/* Analytics component */}
-      <ProjectAnalytics workspaceId={workspaceId} projectId={projId} />
+      {/* <ProjectAnalytics workspaceId={workspaceId} projectId={projId} /> */}
       <TaskViewSwitcher
         // ? Changing this has what effect?
         projectId={projId}
