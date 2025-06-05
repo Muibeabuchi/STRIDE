@@ -34,7 +34,7 @@ function DashboardLayout() {
             <main
               className=" w-full py-4 px-6 
             h-[calc(100%-0px)]
-              border-b border-red-600 flex flex-col"
+               flex flex-col"
             >
               <Outlet />
             </main>

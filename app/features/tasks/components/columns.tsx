@@ -40,6 +40,7 @@ export const columns: ColumnDef<PaginatedTasksResponse>[] = [
       return (
         <Button
           variant="ghost"
+          // className="ml-3"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Project
@@ -51,11 +52,11 @@ export const columns: ColumnDef<PaginatedTasksResponse>[] = [
       const project = row.original.taskProject;
 
       return (
-        <div className="flex items-center gap-x-2 text-sm font-medium">
+        <div className="flex   ml-3  items-center gap-x-2 text-sm font-medium">
           <ProjectAvatar
             name={project.projectName}
             image={project.projectImage}
-            className="size-6  ml-3"
+            className="size-6"
           />
           <p className="line-clamp-1"> {truncateString(project.projectName)}</p>
         </div>
@@ -79,7 +80,7 @@ export const columns: ColumnDef<PaginatedTasksResponse>[] = [
     cell: ({ row }) => {
       const dueDate = row.original.dueDate;
 
-      return <TaskDate value={dueDate} />;
+      return <TaskDate className="pl-3" value={dueDate} />;
     },
   },
   {
@@ -98,7 +99,7 @@ export const columns: ColumnDef<PaginatedTasksResponse>[] = [
     cell: ({ row }) => {
       const status = row.original.status;
 
-      return <Badge>{snakeCaseToTitleCase(status)}</Badge>;
+      return <Badge className="ml-5">{snakeCaseToTitleCase(status)}</Badge>;
     },
   },
   {
@@ -109,7 +110,7 @@ export const columns: ColumnDef<PaginatedTasksResponse>[] = [
         projectId={row.original.taskProject._id}
         workspaceId={row.original.workspaceId}
       >
-        <Button variant={"ghost"} className="size-8 p-0">
+        <Button variant={"ghost"} className="size-8  p-0">
           <MoreVerticalIcon className="size-4" />
         </Button>
       </TaskActions>

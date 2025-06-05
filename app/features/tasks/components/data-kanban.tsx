@@ -12,6 +12,7 @@ import { useCallback } from "react";
 import { useEditTask } from "../api/use-edit-task";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface DataKanbanProps {
   data: PaginatedTasksResponse[];
@@ -293,11 +294,16 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex  overflow-x-auto h-full ">
+      <div className="flex  overflow-x-auto  !scrollbar-custom ">
         {boards.map((board) => {
           return (
             <div
-              className="flex-1 mx-2 bg-muted h-full  p-1.5 rounded-md  "
+              className={cn(
+                ` ${
+                  tasks[board].length === 0 && "p-0"
+                } flex-1 mx-2 bg-muted h-full p-1.5 rounded-md`
+              )}
+              // className="  "
               key={board}
             >
               <KanbanColumnHeader
@@ -306,9 +312,12 @@ const DataKanban = ({ data }: DataKanbanProps) => {
               />
               <Droppable droppableId={board}>
                 {(prop) => {
+                  // console.log(`${board}`,board.length);
                   return (
                     <div
-                      className=" max-h-[calc(100vh-135px)] w-[300px]  overflow-y-auto py-1.5"
+                      className={cn(
+                        `max-h-[calc(100vh-135px)] w-[400px] overflow-y-auto py-1.5`
+                      )}
                       {...prop.droppableProps}
                       ref={prop.innerRef}
                     >

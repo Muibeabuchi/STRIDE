@@ -6,6 +6,7 @@ import { MemberAvatar } from "@/features/members/components/member-avatar";
 import TaskDate from "./task-date";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { truncateString } from "@/utils/truncate-words";
+import { Card } from "@/components/ui/card";
 
 interface KanbanCardProps {
   task: PaginatedTasksResponse;
@@ -13,7 +14,7 @@ interface KanbanCardProps {
 
 const KanbanCard = ({ task }: KanbanCardProps) => {
   return (
-    <div className="bg-white p-2.5 rounded mb-1.5 shadow-sm space-y-3">
+    <div className="p-2.5 rounded mb-1.5 border border-accent dark:bg-card mr-1.5 bg-[#FAFAFA] shadow-sm space-y-3">
       <div className="flex items-start justify-between gap-x-2">
         <p>{truncateString(task.taskName, 15, 40)}</p>
         <TaskActions

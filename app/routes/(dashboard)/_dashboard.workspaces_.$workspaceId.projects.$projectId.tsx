@@ -45,6 +45,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FcDisplay } from "react-icons/fc";
 import { CustomToolTip } from "@/components/custom-tooltip";
+import { cn } from "@/lib/utils";
 // import { useIsMobile } from "@/hooks/use-mobile";
 // import { truncateWords } from "@/utils/truncate-words";
 
@@ -148,7 +149,7 @@ function RouteComponent() {
   };
 
   return (
-    <div className="flex flex-col h-full border-b border-amber-400 gap-y-4 ">
+    <div className="flex flex-col h-full  gap-y-4 ">
       <Tabs
         // className="flex-1 w-full h-full border rounded-lg"
         defaultValue={taskView}
@@ -186,49 +187,43 @@ function RouteComponent() {
                   </Button>
                 </DropdownMenuTrigger>
               </CustomToolTip>
-              <DropdownMenuContent className="w-70 p-3">
-                <DropdownMenuGroup className="flex gap-x-3 items-center">
-                  <DropdownMenuItem asChild>
-                    <Button
-                      className=" flex-col bg-background border  w-30 h-15 "
-                      onClick={() => handleTaskViewChange("table")}
-                    >
-                      <Table className="size-5 text-foreground" />
-                      <p className="text-xs text-foreground">Table</p>
-                    </Button>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="" asChild>
-                    <Button
-                      className=" flex-col bg-background border   w-30 h-15"
-                      onClick={() => handleTaskViewChange("kanban")}
-                    >
-                      <Kanban className="size-5  text-foreground" />
-                      <p className="text-xs  text-foreground">Kanban</p>
-                    </Button>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
+              <DropdownMenuContent className="w-auto p-3" align="end">
+                <div className="flex gap-x-3 items-center">
+                  {/* <DropdownMenuItem asChild> */}
+                  <Button
+                    className={cn(
+                      " flex-col bg-sidebar-primary hover:bg-sidebar-primary/70  border   w-40 h-15",
+                      {
+                        "bg-muted hover:bg-muted-foreground/70":
+                          taskView !== "table",
+                      }
+                    )}
+                    onClick={() => handleTaskViewChange("table")}
+                  >
+                    <Table className="size-5 text-foreground" />
+                    <p className="text-[10px] text-foreground">Table</p>
+                  </Button>
+                  {/* </DropdownMenuItem> */}
+                  {/* <DropdownMenuGroup className="flex gap-x-3 items-center"> */}
+                  {/* <DropdownMenuItem className="bg-background" asChild> */}
+                  <Button
+                    className={cn(
+                      " flex-col  border bg-sidebar-primary hover:bg-sidebar-primary/70 w-40 h-15",
+                      {
+                        "bg-muted hover:bg-muted-foreground/70":
+                          taskView !== "kanban",
+                      }
+                    )}
+                    onClick={() => handleTaskViewChange("kanban")}
+                  >
+                    <Kanban className="size-5  text-foreground" />
+                    <p className="text-[10px]  text-foreground">Kanban</p>
+                  </Button>
+                  {/* </DropdownMenuItem> */}
+                  {/* </DropdownMenuGroup> */}
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            {/* Display Items */}
-
-            {/* <div className="flex flex-col  h-full  lg:flex-row gap-y-2 justify-between items-center">
-              <TabsList className="w-auto ">
-                <TabsTrigger
-                  className="w-full  lg:w-auto"
-                  value="table"
-                  // onClick={() => handleTaskViewChange("table")}
-                >
-                  {!isMobile ? <Table size={20} /> : "Table"}
-                </TabsTrigger>
-                <TabsTrigger className="w-full    lg:w-auto" value="kanban">
-                  {!isMobile ? <Kanban size={20} /> : "Kanban"}
-                </TabsTrigger>
-                <TabsTrigger className=" w-full   lg:w-auto" value="calendar">
-                  {!isMobile ? <CalendarDays size={20} /> : "Calendar"}
-                </TabsTrigger>
-              </TabsList>
-            </div> */}
 
             {/* Todo: Hide this buttonLink for non-admin users */}
             {workspaceMember?.role === "admin" && (

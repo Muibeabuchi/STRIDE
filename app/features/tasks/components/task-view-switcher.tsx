@@ -72,7 +72,7 @@ export const TaskViewSwitcher = ({
     return <p>Task Errored out</p>;
   }
   return (
-    <div className="flex-1 w-full h-full border-b  border-teal-800 rounded-lg">
+    <div className="flex-1 w-full h-full  rounded-lg">
       <div className="  h-full  flex flex-col  ">
         {taskView !== "kanban" && (
           <>
@@ -87,7 +87,6 @@ export const TaskViewSwitcher = ({
               projectId={projectId}
               status={status}
             />
-            {/* <DottedSeparator className="my-4" /> */}
           </>
         )}
         <>
@@ -97,9 +96,9 @@ export const TaskViewSwitcher = ({
           <TabsContent value="kanban" className="mt-0">
             <DataKanban data={tasks} />
           </TabsContent>
-          <TabsContent value="calendar" className="mt-0">
+          {/* <TabsContent value="calendar" className="mt-0">
             <DataCalendar data={tasks} />
-          </TabsContent>
+          </TabsContent> */}
         </>
       </div>
     </div>
@@ -111,12 +110,6 @@ export const TaskViewSwitcherSkeleton = () => {
     <Tabs className="flex-1 w-full border rounded-lg">
       <div className="h-full flex flex-col overflow-auto p-4">
         <div className="flex flex-col lg:flex-row gap-y-2  justify-between items-center">
-          {/* Tabs skeleton */}
-          {/* <div className="flex gap-x-2 bg-muted rounded-md p-1 w-full lg:w-auto">
-            <Skeleton className="h-8 w-full lg:w-24 rounded-md mx-1" />
-            <Skeleton className="h-8 w-full lg:w-24 rounded-md mx-1" />
-            <Skeleton className="h-8 w-full lg:w-24 rounded-md mx-1" />
-          </div> */}
           <div className="flex bg-transparent rounded-md justify-between p-1 w-full lg:w-auto gap-x-4">
             <Skeleton className="h-8 w-[65px]  lg:w-[65px] rounded-md" />
             <Skeleton className="h-8 w-[65px]  lg:w-[65px] rounded-md" />
