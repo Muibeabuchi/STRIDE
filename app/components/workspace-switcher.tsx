@@ -1,4 +1,9 @@
-import { PlusCircle } from "lucide-react";
+import {
+  ChevronRight,
+  MoreHorizontal,
+  PlusCircle,
+  StarIcon,
+} from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -13,12 +18,34 @@ import { useCreateWorkspaceModal } from "@/features/workspaces/hooks/use-create-
 import { useNavigate } from "@tanstack/react-router";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
-import { use } from "react";
+import { use, useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { lastWorkspaceLocalStorageKey } from "@/routes";
 import CustomToolBar from "@/features/tasks/components/custom-tool-bar";
 import { CustomToolTip } from "./custom-tooltip";
 import { truncateString } from "@/utils/truncate-words";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "./ui/command";
+import { Button } from "./ui/button";
 
 export function WorkspaceSwitcherSkeleton() {
   return (
@@ -39,53 +66,112 @@ export default function WorkspaceSwitcher() {
     lastWorkspaceLocalStorageKey,
     ""
   );
+  const [open, setOpen] = useState(false);
 
   const { data: workspaces } = useGetUserWorkspaces();
-  const { open } = useCreateWorkspaceModal();
+  const { open: openWorkspaceModal } = useCreateWorkspaceModal();
 
-  const onSelect = (workspaceId: Id<"workspaces">) => {
-    // Todo: Add the selected workspace to localStorage
-    setLastWorkspace(workspaceId);
+  const currentWorkspaceInfo = workspaces?.find((w) => w._id === workspaceId);
+
+  const onSelect = (workspaceName: string) => {
+    if (!workspaces) return;
+    const workspace = workspaces.find((w) => w.workspaceName === workspaceName);
+
+    if (!workspace) return;
+    setLastWorkspace(workspace._id);
     navigate({
       to: `/workspaces/$workspaceId`,
-      params: { workspaceId },
+      params: { workspaceId: workspace._id },
     });
   };
   if (!workspaceId) throw new Error("WorkspaceId not found");
   return (
     <div className="flex flex-col gap-y-2">
       <div className="flex items-center justify-between">
-        <p className="text-xs uppercase text-neutral-500">Workspaces</p>
+        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          Workspaces
+        </p>
         <CustomToolTip content="New">
           <PlusCircle
-            onClick={open}
+            onClick={openWorkspaceModal}
             className="size-5 text-neutral-500 cursor-pointer hover:opacity-75 transition"
           />
         </CustomToolTip>
       </div>
 
-      {/* The user should always have a workspace */}
-      {workspaces && workspaces.length > 0 ? (
-        <Select value={workspaceId} onValueChange={onSelect}>
-          <SelectTrigger className="w-full h-9 font-medium">
-            <SelectValue placeholder="No workspace selected" className="py-4" />
-          </SelectTrigger>
-          <SelectContent>
-            {workspaces.map((workspace) => (
-              <SelectItem key={workspace._id} value={workspace._id}>
-                <div className="flex items-center justify-start gap-3 font-medium ">
-                  <WorkspaceAvatar
-                    name={truncateString(workspace.workspaceName, 1, 10)}
-                    image={workspace.workspaceAvatar ?? ""}
-                  />
-                  <span className="truncate">
-                    {truncateString(workspace.workspaceName, 1, 10)}
-                  </span>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      {/* {workspaces && workspaces.length > 0 ? ( */}
+      {currentWorkspaceInfo?.workspaceName ? (
+        <>
+          <div className="flex items-center w-full border rounded-md p-1 pl-2 py-2 justify-between gap-3 font-medium ">
+            <div className="flex items-center gap-2">
+              <WorkspaceAvatar
+                name={truncateString(
+                  currentWorkspaceInfo?.workspaceName,
+                  1,
+                  10
+                )}
+                image={currentWorkspaceInfo?.workspaceAvatar ?? ""}
+              />
+              <span className="truncate">
+                {truncateString(currentWorkspaceInfo?.workspaceName, 1, 10)}
+              </span>
+            </div>
+            <DropdownMenu open={open} modal onOpenChange={setOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <ChevronRight />
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="start" className="w-[200px]">
+                <DropdownMenuGroup>
+                  {/* <DropdownMenuSeparator /> */}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      Your Workspaces
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className="p-0">
+                      <Command>
+                        <CommandInput
+                          placeholder="Find Workspace"
+                          autoFocus={true}
+                          className="h-9"
+                        />
+                        <CommandList>
+                          <CommandEmpty>No Workspace found.</CommandEmpty>
+                          <CommandGroup>
+                            {workspaces?.map((label) => (
+                              <CommandItem
+                                key={label._id}
+                                value={label.workspaceName}
+                                onSelect={(value) => {
+                                  onSelect(value);
+                                  setOpen(false);
+                                }}
+                              >
+                                {truncateString(label.workspaceName, 1, 10)}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="w-full justify-between flex items-center">
+                    Favorite Workspace
+                    <StarIcon />
+                  </DropdownMenuItem>
+                  {/* <DropdownMenuItem className="text-red-600">
+                    Delete
+                    <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+                  </DropdownMenuItem> */}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </>
       ) : null}
     </div>
   );

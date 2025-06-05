@@ -108,7 +108,7 @@ export const CreateProjectForm = ({ onCancel }: CreateProjectFormProps) => {
                     <FormItem>
                       <FormLabel>Project Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter Workspace Name" {...field} />
+                        <Input placeholder="Enter Project Name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

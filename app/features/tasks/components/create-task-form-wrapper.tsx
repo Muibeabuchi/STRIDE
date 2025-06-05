@@ -49,7 +49,7 @@ export function CreateTaskFormWrapper() {
     name: member.userName,
   }));
 
-  const projectTaskStatus = projects.data[0].projectTaskStatus ?? null;
+  const projectTaskStatus = projects?.data[0]?.projectTaskStatus ?? null;
 
   return (
     <CreateTaskForm

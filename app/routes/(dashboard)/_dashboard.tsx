@@ -1,5 +1,4 @@
 import Navbar from "@/components/navbar";
-import Sidebar from "@/components/sidebar";
 import { CreateWorkspaceModal } from "@/features/workspaces/components/create-workspace-modal";
 import { Outlet } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";

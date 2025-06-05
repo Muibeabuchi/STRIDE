@@ -69,7 +69,7 @@ const Projects = () => {
     <SidebarGroup className=" relative ">
       <SidebarGroupLabel className="flex  mb-2 items-center justify-between text-xs font-medium text-muted-foreground uppercase tracking-wider px-2">
         Projects
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-3">
           <CustomToolTip content="New">
             <PlusCircle
               onClick={open}
@@ -99,13 +99,17 @@ const Projects = () => {
                     {projects?.map((project) => (
                       <CommandItem
                         key={project._id}
-                        value={project._id}
+                        value={project.projectName}
                         onSelect={(value) => {
+                          const project = projects.find(
+                            (project) => project.projectName === value
+                          );
+                          if (!project) return;
                           navigate({
                             to: "/workspaces/$workspaceId/projects/$projectId",
                             params: {
                               workspaceId,
-                              projectId: value as Id<"projects">,
+                              projectId: project._id as Id<"projects">,
                             },
                             //  activeOptions={ exact: true, includeSearch: false },
                             search: (search) => ({

@@ -52,8 +52,6 @@ export function AdvancedSidebar() {
           </Suspense>
         </SidebarGroup>
 
-        <DottedSeparator />
-
         <SidebarGroup>
           <SidebarGroupContent>
             <Navigation />
