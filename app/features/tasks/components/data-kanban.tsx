@@ -288,19 +288,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       }
 
       //   ? set the  position of the source card to the average of the top card and bottom card(destination card) minus the destination card position
-
-      // const newPosition =
-      //   destTask.position -
-      //   (topDestinationCard.position - destTask.position) / 2;
-
-      // await editTask({
-      //   taskId: sourceTask._id,
-      //   workspaceId: sourceTask.workspaceId,
-      //   taskPosition: newPosition,
-      //   projectId: sourceTask.taskProject._id,
-
-      //   // taskStatus: destinationStatus,
-      // });
     }
   };
 
@@ -310,7 +297,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
         {boards.map((board) => {
           return (
             <div
-              className="flex-1 mx-2 bg-muted h-full p-1.5 rounded-md min-w-[200px] "
+              className="flex-1 mx-2 bg-muted h-full  p-1.5 rounded-md  "
               key={board}
             >
               <KanbanColumnHeader
@@ -321,7 +308,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                 {(prop) => {
                   return (
                     <div
-                      className=" max-h-[600px] overflow-y-auto py-1.5"
+                      className=" max-h-[calc(100vh-135px)] w-[300px]  overflow-y-auto py-1.5"
                       {...prop.droppableProps}
                       ref={prop.innerRef}
                     >

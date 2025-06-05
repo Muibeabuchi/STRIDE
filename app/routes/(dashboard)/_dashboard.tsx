@@ -29,9 +29,13 @@ function DashboardLayout() {
         {/* </div> */}
         {/* <div className="lg:pl-[264px] w-full"> */}
         <SidebarInset className="flex-1 flex flex-col h-full min-w-0">
-          <div className="mx-auto max-w-screen-2xl relative w-full h-full">
-            <SidebarTrigger className="ml-5.5 p-4 z-50 mt-4 absolute" />
-            <main className=" w-full py-4 px-6 h-[calc(100%-60px)] overflow-y-clip border-b flex flex-col">
+          <div className="mx-auto max-w-screen-2xl border-b relative w-full h-full">
+            <SidebarTrigger className="ml-5.5 p-4 z-50 mt-5 absolute" />
+            <main
+              className=" w-full py-4 px-6 
+            h-[calc(100%-0px)]
+              border-b border-red-600 flex flex-col"
+            >
               <Outlet />
             </main>
           </div>

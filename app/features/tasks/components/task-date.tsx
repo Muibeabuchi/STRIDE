@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import { differenceInDays, format } from "date-fns";
-import { EndpointUpdateSerializer } from "svix/dist/models/endpointUpdate";
 
 interface TaskDateProps {
   value: string;

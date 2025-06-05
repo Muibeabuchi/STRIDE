@@ -74,7 +74,7 @@ const DataFilter = ({
   const projectTaskStatus = projects.data[0]?.projectTaskStatus;
 
   return (
-    <div className="flex flex-row gap-2 items-center">
+    <div className="flex flex-row gap-2 w-fit items-center">
       <Select
         defaultValue={status || "ALL"}
         value={status}

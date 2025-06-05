@@ -72,8 +72,8 @@ export const TaskViewSwitcher = ({
     return <p>Task Errored out</p>;
   }
   return (
-    <div className="flex-1 w-full h-full border rounded-lg">
-      <div className=" overflow-y-auto h-full  flex flex-col  p-4">
+    <div className="flex-1 w-full h-full border-b  border-teal-800 rounded-lg">
+      <div className="  h-full  flex flex-col  ">
         {taskView !== "kanban" && (
           <>
             <DataFilter
@@ -87,11 +87,11 @@ export const TaskViewSwitcher = ({
               projectId={projectId}
               status={status}
             />
-            <DottedSeparator className="my-4" />
+            {/* <DottedSeparator className="my-4" /> */}
           </>
         )}
         <>
-          <TabsContent value="table" className="mt-0 pb-6">
+          <TabsContent value="table" className="mt-0  pb-6">
             <DataTable columns={columns} data={tasks} />
           </TabsContent>
           <TabsContent value="kanban" className="mt-0">
