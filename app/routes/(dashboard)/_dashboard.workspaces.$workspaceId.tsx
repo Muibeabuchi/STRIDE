@@ -25,15 +25,15 @@ function RouteComponent() {
   useWorkspaceExists(workspaceId);
 
   return (
-    <div className="h-full space-y-4 flex flex-col ">
-      <WorkspaceAnalytics workspaceId={workspaceId} />
+    <div className="max-h-screen space-y-4 flex flex-col ">
+      {/* <WorkspaceAnalytics workspaceId={workspaceId} />
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <TaskList workspaceId={workspaceId} />
         <div className="flex gap-y-3 flex-col">
           <ProjectList workspaceId={workspaceId} />
           <MemberList workspaceId={workspaceId} />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -17,23 +17,21 @@ function DashboardLayout() {
   const { showAuthContent } = useProtectAuthPage();
   if (!showAuthContent) return null;
   return (
-    <div className="min-h-screen w-full">
+    <div className="h-screen w-full">
       <CreateWorkspaceModal />
       <CreateProjectModal />
       <CreateTaskModal />
       <EditTaskModal />
-      <div className="flex w-full h-full">
+      <div className="flex h-screen w-full overflow-y-hidden">
         {/* <div className="fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-y-auto"> */}
         {/* <Sidebar /> */}
         <AdvancedSidebar />
         {/* </div> */}
         {/* <div className="lg:pl-[264px] w-full"> */}
-        <SidebarInset className="flex-1 flex flex-col min-w-0">
-          <div className="mx-auto max-w-screen-2xl w-full h-full">
-            {/* <Navbar /> */}
-            <SidebarTrigger className="ml-5.5 p-4 z-50 mt-4" />
-
-            <main className="h-full w-full py-8 px-6 flex flex-col">
+        <SidebarInset className="flex-1 flex flex-col h-full min-w-0">
+          <div className="mx-auto max-w-screen-2xl relative w-full h-full">
+            <SidebarTrigger className="ml-5.5 p-4 z-50 mt-4 absolute" />
+            <main className=" w-full py-4 px-6 h-[calc(100%-60px)] overflow-y-clip border-b flex flex-col">
               <Outlet />
             </main>
           </div>

@@ -72,35 +72,8 @@ export const TaskViewSwitcher = ({
     return <p>Task Errored out</p>;
   }
   return (
-    <Tabs
-      className="flex-1 w-full border rounded-lg"
-      defaultValue={taskView}
-      value={taskView}
-      onValueChange={handleTaskViewChange}
-    >
-      <div className="h-full flex flex-col overflow-auto p-4">
-        <div className="flex flex-col lg:flex-row gap-y-2 justify-between items-center">
-          <TabsList className="w-full lg:w-auto ">
-            <TabsTrigger className="h-8 w-full lg:w-auto" value="table">
-              Table
-            </TabsTrigger>
-            <TabsTrigger className="h-8 w-full lg:w-auto" value="kanban">
-              Kanban
-            </TabsTrigger>
-            <TabsTrigger className="h-8 w-full lg:w-auto" value="calendar">
-              Calendar
-            </TabsTrigger>
-          </TabsList>
-          <Button
-            size="sm"
-            className="w-full lg:w-auto"
-            onClick={() => open("ALL")}
-          >
-            <PlusIcon className="size-4 mr-2" />
-            New
-          </Button>
-        </div>
-        <DottedSeparator className="my-4" />
+    <div className="flex-1 w-full h-full border rounded-lg">
+      <div className=" overflow-y-auto h-full  flex flex-col  p-4">
         {taskView !== "kanban" && (
           <>
             <DataFilter
@@ -118,7 +91,7 @@ export const TaskViewSwitcher = ({
           </>
         )}
         <>
-          <TabsContent value="table" className="mt-0">
+          <TabsContent value="table" className="mt-0 pb-6">
             <DataTable columns={columns} data={tasks} />
           </TabsContent>
           <TabsContent value="kanban" className="mt-0">
@@ -129,7 +102,7 @@ export const TaskViewSwitcher = ({
           </TabsContent>
         </>
       </div>
-    </Tabs>
+    </div>
   );
 };
 
@@ -162,6 +135,7 @@ export const TaskViewSwitcherSkeleton = () => {
         <DottedSeparator className="my-4" />
 
         {/* Tab content - using DataTableSkeleton as default */}
+
         {/* <TabsContent value="table" className="mt-0"> */}
         <DataTableSkeleton columnCount={5} rowCount={5} />
         {/* </TabsContent> */}

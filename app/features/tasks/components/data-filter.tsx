@@ -24,6 +24,8 @@ import {
 import useTaskFilters from "../hooks/use-task-filters";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIsMobile } from "@/hooks/use-advanced-is-mobile";
+// import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DataFilterProps {
   hideProjectFilter?: boolean;
@@ -50,6 +52,8 @@ const DataFilter = ({
 }: DataFilterProps) => {
   const [projects, members] = useGetTaskFormData();
 
+  const isMobile = useIsMobile(534);
+
   const isLoading = projects.isPending || members.isPending;
 
   const error = projects.error || members.error;
@@ -70,7 +74,7 @@ const DataFilter = ({
   const projectTaskStatus = projects.data[0]?.projectTaskStatus;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-2">
+    <div className="flex flex-row gap-2 items-center">
       <Select
         defaultValue={status || "ALL"}
         value={status}
@@ -88,7 +92,12 @@ const DataFilter = ({
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex pr-2 items-center">
             <ListChecksIcon className="size-4 mr-2" />
-            <SelectValue placeholder="All Statuses" />
+            {isMobile && (
+              <SelectValue
+                placeholder="All Statuses"
+                className="hidden lg:flex"
+              />
+            )}
           </div>
         </SelectTrigger>
         {projectTaskStatus === null ? null : (
@@ -115,7 +124,7 @@ const DataFilter = ({
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex pr-2 items-center">
             <UserIcon className="size-4 mr-2" />
-            <SelectValue placeholder="All Assignees" />
+            {isMobile && <SelectValue placeholder="All Assignees" />}
           </div>
         </SelectTrigger>
         <SelectContent>
@@ -142,10 +151,10 @@ const DataFilter = ({
           value={projectId || "All"}
           onValueChange={onProjectIdChange}
         >
-          <SelectTrigger className="w-full lg:w-auto h-8">
-            <div className="flex pr-2 items-center">
+          <SelectTrigger className=" lg:w-auto w-fit h-8">
+            <div className="flex pr-2 items-center w-auto">
               <FolderArchiveIcon className="size-4 mr-2" />
-              <SelectValue placeholder="All Projects" />
+              {isMobile && <SelectValue placeholder="All Projects" />}
             </div>
           </SelectTrigger>
           <SelectContent>

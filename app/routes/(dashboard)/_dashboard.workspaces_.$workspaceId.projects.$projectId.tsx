@@ -11,7 +11,7 @@ import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { PencilIcon } from "lucide-react";
+import { CalendarDays, Kanban, PencilIcon, Table } from "lucide-react";
 import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
@@ -23,6 +23,9 @@ import ProjectAnalytics from "@/features/projects/components/project-analytics";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetMember } from "@/features/members/api/use-get-member";
 import { truncateString } from "@/utils/truncate-words";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useIsMobile } from "@/hooks/use-advanced-is-mobile";
+// import { useIsMobile } from "@/hooks/use-mobile";
 // import { truncateWords } from "@/utils/truncate-words";
 
 export const Route = createFileRoute(
@@ -65,6 +68,8 @@ function RouteComponent() {
     projectId: projId,
     workspaceId,
   });
+
+  const isMobile = useIsMobile();
 
   const { data: workspaceMember, isLoading: isLoadingWorkspaceMember } =
     useGetMember(workspaceId);
@@ -123,60 +128,100 @@ function RouteComponent() {
   };
 
   return (
-    <div className="flex flex-col gap-y-4">
-      <div className="flex items-center justify-between">
-        {project === undefined ||
-        isLoading ||
-        isPending ||
-        workspaceMember === undefined ||
-        isLoadingWorkspaceMember ? (
-          <ProjectInfoSkeleton />
-        ) : (
-          <div className="flex items-center gap-x-2">
-            <ProjectAvatar
-              name={project.projectName}
-              image={project.projectImage}
-              className="size-8"
-            />
-            <p className="text-lg font-semibold">
-              {truncateString(project.projectName)}
-            </p>
+    <div className="flex flex-col h-full  gap-y-4">
+      <Tabs
+        // className="flex-1 w-full h-full border rounded-lg"
+        defaultValue={taskView}
+        value={taskView}
+        onValueChange={handleTaskViewChange}
+      >
+        <div className="flex items-center pl-10 justify-between">
+          {project === undefined ||
+          isLoading ||
+          isPending ||
+          workspaceMember === undefined ||
+          isLoadingWorkspaceMember ? (
+            <ProjectInfoSkeleton />
+          ) : (
+            <div className="flex items-center gap-x-2">
+              <ProjectAvatar
+                name={project.projectName}
+                image={project.projectImage}
+                className="size-8"
+              />
+              <p className="text-lg font-semibold">
+                {truncateString(project.projectName)}
+              </p>
+            </div>
+          )}
+
+          <div className="flex gap-x-12 items-center">
+            <div className="flex flex-col    lg:flex-row gap-y-2 justify-between items-center">
+              <TabsList className="w-auto ">
+                <TabsTrigger
+                  className="w-full  lg:w-auto"
+                  value="table"
+                  // onClick={() => handleTaskViewChange("table")}
+                >
+                  {!isMobile ? <Table size={20} /> : "Table"}
+                </TabsTrigger>
+                <TabsTrigger className="w-full    lg:w-auto" value="kanban">
+                  {!isMobile ? <Kanban size={20} /> : "Kanban"}
+                </TabsTrigger>
+                <TabsTrigger className=" w-full   lg:w-auto" value="calendar">
+                  {!isMobile ? <CalendarDays size={20} /> : "Calendar"}
+                </TabsTrigger>
+              </TabsList>
+              {/* <Button
+            size="sm"
+            className="w-full lg:w-auto"
+            onClick={() => open("ALL")}
+          >
+            <PlusIcon className="size-4 mr-2" />
+            New
+          </Button> */}
+            </div>
+
+            {/* Todo: Hide this buttonLink for non-admin users */}
+            {workspaceMember?.role === "admin" && (
+              <Button size="sm" asChild variant={"secondary"}>
+                <Link
+                  to={"/workspaces/$workspaceId/projects/$projectId/settings"}
+                  params={{
+                    projectId: projId,
+                    workspaceId,
+                  }}
+                >
+                  <PencilIcon className="size-4 lg:mr-2" />
+
+                  {isMobile && "Edit Project"}
+                </Link>
+              </Button>
+            )}
           </div>
-        )}
-        {/* Todo: Hide this buttonLink for non-admin users */}
-        {workspaceMember?.role === "admin" && (
-          <Button size="sm" asChild variant={"secondary"}>
-            <Link
-              to={"/workspaces/$workspaceId/projects/$projectId/settings"}
-              params={{
-                projectId: projId,
-                workspaceId,
-              }}
-            >
-              <PencilIcon className="size-4 mr-2" />
-              Edit Project
-            </Link>
-          </Button>
-        )}
-      </div>
-      {/* Analytics component */}
-      {/* <ProjectAnalytics workspaceId={workspaceId} projectId={projId} /> */}
-      <TaskViewSwitcher
-        // ? Changing this has what effect?
-        projectId={projId}
-        workspaceId={workspaceId}
-        hideProjectFilter={true}
-        status={status}
-        assigneeId={assigneeId}
-        dueDate={dueDate}
-        taskView={taskView}
-        onAssigneeIdChange={onAssigneeIdChange}
-        onDueDateChange={onDueDateChange}
-        onProjectIdChange={onProjectIdChange}
-        onStatusChange={onStatusChange}
-        handleTaskViewChange={handleTaskViewChange}
-      />
-      <Outlet />
+        </div>
+        {/* Analytics component */}
+        {/* <ProjectAnalytics workspaceId={workspaceId} projectId={projId} /> */}
+
+        {/* TabList */}
+
+        <TaskViewSwitcher
+          // ? Changing this has what effect?
+          projectId={projId}
+          workspaceId={workspaceId}
+          hideProjectFilter={true}
+          status={status}
+          assigneeId={assigneeId}
+          dueDate={dueDate}
+          taskView={taskView}
+          onAssigneeIdChange={onAssigneeIdChange}
+          onDueDateChange={onDueDateChange}
+          onProjectIdChange={onProjectIdChange}
+          onStatusChange={onStatusChange}
+          handleTaskViewChange={handleTaskViewChange}
+        />
+        <Outlet />
+      </Tabs>
     </div>
   );
 }

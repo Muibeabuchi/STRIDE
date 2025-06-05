@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DatePickerProps {
   value: Date | undefined;
@@ -21,6 +22,7 @@ const DatePicker = ({
   placeholder = "Select Date",
   create = true,
 }: DatePickerProps) => {
+  const isMobile = useIsMobile();
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -34,7 +36,9 @@ const DatePicker = ({
           )}
         >
           <CalendarIcon className="mr-2 w-4 h-4" />
-          {value ? format(value, "PPP") : <span>{placeholder}</span>}
+
+          {!isMobile &&
+            (value ? format(value, "PPP") : <span>{placeholder}</span>)}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

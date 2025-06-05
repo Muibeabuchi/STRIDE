@@ -306,11 +306,11 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex overflow-x-auto">
+      <div className="flex  overflow-x-auto h-full ">
         {boards.map((board) => {
           return (
             <div
-              className="flex-1 mx-2 bg-muted p-1.5 rounded-md min-w-[200px] "
+              className="flex-1 mx-2 bg-muted h-full p-1.5 rounded-md min-w-[200px] "
               key={board}
             >
               <KanbanColumnHeader
@@ -321,7 +321,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                 {(prop) => {
                   return (
                     <div
-                      className="min-h-[200px] max-h-[600px] overflow-y-auto py-1.5"
+                      className=" max-h-[600px] overflow-y-auto py-1.5"
                       {...prop.droppableProps}
                       ref={prop.innerRef}
                     >
@@ -338,7 +338,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                                   {...prop.draggableProps}
                                   {...prop.dragHandleProps}
                                   ref={prop.innerRef}
-                                  className="overflow-y-auto"
                                 >
                                   <KanbanCard task={task} />
                                 </div>
