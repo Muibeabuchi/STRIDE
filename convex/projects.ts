@@ -6,7 +6,9 @@ import {
   authorizedWorkspaceQuery,
 } from "./middleware";
 import { filter } from "convex-helpers/server/filter";
-import { DEFAULT_PROJECT_TASK_STATUS } from "./model/projects";
+// import { DEFAULT_PROJECT_TASK_STATUS } from "./model/projects";
+import { IssueStatusValidator } from "./schema";
+import { DEFAULT_PROJECT_TASK_STATUS } from "./constants";
 
 export const get = authorizedWorkspaceQuery({
   args: {
@@ -283,7 +285,10 @@ export const getProjectAnalytics = authorizedWorkspaceQuery({
 });
 
 export const addProjectStatus = authorizedWorkspaceMutation({
-  args: { projectId: v.id("projects"), projectTaskStatus: v.string() },
+  args: {
+    projectId: v.id("projects"),
+    projectTaskStatus: IssueStatusValidator,
+  },
   async handler(ctx, args) {
     // grab the project
     const projectData = await ctx.db.get(args.projectId);
@@ -321,7 +326,7 @@ export const removeProjectTaskStatus = authorizedWorkspaceMutation({
     // check if the projectTaskStatus exists
     // TODO: Change after the migration
     const statusToRemove = projectData.projectTaskStatus?.find(
-      (status) => status === args.projectTaskStatus
+      (status) => status.issueName === args.projectTaskStatus
     );
 
     if (!statusToRemove) throw new ConvexError("Status does not exist");
@@ -333,7 +338,7 @@ export const removeProjectTaskStatus = authorizedWorkspaceMutation({
         q
           .eq("workspaceId", args.workspaceId)
           .eq("projectId", args.projectId)
-          .eq("status", statusToRemove)
+          .eq("status", statusToRemove.issueName)
       )
       .collect();
 
@@ -344,24 +349,24 @@ export const removeProjectTaskStatus = authorizedWorkspaceMutation({
       })
     );
 
-    // check if the status is the last one
-    const isLastStatus =
-      projectData.projectTaskStatus !== null &&
-      // TODO: Change after the migration
-      projectData.projectTaskStatus?.length === 1;
+    // // check if the status is the last one
+    // const isLastStatus =
+    //   projectData.projectTaskStatus !== null &&
+    //   // TODO: Change after the migration
+    //   projectData.projectTaskStatus?.length === 1;
 
-    await ctx.db.patch(args.projectId, {
-      // TODO: Change after the migration
-      projectTaskStatus: projectData.projectTaskStatus?.filter(
-        (status) => status !== statusToRemove
-      ),
-    });
+    // await ctx.db.patch(args.projectId, {
+    //   // TODO: Change after the migration
+    //   projectTaskStatus: projectData.projectTaskStatus?.filter(
+    //     (status) => status !== statusToRemove
+    //   ),
+    // });
 
-    // if its the last status, we create a generic default status
-    if (isLastStatus) {
-      await ctx.db.patch(args.projectId, {
-        projectTaskStatus: ["TODO"],
-      });
-    }
+    // // if its the last status, we create a generic default status
+    // if (isLastStatus) {
+    //   await ctx.db.patch(args.projectId, {
+    //     projectTaskStatus: DEFAULT_PROJECT_TASK_STATUS,
+    //   });
+    // }
   },
 });

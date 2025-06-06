@@ -32,8 +32,7 @@ const schema = defineSchema({
     projectName: v.string(),
     workspaceId: v.id("workspaces"),
     // Project status can either be an array of strings or  null
-    projectTaskStatus: v.union(v.array(v.string()), v.null()),
-    taskStatus: v.optional(v.array(IssueStatusValidator)),
+    projectTaskStatus: v.union(v.array(IssueStatusValidator), v.null()),
   })
     .index("by_workspaceId", ["workspaceId"])
     .index("by_projectName", ["projectName"])

@@ -27,7 +27,7 @@ export const ensureProjectTaskStatus = async ({
     throw new ConvexError("ProjectTaskStatus does not exist");
 
   // check if the status is defined in  the project
-  return project.projectTaskStatus.find((s) => s === status);
+  return project.projectTaskStatus.find((s) => s.issueName === status);
 };
 
 export const validateTaskWorkspace = async (

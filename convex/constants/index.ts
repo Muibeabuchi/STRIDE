@@ -1,5 +1,13 @@
 import { IssueStatusTypes } from "../schema";
 
+export const DEFAULT_PROJECT_TASK_STATUS_NAME = [
+  "TODO",
+  "DONE",
+  "IN_REVIEW",
+  "BACKLOG",
+  "IN_PROGRESS",
+];
+
 export const TaskPriorityMapper = {
   0: "No priority",
   1: "Low",
@@ -34,14 +42,6 @@ export const DEFAULT_PROJECT_TASK_STATUS: IssueStatusTypes[] = [
     issueName: "IN_PROGRESS",
     issuePosition: 5,
   },
-];
-
-export const DEFAULT_TASK_STATUS_NAMES = [
-  "TODOS",
-  "DONE",
-  "IN_REVIEW",
-  "BACKLOG",
-  "IN_PROGRESS",
 ];
 
 export const NUMBER_OF_DEFAULT_TASK_STATUS = DEFAULT_PROJECT_TASK_STATUS.length;

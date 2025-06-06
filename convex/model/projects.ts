@@ -2,14 +2,6 @@ import { ConvexError } from "convex/values";
 import { Doc, Id } from "../_generated/dataModel";
 import { QueryCtx } from "../_generated/server";
 
-export const DEFAULT_PROJECT_TASK_STATUS = [
-  "TODO",
-  "DONE",
-  "IN_REVIEW",
-  "BACKLOG",
-  "IN_PROGRESS",
-];
-
 export async function populateProject({
   ctx,
   projectIds,

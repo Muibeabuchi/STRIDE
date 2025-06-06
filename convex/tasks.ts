@@ -201,7 +201,7 @@ export const create = authorizedWorkspaceMutation({
         q
           .eq("workspaceId", args.workspaceId)
           .eq("projectId", args.projectId)
-          .eq("status", projectTaskStatus)
+          .eq("status", projectTaskStatus.issueName)
       )
       .collect();
 
@@ -346,7 +346,7 @@ export const edit = authorizedWorkspaceMutation({
     // }
 
     await ctx.db.patch(task._id, {
-      status: projectTaskStatus ?? task.status,
+      status: projectTaskStatus ? projectTaskStatus.issueName : task.status,
       position: taskPosition ?? task.position,
       description: taskDescription ?? task.description,
       assigneeId: assigneeId ?? task.assigneeId,
