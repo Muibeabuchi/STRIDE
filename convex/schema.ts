@@ -4,6 +4,13 @@ import { Doc } from "./_generated/dataModel";
 import { api } from "./_generated/api";
 import { authTables } from "@convex-dev/auth/server";
 
+export const IssueStatusValidator = v.object({
+  issueName: v.string(),
+  issuePosition: v.number(),
+});
+
+export type IssueStatusTypes = Infer<typeof IssueStatusValidator>;
+
 const schema = defineSchema({
   ...authTables,
   workspaces: defineTable({
@@ -25,7 +32,9 @@ const schema = defineSchema({
     projectName: v.string(),
     workspaceId: v.id("workspaces"),
     // Project status can either be an array of strings or  null
-    projectTaskStatus: v.optional(v.union(v.array(v.string()), v.null())),
+    projectTaskStatus: v.optional(
+      v.union(v.array(IssueStatusValidator), v.array(v.string()))
+    ),
   })
     .index("by_workspaceId", ["workspaceId"])
     .index("by_projectName", ["projectName"])
@@ -37,6 +46,7 @@ const schema = defineSchema({
     assigneeId: v.id("users"),
     description: v.optional(v.string()),
     dueDate: v.string(),
+    priority: v.optional(v.number()),
     // ? A task must always have a status
     status: v.string(),
     position: v.number(),

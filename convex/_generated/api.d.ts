@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as constants_index from "../constants/index.js";
 import type * as http from "../http.js";
 import type * as members from "../members.js";
 import type * as middleware from "../middleware.js";
@@ -38,6 +39,7 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  "constants/index": typeof constants_index;
   http: typeof http;
   members: typeof members;
   middleware: typeof middleware;
