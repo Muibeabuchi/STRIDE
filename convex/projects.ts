@@ -288,10 +288,17 @@ export const addProjectStatus = authorizedWorkspaceMutation({
     // grab the project
     const projectData = await ctx.db.get(args.projectId);
     if (!projectData) throw new ConvexError("Project does not exist");
+    if (!projectData.projectTaskStatus)
+      throw new ConvexError("Project TaskStatus does not exist");
 
     await ctx.db.patch(args.projectId, {
       projectTaskStatus: [
-        ...(projectData.projectTaskStatus ?? []),
+        ...projectData.projectTaskStatus,
+        // {
+        //   issueName: args.projectTaskStatus,
+        //   issuePosition:10
+        // }
+
         args.projectTaskStatus,
       ],
     });
@@ -342,8 +349,8 @@ export const removeProjectTaskStatus = authorizedWorkspaceMutation({
       projectData.projectTaskStatus !== null &&
       // TODO: Change after the migration
       projectData.projectTaskStatus?.length === 1;
-      
-      await ctx.db.patch(args.projectId, {
+
+    await ctx.db.patch(args.projectId, {
       // TODO: Change after the migration
       projectTaskStatus: projectData.projectTaskStatus?.filter(
         (status) => status !== statusToRemove
