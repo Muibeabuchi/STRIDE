@@ -23,23 +23,23 @@ export const FREE_MAX_TASK_STATUS = 3;
 
 export const DEFAULT_PROJECT_TASK_STATUS: IssueStatusTypes[] = [
   {
-    issueName: "TODO",
+    issueName: DEFAULT_PROJECT_TASK_STATUS_NAME[0],
     issuePosition: 1,
   },
   {
-    issueName: "DONE",
+    issueName: DEFAULT_PROJECT_TASK_STATUS_NAME[1],
     issuePosition: 2,
   },
   {
-    issueName: "IN_REVIEW",
+    issueName: DEFAULT_PROJECT_TASK_STATUS_NAME[2],
     issuePosition: 3,
   },
   {
-    issueName: "BACKLOG",
+    issueName: DEFAULT_PROJECT_TASK_STATUS_NAME[3],
     issuePosition: 4,
   },
   {
-    issueName: "IN_PROGRESS",
+    issueName: DEFAULT_PROJECT_TASK_STATUS_NAME[4],
     issuePosition: 5,
   },
 ];

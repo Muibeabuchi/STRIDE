@@ -1,6 +1,7 @@
 import { ConvexError } from "convex/values";
 import { Doc, Id } from "../_generated/dataModel";
 import { QueryCtx } from "../_generated/server";
+import { DEFAULT_PROJECT_TASK_STATUS_NAME } from "../constants";
 
 export async function populateProject({
   ctx,
@@ -86,4 +87,10 @@ export async function ensureUniqueTaskStatusName({
   };
 
   // return !projectStatus ? null : projectStatus;
+}
+
+// takes in a taskStatus and checks to see if it is a default task Status
+// THrows if it is a default task
+export function assertNotDefaultTaskStatus(taskName: string) {
+  return DEFAULT_PROJECT_TASK_STATUS_NAME.includes(taskName);
 }

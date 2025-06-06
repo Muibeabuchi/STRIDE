@@ -13,7 +13,10 @@ import {
   FREE_MAX_TASK_STATUS,
   NUMBER_OF_DEFAULT_TASK_STATUS,
 } from "./constants";
-import { ensureUniqueTaskStatusName } from "./model/projects";
+import {
+  assertNotDefaultTaskStatus,
+  ensureUniqueTaskStatusName,
+} from "./model/projects";
 
 // ================================QUERIES ===============================
 export const get = authorizedWorkspaceQuery({
@@ -421,6 +424,13 @@ export const editProjectStatusPositionOrName = authorizedWorkspaceMutation({
       const statusName = isUniqueTaskStatusName.isUniqueName.issueName;
       if (!isUniqueTaskStatusName.projectInfo.projectTaskStatus)
         throw new ConvexError("Task Status must exist");
+
+      // ensure only extra taskStatus name can be edited
+      // TODO? Write Frontend code that prevents the admin from deleting default task
+      const isDefaultTaskName = assertNotDefaultTaskStatus(statusName);
+      if (isDefaultTaskName) return -1;
+      // throw new ConvexError("Default Tasks cannot be deleted");
+
       // filter the taskStatus
       const filteredTaskStatus =
         isUniqueTaskStatusName.projectInfo.projectTaskStatus.map((status) => {
