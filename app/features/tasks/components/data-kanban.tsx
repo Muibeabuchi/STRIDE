@@ -44,7 +44,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
   console.log(kanbanTasksStatus);
 
   kanbanTasksStatus.map((task) => {
-    kanbanTasks[task] = [];
+    kanbanTasks[task.issueName] = [];
   });
 
   // const boards = Object.keys(kanbanBoards?.[0]);
@@ -58,14 +58,14 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
     // const taskStatusKey = Object.keys(acc[0]);
     // console.log("taskStatusKey", taskStatusKey);
-    const taskKey = boards.find((key) => key === status);
+    const taskKey = boards.find((key) => key.issueName === status);
     console.log("taskKey", taskKey);
     if (!taskKey) throw new Error("Key does not match");
     console.log(acc[0]);
     console.log(acc);
-    if (taskKey === status) {
-      console.log(acc[taskKey]);
-      acc[taskKey].push(currentTask);
+    if (taskKey.issueName === status) {
+      console.log(acc[taskKey.issueName]);
+      acc[taskKey.issueName].push(currentTask);
     }
 
     // currentTask.taskProject.projectTaskStatus?.map((task) => {
@@ -300,17 +300,17 @@ const DataKanban = ({ data }: DataKanbanProps) => {
             <div
               className={cn(
                 ` ${
-                  tasks[board].length === 0 && "p-0"
+                  tasks[board.issueName].length === 0 && "p-0"
                 } flex-1 mx-2 bg-muted h-full p-1.5 rounded-md`
               )}
               // className="  "
-              key={board}
+              key={board.issueName}
             >
               <KanbanColumnHeader
-                taskCount={tasks[board].length}
-                board={board}
+                taskCount={tasks[board.issueName].length}
+                board={board.issueName}
               />
-              <Droppable droppableId={board}>
+              <Droppable droppableId={board.issueName}>
                 {(prop) => {
                   // console.log(`${board}`,board.length);
                   return (
@@ -321,7 +321,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                       {...prop.droppableProps}
                       ref={prop.innerRef}
                     >
-                      {tasks[board].map((task, index) => {
+                      {tasks[board.issueName].map((task, index) => {
                         return (
                           <Draggable
                             key={task._id}

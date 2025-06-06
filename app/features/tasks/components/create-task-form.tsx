@@ -33,6 +33,7 @@ import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { useTaskModalStore } from "@/store/store";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
+import { IssueStatusTypes } from "convex/schema";
 
 interface CreateTaskFormProps {
   onCancel?: () => void;
@@ -45,7 +46,7 @@ interface CreateTaskFormProps {
     id: Id<"users">;
     name: string | undefined;
   }[];
-  projectTaskStatus: string[] | null;
+  projectTaskStatus: IssueStatusTypes[] | null;
 }
 
 export const CreateTaskForm = ({
@@ -238,8 +239,11 @@ export const CreateTaskForm = ({
                           <FormMessage />
                           <SelectContent>
                             {projectTaskStatus.map((task) => (
-                              <SelectItem value={task} key={task}>
-                                {task.toLocaleUpperCase()}
+                              <SelectItem
+                                value={task.issueName}
+                                key={task.issueName}
+                              >
+                                {task.issueName.toLocaleUpperCase()}
                               </SelectItem>
                             ))}
                           </SelectContent>
