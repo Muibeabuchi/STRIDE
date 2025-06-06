@@ -59,3 +59,31 @@ export async function populateMemberWithUser({
     })
   );
 }
+
+export async function ensureUniqueTaskStatusName({
+  ctx,
+  projectId,
+  statusName,
+}: {
+  ctx: QueryCtx;
+  statusName: string;
+  projectId: Id<"projects">;
+}) {
+  // ! We are assuming this function is called from an authorized api
+  // Loop through all the project Task Status, checking if the  statusName is repeated
+
+  const project = await ctx.db.get(projectId);
+  if (!project) throw new ConvexError("The project does not exist");
+  const projectTaskStatusNames = project.projectTaskStatus;
+  if (!projectTaskStatusNames)
+    throw new ConvexError("The project has not task status");
+
+  return {
+    isUniqueName: projectTaskStatusNames.find(
+      (status) => status.issueName === statusName
+    ),
+    projectInfo: project,
+  };
+
+  // return !projectStatus ? null : projectStatus;
+}
