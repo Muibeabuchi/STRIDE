@@ -200,8 +200,18 @@ function RouteComponent() {
                     )}
                     onClick={() => handleTaskViewChange("table")}
                   >
-                    <Table className="size-5 text-foreground" />
-                    <p className="text-[10px] text-foreground">Table</p>
+                    <Table
+                      className={cn("size-5 text-foreground", {
+                        "text-white/60 ": taskView !== "kanban",
+                      })}
+                    />
+                    <p
+                      className={cn("text-[10px] text-foreground ", {
+                        "text-white/60 ": taskView !== "kanban",
+                      })}
+                    >
+                      Table
+                    </p>
                   </Button>
                   {/* </DropdownMenuItem> */}
                   {/* <DropdownMenuGroup className="flex gap-x-3 items-center"> */}
@@ -210,14 +220,27 @@ function RouteComponent() {
                     className={cn(
                       " flex-col  border bg-sidebar-primary hover:bg-sidebar-primary/70 w-40 h-15",
                       {
-                        "bg-muted hover:bg-muted-foreground/70":
+                        "bg-muted  hover:bg-muted-foreground/70":
                           taskView !== "kanban",
                       }
                     )}
                     onClick={() => handleTaskViewChange("kanban")}
                   >
-                    <Kanban className="size-5  text-foreground" />
-                    <p className="text-[10px]  text-foreground">Kanban</p>
+                    <Kanban
+                      className={cn("size-5  text-foreground", {
+                        "text-white/60 ": taskView !== "table",
+                      })}
+                    />
+                    <p
+                      className={cn("text-[10px] text-foreground ", {
+                        "text-white/60 ": taskView !== "table",
+                      })}
+                    >
+                      Kanban
+                    </p>
+                    {/* <p className="text-[10px]  dark:text-foreground text-white">
+                      
+                    </p> */}
                   </Button>
                   {/* </DropdownMenuItem> */}
                   {/* </DropdownMenuGroup> */}
