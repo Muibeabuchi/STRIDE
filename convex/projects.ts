@@ -303,7 +303,7 @@ export const remove = authorizedWorkspaceMutation({
 export const addProjectStatus = authorizedWorkspaceMutation({
   args: {
     projectId: v.id("projects"),
-    projectTaskStatus: IssueStatusValidator,
+    projectTaskStatus: v.string(),
   },
   async handler(ctx, args) {
     // grab the project
@@ -329,7 +329,7 @@ export const addProjectStatus = authorizedWorkspaceMutation({
     const isUniqueTaskStatusName = await ensureUniqueTaskStatusName({
       ctx,
       projectId: args.projectId,
-      statusName: args.projectTaskStatus.issueName,
+      statusName: args.projectTaskStatus,
     });
 
     if (!isUniqueTaskStatusName.isUniqueName) return -1;
@@ -343,7 +343,7 @@ export const addProjectStatus = authorizedWorkspaceMutation({
       projectTaskStatus: [
         ...projectStatus,
         {
-          issueName: isUniqueTaskStatusName.isUniqueName?.issueName,
+          issueName: isUniqueTaskStatusName.isUniqueName.issueName,
           issuePosition: highestTaskStatus.issuePosition,
         },
       ],
@@ -453,6 +453,14 @@ export const removeProjectTaskStatus = authorizedWorkspaceMutation({
     // Permit deleting of projectTaskStatus if it exists
     if (!projectStatus) throw new ConvexError("Project Status must exist");
 
+    // check if the projectTaskStatus exists
+    const taskExists = projectStatus.find(
+      (status) => status.issueName === args.projectTaskStatus
+    );
+    if (!taskExists) throw new ConvexError("TaskStatus does not exist");
+
+    const verifiedTaskStatus = taskExists.issueName;
+
     //? grab the "Deletable taskStatus"
     const deleteAbleTaskStatus = projectStatus
       .map((status) => {
@@ -463,15 +471,6 @@ export const removeProjectTaskStatus = authorizedWorkspaceMutation({
       })
       .filter((s) => s !== null);
 
-    // check if the projectTaskStatus exists
-    // TODO: Change after the migration
-    // const statusToRemove = projectData.projectTaskStatus?.find(
-    const statusToRemove = deleteAbleTaskStatus.find(
-      (status) => status.issueName === args.projectTaskStatus
-    );
-
-    if (!statusToRemove) throw new ConvexError("Status does not exist");
-
     // grab the tasks associated with the status
     const tasksWithProjectTaskStatus = await ctx.db
       .query("tasks")
@@ -479,12 +478,13 @@ export const removeProjectTaskStatus = authorizedWorkspaceMutation({
         q
           .eq("workspaceId", args.workspaceId)
           .eq("projectId", args.projectId)
-          .eq("status", statusToRemove.issueName)
+          .eq("status", verifiedTaskStatus)
       )
       .collect();
 
     // delete the tasks associated with the projectStatus
     // TODO: Future versions will give the admin options in the settings menu  to either delete the tasks associated with the status or move them to a different status
+    // if(settings.deleteTasksAlongsideTaskStatus){}
     await Promise.all(
       tasksWithProjectTaskStatus.map(async (task) => {
         await ctx.db.delete(task._id);

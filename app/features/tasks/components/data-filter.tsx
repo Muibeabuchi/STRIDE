@@ -106,7 +106,9 @@ const DataFilter = ({
             <SelectSeparator />
             {/*TODO: Fix this Later after migrations */}
             {projectTaskStatus?.map((status) => (
-              <SelectItem value={status}>{status}</SelectItem>
+              <SelectItem value={status.issueName}>
+                {status.issueName}
+              </SelectItem>
             ))}
             {/* <SelectItem value={TaskStatus.DONE}>DONE</SelectItem>
             <SelectItem value={TaskStatus.IN_PROGRESS}>IN PROGRESS</SelectItem>
