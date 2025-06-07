@@ -189,61 +189,64 @@ function RouteComponent() {
               </CustomToolTip>
               <DropdownMenuContent className="w-auto p-3" align="end">
                 <div className="flex gap-x-3 items-center">
-                  {/* <DropdownMenuItem asChild> */}
-                  <Button
-                    className={cn(
-                      " flex-col bg-sidebar-primary hover:bg-sidebar-primary/70  border   w-40 h-15",
-                      {
-                        "bg-muted hover:bg-muted-foreground/70":
-                          taskView !== "table",
-                      }
-                    )}
-                    onClick={() => handleTaskViewChange("table")}
-                  >
-                    <Table
-                      className={cn("size-5 text-foreground", {
-                        "text-white/60 ": taskView !== "kanban",
-                      })}
-                    />
-                    <p
-                      className={cn("text-[10px] text-foreground ", {
-                        "text-white/60 ": taskView !== "kanban",
-                      })}
-                    >
-                      Table
-                    </p>
-                  </Button>
-                  {/* </DropdownMenuItem> */}
-                  {/* <DropdownMenuGroup className="flex gap-x-3 items-center"> */}
-                  {/* <DropdownMenuItem className="bg-background" asChild> */}
-                  <Button
-                    className={cn(
-                      " flex-col  border bg-sidebar-primary hover:bg-sidebar-primary/70 w-40 h-15",
-                      {
-                        "bg-muted  hover:bg-muted-foreground/70":
-                          taskView !== "kanban",
-                      }
-                    )}
-                    onClick={() => handleTaskViewChange("kanban")}
-                  >
-                    <Kanban
-                      className={cn("size-5  text-foreground", {
-                        "text-white/60 ": taskView !== "table",
-                      })}
-                    />
-                    <p
-                      className={cn("text-[10px] text-foreground ", {
-                        "text-white/60 ": taskView !== "table",
-                      })}
-                    >
-                      Kanban
-                    </p>
-                    {/* <p className="text-[10px]  dark:text-foreground text-white">
+                  <DropdownMenuGroup className="flex gap-x-3 items-center">
+                    <DropdownMenuItem asChild className="!focus:bg-none">
+                      <Button
+                        className={cn(
+                          " flex-col bg-sidebar-primary !hover:bg-sidebar-primary/70  border   w-40 h-15",
+                          {
+                            "bg-muted hover:bg-muted-foreground/70":
+                              taskView !== "table",
+                          }
+                        )}
+                        onClick={() => handleTaskViewChange("table")}
+                      >
+                        <Table
+                          className={cn("size-5 text-foreground", {
+                            "text-white/60 ": taskView !== "kanban",
+                          })}
+                        />
+                        <p
+                          className={cn("text-[10px] text-foreground ", {
+                            "text-white/60 ": taskView !== "kanban",
+                          })}
+                        >
+                          Table
+                        </p>
+                      </Button>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+
+                  <DropdownMenuGroup className="flex gap-x-3 items-center">
+                    <DropdownMenuItem className="!focus:bg-none" asChild>
+                      <Button
+                        className={cn(
+                          " flex-col  border bg-sidebar-primary hover:bg-sidebar-primary/70 w-40 h-15",
+                          {
+                            "bg-muted  hover:bg-muted-foreground/70":
+                              taskView !== "kanban",
+                          }
+                        )}
+                        onClick={() => handleTaskViewChange("kanban")}
+                      >
+                        <Kanban
+                          className={cn("size-5  text-foreground", {
+                            "text-white/60 ": taskView !== "table",
+                          })}
+                        />
+                        <p
+                          className={cn("text-[10px] text-foreground ", {
+                            "text-white/60 ": taskView !== "table",
+                          })}
+                        >
+                          Kanban
+                        </p>
+                        {/* <p className="text-[10px]  dark:text-foreground text-white">
                       
                     </p> */}
-                  </Button>
-                  {/* </DropdownMenuItem> */}
-                  {/* </DropdownMenuGroup> */}
+                      </Button>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
                 </div>
               </DropdownMenuContent>
             </DropdownMenu>

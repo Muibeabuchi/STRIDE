@@ -278,7 +278,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="h-[calc(100vh-73px)]  overflow-x-auto">
+      <div className="h-[calc(100svh-72px)]  overflow-x-auto">
         <div className="flex  ">
           {boards.length > 0 ? (
             boards.map((board) => {
@@ -300,7 +300,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                       return (
                         <div
                           className={cn(
-                            `max-h-[calc(100vh-135px)]  w-[400px] overflow-x-hidden overflow-y-auto py-1.5`
+                            `max-h-[calc(100svh-135px)]  w-[400px] overflow-x-hidden overflow-y-auto py-1.5`
                           )}
                           {...prop.droppableProps}
                           ref={prop.innerRef}
