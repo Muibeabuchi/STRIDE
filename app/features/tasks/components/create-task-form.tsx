@@ -34,6 +34,7 @@ import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { useTaskModalStore } from "@/store/store";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { IssueStatusTypes } from "convex/schema";
+import { truncateString } from "@/utils/truncate-words";
 
 interface CreateTaskFormProps {
   onCancel?: () => void;
@@ -134,13 +135,11 @@ export const CreateTaskForm = ({
 
   return (
     <Card className="w-full h-full border-none shadow-none gap-4">
-      <CardHeader className="flex p-4">
+      <CardHeader className="flex p-2 px-4">
         <CardTitle className="text-lg font-bold">Create a new Task</CardTitle>
       </CardHeader>
-      <div className="px-7">
-        <DottedSeparator />
-      </div>
-      <CardContent className="p-4">
+
+      <CardContent className="p-4 -my-2">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-4">
@@ -285,7 +284,9 @@ export const CreateTaskForm = ({
                                       className="size-6"
                                       image={project.imageUrl}
                                     />
-                                    {project.name}
+                                    <p className="truncate">
+                                      {truncateString(project.name, 3, 20)}
+                                    </p>
                                   </div>
                                 </SelectItem>
                               );

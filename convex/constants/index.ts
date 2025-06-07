@@ -6,7 +6,15 @@ export const DEFAULT_PROJECT_TASK_STATUS_NAME = [
   "IN_REVIEW",
   "BACKLOG",
   "IN_PROGRESS",
+  "CANCELLED",
+  "SUSPENDED",
 ];
+
+export type TaskType =
+  | (typeof DEFAULT_PROJECT_TASK_STATUS_NAME)[number]
+  | string;
+
+// const taskValue: TaskType = "";
 
 export const TaskPriorityMapper = {
   0: "No priority",

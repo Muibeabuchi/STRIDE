@@ -40,8 +40,8 @@ const KanbanCard = ({ task }: KanbanCardProps) => {
           fallbackClassName="text-[10px]"
           image={task.taskProject.projectImage}
         />
-        <span className="text-xs font-medium">
-          {task.taskProject.projectName}
+        <span className="text-xs truncate font-medium">
+          {truncateString(task.taskProject.projectName, 3, 15)}
         </span>
       </div>
     </div>

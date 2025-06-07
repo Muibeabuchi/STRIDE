@@ -201,7 +201,7 @@ const Projects = () => {
                           <ProjectAvatar
                             image={project.projectImage}
                             name={project.projectName}
-                            className=""
+                            className="truncate"
                           />
                           <span className="truncate">
                             {project.projectName}

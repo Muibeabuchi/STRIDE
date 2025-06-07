@@ -36,6 +36,7 @@ import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { useEditTask } from "../api/use-edit-task";
 import { getTaskByIdResponse } from "convex/schema";
 import { useState } from "react";
+import { truncateString } from "@/utils/truncate-words";
 
 interface EditTaskFormProps {
   onCancel?: () => void;
@@ -106,10 +107,8 @@ export const EditTaskForm = ({
       <CardHeader className="flex p-4">
         <CardTitle className="text-lg font-bold">Edit Task</CardTitle>
       </CardHeader>
-      <div className="px-7">
-        <DottedSeparator />
-      </div>
-      <CardContent className="p-4">
+
+      <CardContent className="p-4 -my-2">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-4">
@@ -281,10 +280,12 @@ export const EditTaskForm = ({
                               <div className="flex items-center gap-x-2">
                                 <ProjectAvatar
                                   name={project.name}
-                                  className="size-6"
+                                  className="size-6 truncate"
                                   image={project.imageUrl}
                                 />
-                                {project.name}
+                                <p className="truncate">
+                                  {truncateString(project.name, 2, 15)}
+                                </p>
                               </div>
                             </SelectItem>
                           ))}
