@@ -41,8 +41,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
   let kanbanTasks: TaskState = {};
 
   const kanbanTasksStatus = data[0]?.taskProject.projectTaskStatus ?? [];
-  console.log(data);
-  console.log(kanbanTasksStatus);
 
   kanbanTasksStatus.map((task) => {
     kanbanTasks[task.issueName] = [];
@@ -51,21 +49,15 @@ const DataKanban = ({ data }: DataKanbanProps) => {
   // const boards = Object.keys(kanbanBoards?.[0]);
   const boards = data[0]?.taskProject?.projectTaskStatus ?? [];
 
-  console.log("boards", boards);
   const tasks = data.reduce((acc, currentTask) => {
     // check if the status of task is equal to key of the board
     const status = currentTask.status;
-    console.log("status", status);
 
     // const taskStatusKey = Object.keys(acc[0]);
     // console.log("taskStatusKey", taskStatusKey);
     const taskKey = boards.find((key) => key.issueName === status);
-    console.log("taskKey", taskKey);
     if (!taskKey) throw new Error("Key does not match");
-    console.log(acc[0]);
-    console.log(acc);
     if (taskKey.issueName === status) {
-      console.log(acc[taskKey.issueName]);
       acc[taskKey.issueName].push(currentTask);
     }
 

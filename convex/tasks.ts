@@ -266,9 +266,6 @@ export const copy = authorizedWorkspaceMutation({
 
     const nextTask = sortedTasks[0];
 
-    console.log("sortedTasks", sortedTasks);
-    console.log("nextTask", nextTask);
-
     if (!nextTask) {
       newPosition = taskToBeCopied.position + 1000;
     } else {
