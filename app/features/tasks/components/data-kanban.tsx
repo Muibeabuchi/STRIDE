@@ -294,7 +294,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex  overflow-x-auto  !scrollbar-custom ">
+      <div className="flex  overflow-x-auto custom-horizontal-scroll  scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-700   ">
         {boards.map((board) => {
           return (
             <div
@@ -316,7 +316,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                   return (
                     <div
                       className={cn(
-                        `max-h-[calc(100vh-135px)] w-[400px] overflow-y-auto py-1.5`
+                        `max-h-[calc(100vh-135px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full w-[400px] overflow-y-auto py-1.5`
                       )}
                       {...prop.droppableProps}
                       ref={prop.innerRef}
