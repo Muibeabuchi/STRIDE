@@ -13,6 +13,7 @@ import { useEditTask } from "../api/use-edit-task";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import EmptyKanbanState from "@/components/empty-kanban";
 
 interface DataKanbanProps {
   data: PaginatedTasksResponse[];
@@ -295,61 +296,65 @@ const DataKanban = ({ data }: DataKanbanProps) => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex  overflow-x-auto custom-horizontal-scroll  scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-700   ">
-        {boards.map((board) => {
-          return (
-            <div
-              className={cn(
-                ` ${
-                  tasks[board.issueName].length === 0 && "p-0"
-                } flex-1 mx-2 bg-muted h-full p-1.5 rounded-md`
-              )}
-              // className="  "
-              key={board.issueName}
-            >
-              <KanbanColumnHeader
-                taskCount={tasks[board.issueName].length}
-                board={board.issueName}
-              />
-              <Droppable droppableId={board.issueName}>
-                {(prop) => {
-                  // console.log(`${board}`,board.length);
-                  return (
-                    <div
-                      className={cn(
-                        `max-h-[calc(100vh-135px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full w-[400px] overflow-y-auto py-1.5`
-                      )}
-                      {...prop.droppableProps}
-                      ref={prop.innerRef}
-                    >
-                      {tasks[board.issueName].map((task, index) => {
-                        return (
-                          <Draggable
-                            key={task._id}
-                            index={index}
-                            draggableId={task._id}
-                          >
-                            {(prop) => {
-                              return (
-                                <div
-                                  {...prop.draggableProps}
-                                  {...prop.dragHandleProps}
-                                  ref={prop.innerRef}
-                                >
-                                  <KanbanCard task={task} />
-                                </div>
-                              );
-                            }}
-                          </Draggable>
-                        );
-                      })}
-                      {prop.placeholder}
-                    </div>
-                  );
-                }}
-              </Droppable>
-            </div>
-          );
-        })}
+        {boards.length > 0 ? (
+          boards.map((board) => {
+            return (
+              <div
+                className={cn(
+                  ` ${
+                    tasks[board.issueName].length === 0 && "p-0"
+                  } flex-1 mx-2 bg-muted h-full p-1.5 rounded-md`
+                )}
+                // className="  "
+                key={board.issueName}
+              >
+                <KanbanColumnHeader
+                  taskCount={tasks[board.issueName].length}
+                  board={board.issueName}
+                />
+                <Droppable droppableId={board.issueName}>
+                  {(prop) => {
+                    // console.log(`${board}`,board.length);
+                    return (
+                      <div
+                        className={cn(
+                          `max-h-[calc(100vh-135px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 scrollbar-thumb-rounded-full scrollbar-track-rounded-full w-[400px] overflow-y-auto py-1.5`
+                        )}
+                        {...prop.droppableProps}
+                        ref={prop.innerRef}
+                      >
+                        {tasks[board.issueName].map((task, index) => {
+                          return (
+                            <Draggable
+                              key={task._id}
+                              index={index}
+                              draggableId={task._id}
+                            >
+                              {(prop) => {
+                                return (
+                                  <div
+                                    {...prop.draggableProps}
+                                    {...prop.dragHandleProps}
+                                    ref={prop.innerRef}
+                                  >
+                                    <KanbanCard task={task} />
+                                  </div>
+                                );
+                              }}
+                            </Draggable>
+                          );
+                        })}
+                        {prop.placeholder}
+                      </div>
+                    );
+                  }}
+                </Droppable>
+              </div>
+            );
+          })
+        ) : (
+          <EmptyKanbanState />
+        )}
       </div>
     </DragDropContext>
   );

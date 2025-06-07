@@ -211,7 +211,7 @@ export const UpdateProjectForm = ({
                                 type="button"
                                 disabled={form.formState.isSubmitting}
                                 variant="destructive"
-                                size="xs"
+                                // size="xs"
                                 className="w-fit mt-2"
                                 onClick={() => {
                                   field.onChange("");
@@ -231,8 +231,8 @@ export const UpdateProjectForm = ({
                               <Button
                                 type="button"
                                 disabled={form.formState.isSubmitting}
-                                variant="territory"
-                                size="xs"
+                                // variant="territory"
+                                // size="xs"
                                 className="w-fit mt-2"
                                 onClick={() => inputRef.current?.click?.()}
                               >

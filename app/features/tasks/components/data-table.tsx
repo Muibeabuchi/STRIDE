@@ -95,9 +95,17 @@ export function DataTable<TData, TValue>({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center"
+                    className="h-24 py-5 w-full text-center"
                   >
-                    No results.
+                    <img
+                      src="/public/undraw_chore-list_ylw0.png"
+                      width={200}
+                      height={200}
+                      className="mx-auto pt-15"
+                    />
+                    <p className="font-medium mt-5">
+                      Your kanban board is empty.
+                    </p>
                   </TableCell>
                 </TableRow>
               )}
