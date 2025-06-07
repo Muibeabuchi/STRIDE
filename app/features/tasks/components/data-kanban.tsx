@@ -295,64 +295,66 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex  overflow-x-auto ">
-        {boards.length > 0 ? (
-          boards.map((board) => {
-            return (
-              <div
-                className={cn(
-                  ` ${
-                    tasks[board.issueName].length === 0 && "p-0"
-                  } flex-1 mx-2 bg-muted h-full p-1.5 rounded-md`
-                )}
-                key={board.issueName}
-              >
-                <KanbanColumnHeader
-                  taskCount={tasks[board.issueName].length}
-                  board={board.issueName}
-                />
-                <Droppable droppableId={board.issueName}>
-                  {(prop) => {
-                    return (
-                      <div
-                        className={cn(
-                          `max-h-[calc(100vh-135px)] w-[400px] overflow-y-auto py-1.5`
-                        )}
-                        {...prop.droppableProps}
-                        ref={prop.innerRef}
-                      >
-                        {tasks[board.issueName].map((task, index) => {
-                          return (
-                            <Draggable
-                              key={task._id}
-                              index={index}
-                              draggableId={task._id}
-                            >
-                              {(prop) => {
-                                return (
-                                  <div
-                                    {...prop.draggableProps}
-                                    {...prop.dragHandleProps}
-                                    ref={prop.innerRef}
-                                  >
-                                    <KanbanCard task={task} />
-                                  </div>
-                                );
-                              }}
-                            </Draggable>
-                          );
-                        })}
-                        {prop.placeholder}
-                      </div>
-                    );
-                  }}
-                </Droppable>
-              </div>
-            );
-          })
-        ) : (
-          <EmptyKanbanState />
-        )}
+      <div className="h-[calc(100vh-73px)]  overflow-x-auto">
+        <div className="flex  ">
+          {boards.length > 0 ? (
+            boards.map((board) => {
+              return (
+                <div
+                  className={cn(
+                    ` ${
+                      tasks[board.issueName].length === 0 && "p-0"
+                    } flex-1 mx-2 bg-muted p-1.5 h-full rounded-md`
+                  )}
+                  key={board.issueName}
+                >
+                  <KanbanColumnHeader
+                    taskCount={tasks[board.issueName].length}
+                    board={board.issueName}
+                  />
+                  <Droppable droppableId={board.issueName}>
+                    {(prop) => {
+                      return (
+                        <div
+                          className={cn(
+                            `max-h-[calc(100vh-135px)]  w-[400px] overflow-x-hidden overflow-y-auto py-1.5`
+                          )}
+                          {...prop.droppableProps}
+                          ref={prop.innerRef}
+                        >
+                          {tasks[board.issueName].map((task, index) => {
+                            return (
+                              <Draggable
+                                key={task._id}
+                                index={index}
+                                draggableId={task._id}
+                              >
+                                {(prop) => {
+                                  return (
+                                    <div
+                                      {...prop.draggableProps}
+                                      {...prop.dragHandleProps}
+                                      ref={prop.innerRef}
+                                    >
+                                      <KanbanCard task={task} />
+                                    </div>
+                                  );
+                                }}
+                              </Draggable>
+                            );
+                          })}
+                          {prop.placeholder}
+                        </div>
+                      );
+                    }}
+                  </Droppable>
+                </div>
+              );
+            })
+          ) : (
+            <EmptyKanbanState />
+          )}
+        </div>
       </div>
       {/* </div> */}
     </DragDropContext>
