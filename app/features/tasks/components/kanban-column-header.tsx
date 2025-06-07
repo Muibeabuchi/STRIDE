@@ -6,10 +6,18 @@ import {
   CircleDotDashedIcon,
   CircleIcon,
   PlusIcon,
+  Eclipse,
+  Ellipsis,
 } from "lucide-react";
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { useTaskModalStore } from "@/store/store";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface KanbanColumnHeaderProps {
   board: string;
@@ -45,14 +53,30 @@ const KanbanColumnHeader = ({ taskCount, board }: KanbanColumnHeaderProps) => {
           {taskCount}
         </div>
       </div>
-      <Button
-        variant={"ghost"}
-        onClick={() => open(board)}
-        size="icon"
-        className="size-5 cursor-pointer hover:bg-accent-foreground"
-      >
-        <PlusIcon className="size-4 " />
-      </Button>
+      <div className="flex items-center gap-x-3">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="cursor-pointer  p-1 rounded-lg hover:bg-accent">
+            <Ellipsis className="size-4 " />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="start">
+            <DropdownMenuItem
+              // onClick={() => open(board)}
+              className="cursor-pointer hover:bg-accent-foreground"
+            >
+              Hide Column
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Button
+          variant={"ghost"}
+          onClick={() => open(board)}
+          size="icon"
+          className="size-5 cursor-pointer hover:bg-accent-foreground"
+        >
+          <PlusIcon className="size-4 " />
+        </Button>
+      </div>
     </div>
   );
 };
