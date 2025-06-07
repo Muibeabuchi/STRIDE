@@ -29,15 +29,6 @@ interface DataKanbanProps {
 type TaskState = Record<string, PaginatedTasksResponse[]>;
 
 const DataKanban = ({ data }: DataKanbanProps) => {
-  // const kanbanTasks: TaskState = {
-  //   [TaskStatus.BACKLOG]: [],
-  //   [TaskStatus.DONE]: [],
-  //   [TaskStatus.IN_PROGRESS]: [],
-  //   [TaskStatus.IN_REVIEW]: [],
-  //   [TaskStatus.TODO]: [],
-  // };
-  // data[0].
-
   let kanbanTasks: TaskState = {};
 
   const kanbanTasksStatus = data[0]?.taskProject.projectTaskStatus ?? [];

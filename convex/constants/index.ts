@@ -50,6 +50,10 @@ export const DEFAULT_PROJECT_TASK_STATUS: IssueStatusTypes[] = [
     issueName: DEFAULT_PROJECT_TASK_STATUS_NAME[4],
     issuePosition: 5,
   },
+  {
+    issueName: DEFAULT_PROJECT_TASK_STATUS_NAME[5],
+    issuePosition: 6,
+  },
 ];
 
 export const NUMBER_OF_DEFAULT_TASK_STATUS = DEFAULT_PROJECT_TASK_STATUS.length;

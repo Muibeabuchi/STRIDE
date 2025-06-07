@@ -51,7 +51,10 @@ interface EditTaskFormProps {
     name: string | undefined;
   }[];
   initialValues: getTaskByIdResponse;
-  projectTaskStatus: string[] | null;
+  projectTaskStatus: {
+    issueName: string;
+    issuePosition: number;
+  }[];
 }
 
 export const EditTaskForm = ({
@@ -245,8 +248,8 @@ export const EditTaskForm = ({
                           <FormMessage />
                           <SelectContent>
                             {projectTaskStatus.map((task) => (
-                              <SelectItem value={task}>
-                                {task.toLocaleUpperCase()}
+                              <SelectItem value={task.issueName}>
+                                {task.issueName.toLocaleUpperCase()}
                               </SelectItem>
                             ))}
                           </SelectContent>

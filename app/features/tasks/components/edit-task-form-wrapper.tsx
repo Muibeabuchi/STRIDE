@@ -76,6 +76,7 @@ export function EditTaskFormWrapper({
     id: member.userId,
     name: member.userName,
   }));
+  const projectTaskStatus = projects.data[0].projectTaskStatus;
 
   return (
     <EditTaskForm
@@ -84,6 +85,7 @@ export function EditTaskFormWrapper({
       taskId={taskId}
       initialValues={initialValues}
       onCancel={onCancel}
+      projectTaskStatus={projectTaskStatus}
     />
   );
 }

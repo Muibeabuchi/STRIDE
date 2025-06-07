@@ -4,13 +4,13 @@
 // import { getManyFrom } from "convex-helpers/server/relationships";
 // import { asyncMap } from "convex-helpers";
 
-// // import {
-// //   customCtx,
-// //   customMutation,
-// // } from "convex-helpers/server/customFunctions";
-// // import { mutation as rawMutation } from "../_generated/server";
+// import {
+//   customCtx,
+//   customMutation,
+// } from "convex-helpers/server/customFunctions";
+// import { mutation as rawMutation } from "../_generated/server";
 
-// // const triggers = new Triggers<DataModel>();
+// const triggers = new Triggers<DataModel>();
 
 // triggers.register("members", async (ctx, change) => {
 //   // Todo: Grab all the tasks associated with the workspace, remove them
@@ -30,7 +30,7 @@
 //   }
 // });
 
-// // export const TriggerMutation = customMutation(
-// //   rawMutation,
-// //   customCtx(triggers.wrapDB)
-// // );
+// export const TriggerMutation = customMutation(
+//   rawMutation,
+//   customCtx(triggers.wrapDB)
+// );
