@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import EmptyKanbanState from "@/components/empty-kanban";
+import { useCollapsedColumn } from "@/hooks/use-collapsed-column";
 
 interface DataKanbanProps {
   data: PaginatedTasksResponse[];
@@ -29,43 +30,55 @@ interface DataKanbanProps {
 type TaskState = Record<string, PaginatedTasksResponse[]>;
 
 const DataKanban = ({ data }: DataKanbanProps) => {
+  // grab the collapsed columns from the Global Store/Local Storage
   let kanbanTasks: TaskState = {};
+  const collapsedColumns = useCollapsedColumn(
+    (state) => state.collapsedColumns
+  );
 
-  const kanbanTasksStatus = data[0]?.taskProject.projectTaskStatus ?? [];
+  // const kanbanTasksStatus = data[0]?.taskProject.projectTaskStatus ?? [];
   console.log(data);
   // const projectId = data
-
-  kanbanTasksStatus.map((task) => {
-    kanbanTasks[task.issueName] = [];
+  const boards = data[0]?.taskProject?.projectTaskStatus ?? [];
+  // filter the boards to only show the non-collapsed boards
+  const nonCollapsedBoards = boards.filter((board) => {
+    console.log("board", board);
+    if (collapsedColumns === null) {
+      return true;
+    } else {
+      const projectCollapsedColumns = collapsedColumns.find(
+        (col) => col.projectId === data[0].taskProject._id
+      );
+      if (!projectCollapsedColumns) return true;
+      const projectCollapsedColumnNames =
+        projectCollapsedColumns.collapsedColumnName;
+      console.log("projectCollapsedColumnName", projectCollapsedColumnNames);
+      const isCollapsedBoard = !!projectCollapsedColumnNames.find(
+        (status) => status === board.issueName
+      );
+      if (!isCollapsedBoard) {
+        return true;
+      } else return false;
+      // return unCollapsedBoards;
+    }
   });
 
-  // const boards = Object.keys(kanbanBoards?.[0]);
-  const boards = data[0]?.taskProject?.projectTaskStatus ?? [];
+  console.log("nonCollapsedBoards", nonCollapsedBoards);
+
+  nonCollapsedBoards.map((task) => {
+    kanbanTasks[task.issueName] = [];
+  });
 
   const tasks = data.reduce((acc, currentTask) => {
     // check if the status of task is equal to key of the board
     const status = currentTask.status;
 
-    // const taskStatusKey = Object.keys(acc[0]);
-    // console.log("taskStatusKey", taskStatusKey);
-    const taskKey = boards.find((key) => key.issueName === status);
-    if (!taskKey) throw new Error("Key does not match");
+    const taskKey = nonCollapsedBoards.find((key) => key.issueName === status);
+    // if (!taskKey) throw new Error("Key does not match");
+    if (!taskKey) return acc;
     if (taskKey.issueName === status) {
       acc[taskKey.issueName].push(currentTask);
     }
-
-    // currentTask.taskProject.projectTaskStatus?.map((task) => {
-    //   // get the key of the object
-    //   const taskStatusKey = Object.keys(acc[0]);
-    //   const taskKey = taskStatusKey.find(key=>key === status);
-    //   if(!taskKey) throw new Error("Key does not match")
-    //     acc[0][taskKey].push(currentTask)
-    //   // const taskStatusKey = acc[0][status];
-    //   // if (taskStatusKey === task) {
-    //   //   return acc[0][task].push(currentTask);
-    //   // }
-    // });
-
     return acc;
   }, kanbanTasks);
 
@@ -282,8 +295,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="h-[calc(100svh-72px)]  overflow-x-auto">
         <div className="flex  ">
-          {boards.length > 0 ? (
-            boards.map((board) => {
+          {nonCollapsedBoards.length > 0 ? (
+            nonCollapsedBoards.map((board) => {
               return (
                 <div
                   className={cn(
