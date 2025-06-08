@@ -19,13 +19,6 @@ import { useCollapsedColumn } from "@/hooks/use-collapsed-column";
 interface DataKanbanProps {
   data: PaginatedTasksResponse[];
 }
-// const boards = [
-//   TaskStatus.BACKLOG,
-//   TaskStatus.DONE,
-//   TaskStatus.IN_PROGRESS,
-//   TaskStatus.IN_REVIEW,
-//   TaskStatus.TODO,
-// ] as const;
 
 type TaskState = Record<string, PaginatedTasksResponse[]>;
 
@@ -59,7 +52,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       if (!isCollapsedBoard) {
         return true;
       } else return false;
-      // return unCollapsedBoards;
     }
   });
 
@@ -302,7 +294,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                   className={cn(
                     ` ${
                       tasks[board.issueName].length === 0 && "p-0"
-                    } flex-1 mx-2 bg-muted p-1.5 h-full rounded-md`
+                    } flex-1 mx-2 bg-muted p-1.5 h-full   max-w-[410px] rounded-md`
                   )}
                   key={board.issueName}
                 >
