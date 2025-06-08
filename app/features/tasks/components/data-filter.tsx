@@ -94,7 +94,7 @@ const DataFilter = ({
             <ListChecksIcon className="size-4 mr-2" />
             {isMobile && (
               <SelectValue
-                placeholder="All Statuses"
+                placeholder="All Status"
                 className="hidden lg:flex"
               />
             )}
@@ -102,7 +102,7 @@ const DataFilter = ({
         </SelectTrigger>
         {projectTaskStatus === null ? null : (
           <SelectContent>
-            <SelectItem value="ALL">All Task Status</SelectItem>
+            <SelectItem value={"ALL"}>ALL</SelectItem>
             <SelectSeparator />
             {/*TODO: Fix this Later after migrations */}
             {projectTaskStatus?.map((status) => (

@@ -10,18 +10,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button, ButtonProps } from "@/components/ui/button";
+import { Button, ButtonVariants } from "@/components/ui/button";
 
 interface useConfirmProps {
   title: string;
   description: string;
-  variant: ButtonProps["variant"];
+  variant: ButtonVariants["variant"];
 }
 
 export const useConfirm = ({
   title,
   description,
-  variant = "primary",
+  variant = "default",
 }: useConfirmProps) => {
   const [promise, setPromise] = useState<{
     resolve: (value: unknown) => void;
@@ -45,22 +45,22 @@ export const useConfirm = ({
     return (
       <ResponsiveModal open={promise !== null} onOpenChange={handleClose}>
         <Card className="w-full h-full border-none shadow-none">
-          <CardContent className="pt-8">
+          <CardContent className="pt-4">
             <CardHeader className="p-0">
               <CardTitle>{title}</CardTitle>
               <CardDescription>{description}</CardDescription>
             </CardHeader>
-            <div className="pt-4 w-full gap-y-2 lg:gap-x-2 lg:items-center lg:justify-between  justify-between flex flex-col lg:flex-row ">
+            <div className="pt-4 w-full gap-y-2 lg:gap-x-2 lg:items-center lg:justify-end    flex flex-col lg:flex-row ">
               <Button
                 onClick={handleClose}
                 variant="outline"
-                className="w-full lg:w-aut0"
+                className="w-full lg:w-[30%] "
               >
                 Close
               </Button>
               <Button
                 variant={variant}
-                className="w-full lg:w-aut0"
+                className="w-full lg:w-[30%]"
                 onClick={handleConfirm}
               >
                 Confirm

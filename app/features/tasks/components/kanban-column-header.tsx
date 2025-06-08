@@ -18,10 +18,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Id } from "convex/_generated/dataModel";
+import { useCollapsedColumn } from "@/hooks/use-collapsed-column";
+import { toast } from "sonner";
 
 interface KanbanColumnHeaderProps {
   board: string;
   taskCount: number;
+  projectId: Id<"projects">;
 }
 
 // const StatusIconMap: Record<TaskStatus, ReactNode> = {
@@ -40,9 +44,33 @@ interface KanbanColumnHeaderProps {
 //   ),
 // };
 
-const KanbanColumnHeader = ({ taskCount, board }: KanbanColumnHeaderProps) => {
+const KanbanColumnHeader = ({
+  projectId,
+  taskCount,
+  board,
+}: KanbanColumnHeaderProps) => {
   // const icon = StatusIconMap[board];
   const { open } = useTaskModalStore();
+  const addCollapsedColumn = useCollapsedColumn(
+    (state) => state.addCollapsedColumn
+  );
+
+  function handleAddToCollapsedColumn({
+    ColumnProjectId,
+    columnName,
+  }: {
+    ColumnProjectId: Id<"projects">;
+    columnName: string;
+  }) {
+    const value = addCollapsedColumn({
+      projectId: ColumnProjectId,
+      columnName,
+    });
+    if (value === null) {
+      // ! Temporary code for error handling
+      toast.error("Column Name already exists for this project");
+    }
+  }
 
   return (
     <div className="flex px-2 py-1.5 items-center justify-between">
@@ -61,7 +89,13 @@ const KanbanColumnHeader = ({ taskCount, board }: KanbanColumnHeaderProps) => {
           <DropdownMenuContent className="w-56" align="start">
             <DropdownMenuItem
               // onClick={() => open(board)}
-              className="cursor-pointer hover:bg-accent-foreground"
+              onClick={() =>
+                handleAddToCollapsedColumn({
+                  columnName: board,
+                  ColumnProjectId: projectId,
+                })
+              }
+              className="cursor-pointer hover:bg-muted"
             >
               Hide Column
             </DropdownMenuItem>

@@ -18,6 +18,7 @@ import DataCalendar from "./data-calendar";
 import { StatusSchemaType, taskViewSearchType } from "../schema";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useStableTasks } from "../hooks/use-stable-get-task";
 
 export const tabSchema = z.union([
   z.literal("table"),
@@ -54,7 +55,7 @@ export const TaskViewSwitcher = ({
   onProjectIdChange,
   onStatusChange,
 }: TaskViewSwitcherProps) => {
-  const { tasks } = useGetTasks({
+  const tasks = useStableTasks({
     workspaceId,
     status,
     assigneeId: assigneeId as Id<"users">,
@@ -69,7 +70,7 @@ export const TaskViewSwitcher = ({
   }
 
   if (tasks === null) {
-    return <p>Task Errored out</p>;
+    return <p>Error fetching Tasks</p>;
   }
   return (
     <div className="flex-1 w-full h-full  rounded-lg">
@@ -130,7 +131,7 @@ export const TaskViewSwitcherSkeleton = () => {
         {/* Tab content - using DataTableSkeleton as default */}
 
         {/* <TabsContent value="table" className="mt-0"> */}
-        <DataTableSkeleton columnCount={5} rowCount={5} />
+        {/* <DataTableSkeleton columnCount={5} rowCount={5} /> */}
         {/* </TabsContent> */}
       </div>
     </Tabs>

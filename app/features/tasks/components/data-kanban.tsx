@@ -32,6 +32,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
   let kanbanTasks: TaskState = {};
 
   const kanbanTasksStatus = data[0]?.taskProject.projectTaskStatus ?? [];
+  console.log(data);
+  // const projectId = data
 
   kanbanTasksStatus.map((task) => {
     kanbanTasks[task.issueName] = [];
@@ -294,6 +296,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                   <KanbanColumnHeader
                     taskCount={tasks[board.issueName].length}
                     board={board.issueName}
+                    projectId={data[0].taskProject._id}
                   />
                   <Droppable droppableId={board.issueName}>
                     {(prop) => {

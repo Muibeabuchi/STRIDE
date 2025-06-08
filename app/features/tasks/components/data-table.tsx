@@ -103,9 +103,7 @@ export function DataTable<TData, TValue>({
                       height={200}
                       className="mx-auto pt-15"
                     />
-                    <p className="font-medium mt-5">
-                      Your kanban board is empty.
-                    </p>
+                    <p className="font-medium mt-5">Your Table is empty.</p>
                   </TableCell>
                 </TableRow>
               )}
