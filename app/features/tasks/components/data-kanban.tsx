@@ -16,6 +16,8 @@ import { cn } from "@/lib/utils";
 import EmptyKanbanState from "@/components/empty-kanban";
 import { useCollapsedColumn } from "@/hooks/use-collapsed-column";
 import CollapsedKanbanBoard from "./collapsed-kanban-board";
+import AdvancedKanbanCard from "./advanced-kanban-task-card";
+import KanbanCardExample from "./advanced-kanban-example";
 
 interface DataKanbanProps {
   data: PaginatedTasksResponse[];
@@ -360,11 +362,11 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                       );
                     }}
                   </Droppable>
+                  {/* <KanbanCardExample /> */}
                 </div>
               );
             })
           ) : (
-            // TODO: Change this to only show when there are no tasks
             <EmptyKanbanState
               message={data?.[0] ? "All Columns are Hidden" : undefined}
             />

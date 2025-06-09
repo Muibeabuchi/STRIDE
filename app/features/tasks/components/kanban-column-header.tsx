@@ -73,7 +73,7 @@ const KanbanColumnHeader = ({
   }
 
   return (
-    <div className="flex px-2 py-1.5 items-center justify-between">
+    <div className="flex px-2 py-1.5 items-center justify-between ">
       <div className="flex items-center gap-x-2">
         {/* {icon} */}
         <h2 className="text-sm font-medium">{snakeCaseToTitleCase(board)}</h2>
@@ -81,7 +81,7 @@ const KanbanColumnHeader = ({
           {taskCount}
         </div>
       </div>
-      <div className="flex items-center gap-x-3">
+      <div className=" items-center gap-x-3  flex   ">
         <DropdownMenu>
           <DropdownMenuTrigger className="cursor-pointer  p-1 rounded-lg hover:bg-accent">
             <Ellipsis className="size-4 " />
@@ -106,7 +106,7 @@ const KanbanColumnHeader = ({
           variant={"ghost"}
           onClick={() => open(board)}
           size="icon"
-          className="size-5 cursor-pointer hover:bg-accent-foreground"
+          className="size-5 cursor-pointer  hover:bg-accent-foreground "
         >
           <PlusIcon className="size-4 " />
         </Button>

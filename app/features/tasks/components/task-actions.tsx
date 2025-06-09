@@ -118,13 +118,16 @@ const TaskActions = ({
               Go To Project
             </DropdownMenuItem>
           ) : null}
-          <DropdownMenuItem onClick={openTask} className="font-medium p-[10px]">
+          <DropdownMenuItem
+            onClick={openTask}
+            className="font-medium p-[10px] hover:bg-muted"
+          >
             <InfoIcon className="size-4 mr-w stroke-2" />
             Task Details
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={handleOpenEditTaskModal}
-            className="font-medium p-[10px]"
+            className="font-medium p-[10px] hover:bg-muted"
           >
             <PencilIcon className="size-4 mr-w stroke-2" />
             Edit Task
@@ -132,7 +135,7 @@ const TaskActions = ({
           <DropdownMenuItem
             onClick={handleCopyTask}
             disabled={CopyingTask}
-            className="font-medium p-[10px]"
+            className="font-medium hover:bg-muted p-[10px]"
           >
             <CopyIcon className="size-4 mr-w stroke-2" />
             Copy Task
@@ -140,7 +143,7 @@ const TaskActions = ({
           <DropdownMenuItem
             onClick={onDeleteTask}
             disabled={deletingTask}
-            className="text-amber-700 focus:text-amber-700 font-medium p-[10px]"
+            className="text-amber-700 focus:text-amber-700 hover:bg-muted font-medium p-[10px]"
           >
             <TrashIcon className="size-4 mr-w stroke-2" />
             Delete Task

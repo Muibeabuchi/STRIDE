@@ -34,7 +34,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
+    <div className="mt-3 lg:mt-0">
       <div className="flex items-center justify-end space-x-2 py-2">
         <Button
           variant="outline"
