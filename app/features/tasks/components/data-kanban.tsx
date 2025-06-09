@@ -331,7 +331,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                       return (
                         <div
                           className={cn(
-                            `max-h-[calc(100svh-135px)]  w-full overflow-x-hidden overflow-y-auto py-1.5`
+                            `max-h-[calc(100svh-135px)] scrollbar-hide  w-full overflow-x-hidden overflow-y-auto py-1.5`
                           )}
                           {...prop.droppableProps}
                           ref={prop.innerRef}
