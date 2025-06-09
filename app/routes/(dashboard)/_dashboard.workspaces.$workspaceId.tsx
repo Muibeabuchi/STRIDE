@@ -29,10 +29,10 @@ function RouteComponent() {
       <WorkspaceAnalytics workspaceId={workspaceId} />
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <ProjectList workspaceId={workspaceId} />
-        <MemberList workspaceId={workspaceId} />
-        <div className="flex gap-y-3 flex-col">
-          <TaskList workspaceId={workspaceId} />
-        </div>
+        <TaskList workspaceId={workspaceId} />
+        {/* <div className="flex gap-y-3 flex-col">
+          <MemberList workspaceId={workspaceId} />
+        </div> */}
       </div>
     </div>
   );
