@@ -46,6 +46,7 @@ import {
   CommandList,
 } from "./ui/command";
 import { Button } from "./ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 export function WorkspaceSwitcherSkeleton() {
   return (
@@ -103,76 +104,53 @@ export default function WorkspaceSwitcher() {
       {currentWorkspaceInfo?.workspaceName ? (
         <>
           <div className="flex items-center w-full border rounded-md p-1 pl-2 py-2 justify-between gap-3 font-medium ">
-            <div className="flex items-center gap-2">
-              <WorkspaceAvatar
-                name={truncateString(
-                  currentWorkspaceInfo?.workspaceName,
-                  1,
-                  10
-                )}
-                image={currentWorkspaceInfo?.workspaceAvatar ?? ""}
-              />
-              <span className="truncate">
-                {truncateString(currentWorkspaceInfo?.workspaceName, 1, 10)}
-              </span>
-            </div>
-            <DropdownMenu open={open} modal onOpenChange={setOpen}>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <ChevronRight />
-                </Button>
-              </DropdownMenuTrigger>
+            <Popover open={open} modal onOpenChange={setOpen}>
+              <PopoverTrigger className="w-full">
+                <div className="flex items-center w-full gap-2">
+                  <WorkspaceAvatar
+                    name={truncateString(
+                      currentWorkspaceInfo?.workspaceName,
+                      1,
+                      10
+                    )}
+                    image={currentWorkspaceInfo?.workspaceAvatar ?? ""}
+                  />
+                  <span className="truncate">
+                    {truncateString(currentWorkspaceInfo?.workspaceName, 1, 10)}
+                  </span>
+                </div>
+              </PopoverTrigger>
 
-              <DropdownMenuContent
+              <PopoverContent
                 align="start"
-                className="w-[150px] lg:w-[250px]"
+                className="w-[150px] p-0 lg:w-[250px]"
               >
-                <DropdownMenuGroup>
-                  {/* <DropdownMenuSeparator /> */}
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger>
-                      Your Workspaces
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent className="p-0">
-                      <Command>
-                        <CommandInput
-                          placeholder="Find Workspace"
-                          autoFocus={true}
-                          className="h-9"
-                        />
-                        <CommandList>
-                          <CommandEmpty>No Workspace found.</CommandEmpty>
-                          <CommandGroup>
-                            {workspaces?.map((label) => (
-                              <CommandItem
-                                key={label._id}
-                                value={label.workspaceName}
-                                onSelect={(value) => {
-                                  onSelect(value);
-                                  setOpen(false);
-                                }}
-                              >
-                                {truncateString(label.workspaceName, 1, 10)}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
-
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="w-full justify-between flex items-center">
-                    Favorite Workspace
-                    <StarIcon />
-                  </DropdownMenuItem>
-                  {/* <DropdownMenuItem className="text-red-600">
-                    Delete
-                    <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-                  </DropdownMenuItem> */}
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                <Command className="w-full">
+                  <CommandInput
+                    placeholder="Find Workspace"
+                    autoFocus={true}
+                    className="h-9"
+                  />
+                  <CommandList>
+                    <CommandEmpty>No Workspace found.</CommandEmpty>
+                    <CommandGroup>
+                      {workspaces?.map((label) => (
+                        <CommandItem
+                          key={label._id}
+                          value={label.workspaceName}
+                          onSelect={(value) => {
+                            onSelect(value);
+                            setOpen(false);
+                          }}
+                        >
+                          {truncateString(label.workspaceName, 1, 10)}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
         </>
       ) : null}

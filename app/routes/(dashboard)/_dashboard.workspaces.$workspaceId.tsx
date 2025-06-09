@@ -25,7 +25,7 @@ function RouteComponent() {
   useWorkspaceExists(workspaceId);
 
   return (
-    <div className="max-h-screen overflow-y-auto mt-12 space-y-4 flex flex-col ">
+    <div className="max-h-screen overflow-y-auto scrollbar-hide mt-12 space-y-4 flex flex-col ">
       <WorkspaceAnalytics workspaceId={workspaceId} />
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <ProjectList workspaceId={workspaceId} />
