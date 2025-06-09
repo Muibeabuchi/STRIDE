@@ -45,7 +45,7 @@ function RouteComponent() {
   );
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col mt-12">
       <TaskBreadCrumbs task={task} project={task.project} />
       <DottedSeparator className="my-6" />
 

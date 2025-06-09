@@ -157,7 +157,7 @@ function RouteComponent() {
   };
 
   return (
-    <div className="flex flex-col h-full  gap-y-4 ">
+    <div className="flex flex-col h-full gap-y-4 ">
       <Tabs
         // className="flex-1 w-full h-full border rounded-lg"
         defaultValue={taskView}

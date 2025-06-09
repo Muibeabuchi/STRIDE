@@ -1,5 +1,7 @@
 import {
+  ChevronDownIcon,
   ChevronRight,
+  ChevronRightIcon,
   MoreHorizontal,
   PlusCircle,
   StarIcon,
@@ -118,6 +120,11 @@ export default function WorkspaceSwitcher() {
                   <span className="truncate">
                     {truncateString(currentWorkspaceInfo?.workspaceName, 1, 10)}
                   </span>
+                  {!open ? (
+                    <ChevronRightIcon className="size-4 ml-auto" />
+                  ) : (
+                    <ChevronDownIcon className="size-4 ml-auto" />
+                  )}
                 </div>
               </PopoverTrigger>
 
