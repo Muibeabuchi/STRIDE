@@ -375,6 +375,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
             <CollapsedKanbanBoard
               collapsedStatus={collapsedColumnData}
               noBoards={noBoards}
+              projectId={data[0].taskProject._id}
             />
           )}
         </div>

@@ -32,19 +32,25 @@ const CollapsedTaskStatusCard = ({
           {/* Task Count */}
           <span className="text-muted-foreground text-xs">{taskCount}</span>
           {/* Dropdown Menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="cursor-pointer rounded-sm p-0.5 hover:bg-muted">
-              <Ellipsis className="size-5" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="p-0 " side="bottom" align="end">
-              <DropdownMenuItem className="p-[2.8px] w-full">
-                <Button variant={"ghost"} className="w-full p-0 h-7">
-                  Show
-                </Button>
-                {/* Show */}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {taskCount > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="cursor-pointer rounded-sm p-0.5 hover:bg-muted">
+                <Ellipsis className="size-5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="p-0 " side="bottom" align="end">
+                <DropdownMenuItem className="p-[2.8px] w-full" asChild>
+                  <Button
+                    variant={"ghost"}
+                    className="w-full p-0 h-7"
+                    onClick={onRestore}
+                  >
+                    Show
+                  </Button>
+                  {/* Show */}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
     </div>

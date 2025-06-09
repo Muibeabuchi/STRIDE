@@ -6,6 +6,9 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import CollapsedTaskStatusCard from "./collapsed-task-status-card";
+import { useCollapsedColumn } from "@/hooks/use-collapsed-column";
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
+import { Id } from "convex/_generated/dataModel";
 
 type CollapsedKanbanBoardProps = {
   collapsedStatus: {
@@ -13,16 +16,31 @@ type CollapsedKanbanBoardProps = {
     length: number;
   }[];
   noBoards?: boolean;
+  projectId: Id<"projects">;
 };
 
 export default function CollapsedKanbanBoard({
   collapsedStatus,
   noBoards,
+  projectId,
 }: CollapsedKanbanBoardProps) {
   const [showHidden, setShowHidden] = useState(false);
 
   const handleToggleShowHidden = () => {
     setShowHidden((prev) => !prev);
+  };
+
+  //   const projectId = useProjectId(false);
+
+  const restoreBoard = useCollapsedColumn(
+    (state) => state.deleteSingleProjectCollapsedColumn
+  );
+
+  const handleRestore = (statusName: string) => {
+    restoreBoard({
+      projectId,
+      columnName: statusName,
+    });
   };
   return (
     <>
@@ -53,7 +71,7 @@ export default function CollapsedKanbanBoard({
                     key={status.statusName}
                   >
                     <CollapsedTaskStatusCard
-                      onRestore={() => {}}
+                      onRestore={() => handleRestore(status.statusName)}
                       taskCount={status.length}
                       taskStatusName={status.statusName}
                     />

@@ -87,7 +87,7 @@ export const useCollapsedColumn = create<CollapsedColumnDataAndActions>()(
         // filter the columnName from the collapsedColumn
         const filteredColumns =
           projectCollapsedColumn.collapsedColumnName.filter(
-            (column) => column === columnName
+            (column) => column !== columnName
           );
         // update the global CollapsedColumn State
         const newCollapsedColumn = get().collapsedColumns?.map((column) => {

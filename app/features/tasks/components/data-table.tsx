@@ -97,12 +97,12 @@ export function DataTable<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 py-5 w-full text-center"
                   >
-                    <img
+                    {/* <img
                       src="/public/undraw_chore-list_ylw0.png"
                       width={200}
                       height={200}
                       className="mx-auto pt-15"
-                    />
+                    /> */}
                     <p className="font-medium mt-5">Your Table is empty.</p>
                   </TableCell>
                 </TableRow>
