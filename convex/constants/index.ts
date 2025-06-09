@@ -24,6 +24,9 @@ export const TaskPriorityMapper = {
   4: "Urgent",
 } as const;
 
+export type PriorityTypes =
+  (typeof TaskPriorityMapper)[keyof typeof TaskPriorityMapper];
+
 export const DefaultPriority = 0;
 
 // Max Limit on extra Project Status for free users

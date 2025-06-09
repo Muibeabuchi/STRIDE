@@ -9,6 +9,15 @@ export const IssueStatusValidator = v.object({
   issuePosition: v.number(),
 });
 
+export const TaskPriorityValidator = v.union(
+  v.literal(0),
+  v.literal(1),
+  v.literal(2),
+  v.literal(3),
+  v.literal(4)
+);
+export type TaskPriorityType = Infer<typeof TaskPriorityValidator>;
+
 export type IssueStatusTypes = Infer<typeof IssueStatusValidator>;
 
 const schema = defineSchema({
@@ -44,10 +53,11 @@ const schema = defineSchema({
     assigneeId: v.id("users"),
     description: v.optional(v.string()),
     dueDate: v.string(),
-    priority: v.optional(v.number()),
+    // priority: v.optional(v.number()),
     // ? A task must always have a status
     status: v.string(),
     position: v.number(),
+    priority: v.optional(TaskPriorityValidator),
   })
     .index("by_workspaceId_by_projectId_by_status", [
       "workspaceId",
