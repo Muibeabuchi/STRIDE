@@ -14,6 +14,7 @@ const EmptyKanbanState = ({ message }: { message?: string }) => {
           width={300}
           height={300}
           alt="No tasks available image"
+          className="hidden lg:block"
         />
       </div>
 
