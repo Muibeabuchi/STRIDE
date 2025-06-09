@@ -150,8 +150,8 @@ const Projects = () => {
                 {({ isActive }) => {
                   return (
                     <SidebarMenuItem>
-                      <SidebarMenuButton
-                        tooltip={activeSelectedProject.projectName}
+                      <div
+                        // tooltip={activeSelectedProject.projectName}
                         className={cn(
                           "flex items-center gap-2.5 p-2.5 rounded-md  transition cursor-pointer ",
                           isActive &&
@@ -166,7 +166,7 @@ const Projects = () => {
                         <span className="truncate">
                           {activeSelectedProject.projectName}
                         </span>
-                      </SidebarMenuButton>
+                      </div>
                     </SidebarMenuItem>
                   );
                 }}
@@ -190,8 +190,8 @@ const Projects = () => {
                   {({ isActive }) => {
                     return (
                       <SidebarMenuItem>
-                        <SidebarMenuButton
-                          tooltip={project.projectName}
+                        <div
+                          // tooltip={project.projectName}
                           className={cn(
                             "flex items-center gap-2.5 p-2.5 rounded-md  transition cursor-pointer ",
                             isActive &&
@@ -206,7 +206,7 @@ const Projects = () => {
                           <span className="truncate">
                             {project.projectName}
                           </span>
-                        </SidebarMenuButton>
+                        </div>
                       </SidebarMenuItem>
                     );
                   }}
