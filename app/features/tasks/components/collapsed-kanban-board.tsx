@@ -8,7 +8,10 @@ import { useState } from "react";
 import CollapsedTaskStatusCard from "./collapsed-task-status-card";
 
 type CollapsedKanbanBoardProps = {
-  collapsedStatus: string[];
+  collapsedStatus: {
+    statusName: string;
+    length: number;
+  }[];
   noBoards?: boolean;
 };
 
@@ -45,11 +48,14 @@ export default function CollapsedKanbanBoard({
           {showHidden
             ? collapsedStatus.map((status) => {
                 return (
-                  <div className={cn("w-full rounded-md")} key={status}>
+                  <div
+                    className={cn("w-full rounded-md")}
+                    key={status.statusName}
+                  >
                     <CollapsedTaskStatusCard
                       onRestore={() => {}}
-                      taskCount={5}
-                      taskStatusName={status}
+                      taskCount={status.length}
+                      taskStatusName={status.statusName}
                     />
                   </div>
                 );

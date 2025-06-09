@@ -29,11 +29,13 @@ const DataKanban = ({ data }: DataKanbanProps) => {
   const collapsedColumns = useCollapsedColumn(
     (state) => state.collapsedColumns
   );
+
   const projectColumns = useCollapsedColumn((state) =>
     state.getProjectCollapsedColumn(data?.[0]?.taskProject._id)
   );
 
   const boards = data[0]?.taskProject?.projectTaskStatus ?? [];
+
   // filter the boards to only show the non-collapsed boards
   const nonCollapsedBoards = boards.filter((board) => {
     if (collapsedColumns === null) {
@@ -53,6 +55,28 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       } else return false;
     }
   });
+
+  const collapsedBoards = boards
+    .map((board) => {
+      const colBoard = nonCollapsedBoards.find(
+        (col) => col.issueName === board.issueName
+      );
+      if (colBoard) {
+        return null;
+      } else return board.issueName;
+    })
+    .filter((board) => board !== null);
+
+  const collapsedColumnData = collapsedBoards.map((board) => {
+    const boardData = data.filter((data) => data.status !== board);
+    return {
+      statusName: board,
+      length: boardData.length,
+    };
+  });
+
+  console.log(collapsedBoards);
+  console.log(collapsedColumnData);
 
   nonCollapsedBoards.map((task) => {
     kanbanTasks[task.issueName] = [];
@@ -280,7 +304,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
     }
   };
 
-  const noBoards = nonCollapsedBoards.length === 0;
+  const noBoards = nonCollapsedBoards.length > 0;
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -349,7 +373,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           )}
           {projectColumns !== null && (
             <CollapsedKanbanBoard
-              collapsedStatus={projectColumns.collapsedColumnName}
+              collapsedStatus={collapsedColumnData}
               noBoards={noBoards}
             />
           )}

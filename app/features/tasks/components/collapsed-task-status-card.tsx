@@ -1,4 +1,11 @@
-import { CircleDashed } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { CircleDashed, Ellipsis } from "lucide-react";
 
 interface CollapsedTaskStatusCardProps {
   taskStatusName: string;
@@ -13,7 +20,7 @@ const CollapsedTaskStatusCard = ({
 }: CollapsedTaskStatusCardProps) => {
   return (
     <div className=" shadow-xs p-1.5 rounded-lg ">
-      <div className="flex items-center justify-between px-2">
+      <div className="flex items-center justify-between px-4">
         <div className="flex items-center gap-x-2">
           {/* icon */}
           <CircleDashed className="size-4" />
@@ -21,10 +28,23 @@ const CollapsedTaskStatusCard = ({
           <p className="text-sm text-accent-foreground">{taskStatusName}</p>
         </div>
 
-        <div className="flex items-center gap-x-2">
-          {/* Tas Count */}
-          <span className="text-muted-foreground">{taskCount}</span>
+        <div className="flex items-center gap-x-3">
+          {/* Task Count */}
+          <span className="text-muted-foreground text-xs">{taskCount}</span>
           {/* Dropdown Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="cursor-pointer rounded-sm p-0.5 hover:bg-muted">
+              <Ellipsis className="size-5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="p-0 " side="bottom" align="end">
+              <DropdownMenuItem className="p-[2.8px] w-full">
+                <Button variant={"ghost"} className="w-full p-0 h-7">
+                  Show
+                </Button>
+                {/* Show */}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
