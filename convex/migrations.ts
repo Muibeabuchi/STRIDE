@@ -8,7 +8,6 @@ export const migrations = new Migrations<DataModel>(components.migrations);
 export const addNewTaskStatus = migrations.define({
   table: "projects",
   async migrateOne(ctx, doc) {
-    console.log("running migration for", doc._id);
     await ctx.db.patch(doc._id, {
       projectTaskStatus: DEFAULT_PROJECT_TASK_STATUS,
     });

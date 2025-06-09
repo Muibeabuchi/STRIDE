@@ -75,8 +75,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
     };
   });
 
-  console.log(collapsedBoards);
-  console.log(collapsedColumnData);
 
   nonCollapsedBoards.map((task) => {
     kanbanTasks[task.issueName] = [];
