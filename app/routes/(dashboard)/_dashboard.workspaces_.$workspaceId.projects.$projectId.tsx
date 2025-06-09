@@ -17,6 +17,7 @@ import {
   Columns3,
   Kanban,
   PencilIcon,
+  PlusIcon,
   SlidersHorizontal,
   Table,
 } from "lucide-react";
@@ -46,6 +47,8 @@ import {
 import { FcDisplay } from "react-icons/fc";
 import { CustomToolTip } from "@/components/custom-tooltip";
 import { cn } from "@/lib/utils";
+import { useCreateTask } from "@/features/tasks/api/use-create-task";
+import { useTaskModalStore } from "@/store/store";
 // import { useIsMobile } from "@/hooks/use-mobile";
 // import { truncateWords } from "@/utils/truncate-words";
 
@@ -90,7 +93,8 @@ function RouteComponent() {
     workspaceId,
   });
 
-  const isMobile = useIsMobile();
+  const { open } = useTaskModalStore();
+  // const isMobile = useIsMobile();
 
   const { data: workspaceMember, isLoading: isLoadingWorkspaceMember } =
     useGetMember(workspaceId);
@@ -148,6 +152,10 @@ function RouteComponent() {
     });
   };
 
+  const handleOpenCreateTaskModal = () => {
+    open("ALL");
+  };
+
   return (
     <div className="flex flex-col h-full  gap-y-4 ">
       <Tabs
@@ -177,7 +185,17 @@ function RouteComponent() {
             </div>
           )}
 
-          <div className="flex gap-x-4 h-full items-center">
+          <div className="flex gap-x-2 lg:gap-x-4 h-full items-center">
+            {/* CreateN ew Project Button */}
+
+            <Button
+              className="lg:mr-3 mr-0 "
+              onClick={handleOpenCreateTaskModal}
+            >
+              <PlusIcon className="size-4 " />
+
+              <span className="hidden lg:block">New Task</span>
+            </Button>
             {/* dropdown */}
             <DropdownMenu>
               <CustomToolTip content="Display">

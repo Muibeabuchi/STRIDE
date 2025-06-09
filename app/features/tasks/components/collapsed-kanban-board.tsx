@@ -45,7 +45,7 @@ export default function CollapsedKanbanBoard({
   return (
     <>
       <div
-        className={cn(" justify-self-end w-[250px]  h-full", {
+        className={cn(" justify-self-end min-w-[300px]  h-full", {
           "ml-auto": noBoards,
         })}
       >

@@ -123,7 +123,10 @@ export default function WorkspaceSwitcher() {
                 </Button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="start" className="w-[200px]">
+              <DropdownMenuContent
+                align="start"
+                className="w-[150px] lg:w-[250px]"
+              >
                 <DropdownMenuGroup>
                   {/* <DropdownMenuSeparator /> */}
                   <DropdownMenuSub>

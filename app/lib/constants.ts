@@ -9,12 +9,12 @@ export const Routes = [
     FilledIcon: HomeIcon,
     Icon: Home,
   },
-  {
-    label: "My Tasks",
-    to: "/tasks",
-    Icon: CheckCircle,
-    FilledIcon: CheckCircle2,
-  },
+  // {
+  //   label: "My Tasks",
+  //   to: "/tasks",
+  //   Icon: CheckCircle,
+  //   FilledIcon: CheckCircle2,
+  // },
   {
     label: "Settings",
     to: "/settings",

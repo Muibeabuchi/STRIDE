@@ -14,7 +14,7 @@ interface KanbanCardProps {
 
 const KanbanCard = ({ task }: KanbanCardProps) => {
   return (
-    <div className="p-2.5 rounded mb-1.5 border border-accent dark:bg-card mr-1.5 bg-[#FAFAFA] shadow-sm space-y-3">
+    <div className="p-2.5 rounded mb-1.5 border border-accent w-full dark:bg-card mr-1.5 bg-[#FAFAFA] shadow-sm space-y-3">
       <div className="flex items-start justify-between gap-x-2">
         <p>{truncateString(task.taskName, 15, 40)}</p>
         <TaskActions

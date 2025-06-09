@@ -26,8 +26,8 @@ const TaskList = ({ workspaceId }: TaskListProps) => {
   if (homeTasks === null) return <p>Error loading tasks</p>;
 
   return (
-    <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-muted rounded-lg p-4 space-y-5">
+    <div className="flex flex-col gap-y-4 border rounded-md col-span-1">
+      <div className=" rounded-lg p-4 space-y-5">
         <div className="flex items-center  justify-between">
           <p className="text-lg font-semibold">Tasks ({homeTasks.length})</p>
           <Button variant={"outline"} size="icon" onClick={() => open("ALL")}>
@@ -54,7 +54,7 @@ const TaskList = ({ workspaceId }: TaskListProps) => {
                     </p>
                     <div className="flex items-center gap-x-4">
                       <p>{task.taskProject.projectName}</p>
-                      <div className="rounded-full size-1 bg-neutral-300 " />
+                      <div className="rounded-full size-1  " />
                       <div className="text-sm text-muted-foreground flex items-center">
                         <CalendarIcon className="size-3 mr-2 " />
                         <span className="truncate">
@@ -72,7 +72,7 @@ const TaskList = ({ workspaceId }: TaskListProps) => {
             No Tasks Found
           </li>
         </ul>
-        {homeTasks.length > 0 && (
+        {/* {homeTasks.length > 0 && (
           <Button variant={"ghost"} className="mt-4 w-full" asChild>
             <Link
               to="/workspaces/$workspaceId/tasks"
@@ -83,7 +83,7 @@ const TaskList = ({ workspaceId }: TaskListProps) => {
               Show All
             </Link>
           </Button>
-        )}
+        )} */}
       </div>
     </div>
   );

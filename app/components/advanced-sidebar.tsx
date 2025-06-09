@@ -56,7 +56,7 @@ export function AdvancedSidebar() {
           <SidebarGroupContent>
             <Navigation />
 
-            <SidebarMenu>
+            {/* <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   tooltip="Reports"
@@ -77,7 +77,7 @@ export function AdvancedSidebar() {
                   <span>Calendar</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            </SidebarMenu>
+            </SidebarMenu> */}
           </SidebarGroupContent>
         </SidebarGroup>
 

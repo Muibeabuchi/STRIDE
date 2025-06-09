@@ -317,7 +317,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                   className={cn(
                     ` ${
                       tasks[board.issueName].length === 0 && "p-0"
-                    } flex-1 mx-2 bg-muted p-1.5 h-full   max-w-[410px] rounded-md`
+                    } flex-1 mx-2 bg-muted p-1.5 h-full min-w-[280px] max-w-[280px] lg:max-w-[400px] lg:min-w-[400px] rounded-md`
                   )}
                   key={board.issueName}
                 >
@@ -331,7 +331,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                       return (
                         <div
                           className={cn(
-                            `max-h-[calc(100svh-135px)]  w-[400px] overflow-x-hidden overflow-y-auto py-1.5`
+                            `max-h-[calc(100svh-135px)]  w-full overflow-x-hidden overflow-y-auto py-1.5`
                           )}
                           {...prop.droppableProps}
                           ref={prop.innerRef}

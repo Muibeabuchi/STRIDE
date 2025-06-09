@@ -34,7 +34,7 @@ const MemberList = ({ workspaceId }: MemberListProps) => {
 
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="space-y-5 bg-muted border rounded-lg p-4">
+      <div className="space-y-5  border rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">People ({members.length})</p>
           <Button variant="outline" size="icon">
