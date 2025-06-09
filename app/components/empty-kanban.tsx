@@ -1,7 +1,7 @@
 import { useTaskModalStore } from "@/store/store";
 import { PlusIcon } from "lucide-react";
 
-const EmptyKanbanState = () => {
+const EmptyKanbanState = ({ message }: { message?: string }) => {
   const { open } = useTaskModalStore();
   function handleOpenTaskModal() {
     open("All");
@@ -19,23 +19,28 @@ const EmptyKanbanState = () => {
 
       {/* Main Message */}
       <div className="max-w-sm md:max-w-md">
-        <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
-          No tasks yet
-        </h3>
+        {!message && (
+          <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-2">
+            No tasks yet
+          </h3>
+        )}
         <p className="text-sm md:text-base text-gray-500 leading-relaxed mb-6">
-          Your kanban board is empty. Create your first task to get started and
-          organize your workflow.
+          {message
+            ? message
+            : "Your kanban board is empty. Create your first task to get started and organize your workflow."}
         </p>
       </div>
 
       {/* Action Button */}
-      <button
-        onClick={handleOpenTaskModal}
-        className="inline-flex items-center px-4 py-2.5 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-900  focus:ring-offset-2"
-      >
-        <PlusIcon size={26} className="pr-2" />
-        Create first task
-      </button>
+      {!message && (
+        <button
+          onClick={handleOpenTaskModal}
+          className="inline-flex items-center px-4 py-2.5 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-900  focus:ring-offset-2"
+        >
+          <PlusIcon size={26} className="pr-2" />
+          Create first task
+        </button>
+      )}
 
       {/* Subtle background pattern */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">

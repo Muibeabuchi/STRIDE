@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import EmptyKanbanState from "@/components/empty-kanban";
 import { useCollapsedColumn } from "@/hooks/use-collapsed-column";
+import CollapsedKanbanBoard from "./collapsed-kanban-board";
 
 interface DataKanbanProps {
   data: PaginatedTasksResponse[];
@@ -23,19 +24,18 @@ interface DataKanbanProps {
 type TaskState = Record<string, PaginatedTasksResponse[]>;
 
 const DataKanban = ({ data }: DataKanbanProps) => {
-  // grab the collapsed columns from the Global Store/Local Storage
   let kanbanTasks: TaskState = {};
+  // grab the collapsed columns from the Global Store/Local Storage
   const collapsedColumns = useCollapsedColumn(
     (state) => state.collapsedColumns
   );
+  const projectColumns = useCollapsedColumn((state) =>
+    state.getProjectCollapsedColumn(data?.[0]?.taskProject._id)
+  );
 
-  // const kanbanTasksStatus = data[0]?.taskProject.projectTaskStatus ?? [];
-  console.log(data);
-  // const projectId = data
   const boards = data[0]?.taskProject?.projectTaskStatus ?? [];
   // filter the boards to only show the non-collapsed boards
   const nonCollapsedBoards = boards.filter((board) => {
-    console.log("board", board);
     if (collapsedColumns === null) {
       return true;
     } else {
@@ -45,7 +45,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       if (!projectCollapsedColumns) return true;
       const projectCollapsedColumnNames =
         projectCollapsedColumns.collapsedColumnName;
-      console.log("projectCollapsedColumnName", projectCollapsedColumnNames);
       const isCollapsedBoard = !!projectCollapsedColumnNames.find(
         (status) => status === board.issueName
       );
@@ -54,8 +53,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       } else return false;
     }
   });
-
-  console.log("nonCollapsedBoards", nonCollapsedBoards);
 
   nonCollapsedBoards.map((task) => {
     kanbanTasks[task.issueName] = [];
@@ -283,10 +280,12 @@ const DataKanban = ({ data }: DataKanbanProps) => {
     }
   };
 
+  const noBoards = nonCollapsedBoards.length === 0;
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="h-[calc(100svh-72px)]  overflow-x-auto">
-        <div className="flex  ">
+        <div className="flex w-full  ">
           {nonCollapsedBoards.length > 0 ? (
             nonCollapsedBoards.map((board) => {
               return (
@@ -343,7 +342,16 @@ const DataKanban = ({ data }: DataKanbanProps) => {
               );
             })
           ) : (
-            <EmptyKanbanState />
+            // TODO: Change this to only show when there are no tasks
+            <EmptyKanbanState
+              message={data?.[0] ? "All Columns are Hidden" : undefined}
+            />
+          )}
+          {projectColumns !== null && (
+            <CollapsedKanbanBoard
+              collapsedStatus={projectColumns.collapsedColumnName}
+              noBoards={noBoards}
+            />
           )}
         </div>
       </div>

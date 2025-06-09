@@ -162,6 +162,7 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+  --shadow-bottom-sides: 0px 8px 25px -15px oklch(0.3481 0.0219 67.0001);
 }
 
 body {
