@@ -59,12 +59,12 @@ export const CreateTaskForm = ({
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
   const matchRoute = useMatchRoute();
-  const isTaskPage = matchRoute({
-    to: "/workspaces/$workspaceId/tasks",
-    params: {
-      workspaceId: workspaceId,
-    },
-  });
+  // const isTaskPage = matchRoute({
+  //   to: "/workspaces/$workspaceId/tasks",
+  //   params: {
+  //     workspaceId: workspaceId,
+  //   },
+  // });
   const isHomePage = matchRoute({
     to: "/workspaces/$workspaceId",
     params: {
@@ -73,7 +73,7 @@ export const CreateTaskForm = ({
   });
 
   // pass true if the route is /workspaces/$workspaceId/tasks
-  const projectId = useProjectId(!!isTaskPage || !!isHomePage);
+  const projectId = useProjectId(!!isHomePage);
 
   const { taskStatus } = useTaskModalStore();
   const { mutate: createTask, isPending: isCreatingTask } = useCreateTask();
