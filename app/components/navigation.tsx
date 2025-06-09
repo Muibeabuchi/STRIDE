@@ -32,44 +32,44 @@ function Navigation() {
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem className="flex cursor-pointer flex-col gap-y-2">
-        {routes.map(({ FilledIcon, Icon, label, to }) => {
-          const fullHref = `/workspaces/${workspaceId}${to}`;
+      {/* <SidebarMenuItem className=""> */}
+      {routes.map(({ FilledIcon, Icon, label, to }) => {
+        const fullHref = `/workspaces/${workspaceId}${to}`;
 
-          return (
-            <Link
-              key={label}
-              to={fullHref}
-              activeOptions={{ exact: true, includeSearch: false }}
-              // search={(search) => ({
-              //   ...search,
-              //   taskView: "kanban",
-              // })}
-              className="cursor-pointer"
-            >
-              {({ isActive }) => {
-                return (
-                  <SidebarMenuButton
-                    tooltip={label}
-                    className={cn(
-                      "flex items-center gap-2.5 p-2.5  cursor-pointer  font-medium transition rounded-md ",
-                      isActive &&
-                        "shadow-sm text-background hover:text-background hover:bg-primary bg-primary  "
-                    )}
-                  >
-                    {isActive ? (
-                      <FilledIcon className="size-5" />
-                    ) : (
-                      <Icon className="size-5 " />
-                    )}
-                    {label}
-                  </SidebarMenuButton>
-                );
-              }}
-            </Link>
-          );
-        })}
-      </SidebarMenuItem>
+        return (
+          <Link
+            key={label}
+            to={fullHref}
+            activeOptions={{ exact: true, includeSearch: false }}
+            // search={(search) => ({
+            //   ...search,
+            //   taskView: "kanban",
+            // })}
+            className="cursor-pointer flex flex-col gap-y-2"
+          >
+            {({ isActive }) => {
+              return (
+                <div
+                  // tooltip={label}
+                  className={cn(
+                    "flex items-center gap-2.5 p-2.5  cursor-pointer  font-medium transition rounded-md ",
+                    isActive &&
+                      "shadow-sm text-background hover:text-background hover:bg-primary bg-primary  "
+                  )}
+                >
+                  {isActive ? (
+                    <FilledIcon className="size-5" />
+                  ) : (
+                    <Icon className="size-5 " />
+                  )}
+                  {label}
+                </div>
+              );
+            }}
+          </Link>
+        );
+      })}
+      {/* </SidebarMenuItem> */}
     </SidebarMenu>
   );
 }

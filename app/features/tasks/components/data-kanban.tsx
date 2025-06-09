@@ -68,13 +68,13 @@ const DataKanban = ({ data }: DataKanbanProps) => {
     .filter((board) => board !== null);
 
   const collapsedColumnData = collapsedBoards.map((board) => {
-    const boardData = data.filter((data) => data.status !== board);
+    const boardData = data.filter((data) => data.status === board);
+
     return {
       statusName: board,
       length: boardData.length,
     };
   });
-
 
   nonCollapsedBoards.map((task) => {
     kanbanTasks[task.issueName] = [];
