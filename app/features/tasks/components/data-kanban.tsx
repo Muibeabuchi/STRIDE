@@ -309,7 +309,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="h-[calc(100svh-72px)]  overflow-x-auto">
-        <div className="flex w-full  ">
+        <div className="flex w-full h-full ">
           {nonCollapsedBoards.length > 0 ? (
             nonCollapsedBoards.map((board) => {
               return (

@@ -25,6 +25,7 @@ import useTaskFilters from "../hooks/use-task-filters";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-advanced-is-mobile";
+import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 // import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DataFilterProps {
@@ -69,6 +70,7 @@ const DataFilter = ({
   const memberOptions = members.data.map((member) => ({
     id: member.userId,
     name: member.userName,
+    imageUrl: member.userImage,
   }));
 
   const projectTaskStatus = projects.data[0]?.projectTaskStatus;
@@ -134,7 +136,11 @@ const DataFilter = ({
             return (
               <SelectItem key={member.id} value={member.id}>
                 <div className="flex items-center gap-x-2">
-                  <MemberAvatar name={member.name} className="size-6" />
+                  <MemberAvatar
+                    name={member.name}
+                    className="size-6"
+                    imageUrl={member.imageUrl}
+                  />
                   {member.name}
                 </div>
               </SelectItem>
@@ -164,7 +170,7 @@ const DataFilter = ({
               return (
                 <SelectItem key={project.id} value={project.id}>
                   <div className="flex items-center gap-x-2">
-                    <MemberAvatar name={project.name} className="size-6" />
+                    <ProjectAvatar name={project.name} className="size-6" />
                     {project.name}
                   </div>
                 </SelectItem>

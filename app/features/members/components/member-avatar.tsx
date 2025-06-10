@@ -5,12 +5,14 @@ interface MemberAvatarProps {
   name: string | undefined;
   className?: string;
   fallbackClassname?: string;
+  imageUrl?: string;
 }
 
 export const MemberAvatar = ({
   fallbackClassname,
   className,
   name,
+  imageUrl,
 }: MemberAvatarProps) => {
   const avatarFallback = name?.charAt(0).toUpperCase();
 
@@ -21,6 +23,7 @@ export const MemberAvatar = ({
         className
       )}
     >
+      <AvatarImage src={imageUrl ?? ""} />
       {/* not using the avatar image component due to noticeable flickering effect */}
       <AvatarFallback
         className={cn(

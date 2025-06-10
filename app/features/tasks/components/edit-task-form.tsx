@@ -49,6 +49,7 @@ interface EditTaskFormProps {
   memberOptions: {
     id: Id<"users">;
     name: string | undefined;
+    imageUrl: string | undefined;
   }[];
   initialValues: getTaskByIdResponse;
   projectTaskStatus: {
@@ -172,6 +173,7 @@ export const EditTaskForm = ({
                                 <MemberAvatar
                                   name={member.name ?? ""}
                                   className="size-6"
+                                  imageUrl={member.imageUrl}
                                 />
                                 {member.name}
                               </div>

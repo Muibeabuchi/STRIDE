@@ -209,6 +209,7 @@ export const MembersList = ({
                   name={member.userName!}
                   className="size-10"
                   fallbackClassname={"text-lg"}
+                  imageUrl={member.userImage}
                 />
 
                 <div className={"flex flex-col"}>

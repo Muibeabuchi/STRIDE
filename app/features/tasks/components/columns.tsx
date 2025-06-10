@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { MemberAvatar } from "@/features/members/components/member-avatar";
+// import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { ColumnDef } from "@tanstack/react-table";
 import { PaginatedTasksResponse } from "convex/schema";

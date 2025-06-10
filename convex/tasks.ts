@@ -162,6 +162,7 @@ export const getById = authenticatedUserQuery({
       ...taskMember,
       name: taskAssignee.name,
       email: taskAssignee.email,
+      imageUrl: taskAssignee.image,
     };
 
     return {

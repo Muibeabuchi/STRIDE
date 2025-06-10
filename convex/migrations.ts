@@ -4,7 +4,7 @@ import { DataModel } from "./_generated/dataModel.js";
 import {
   DEFAULT_PROJECT_TASK_STATUS,
   DefaultPriority,
-} from "./constants/index.js";
+} from "./constants/index";
 
 export const migrations = new Migrations<DataModel>(components.migrations);
 

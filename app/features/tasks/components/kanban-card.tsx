@@ -30,6 +30,7 @@ const KanbanCard = ({ task }: KanbanCardProps) => {
         <MemberAvatar
           name={task.memberUser.user.name}
           fallbackClassname="text-[10px]"
+          imageUrl={task.memberUser.user.image}
         />
         <div className="rounded-full bg-neutral-300 size-1 " />
         <TaskDate value={task.dueDate} className="text-xs" />

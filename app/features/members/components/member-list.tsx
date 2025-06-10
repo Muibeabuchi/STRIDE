@@ -57,6 +57,7 @@ const MemberList = ({ workspaceId }: MemberListProps) => {
                   <MemberAvatar
                     className="size-12"
                     name={member.userName ?? ""}
+                    imageUrl={member.userImage}
                   />
                   <div className="flex items-center overflow-hidden flex-col">
                     <p className="font-medium text-[9px] truncate line-clamp-1 sm:hidden lg:block">

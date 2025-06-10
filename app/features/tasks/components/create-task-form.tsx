@@ -46,6 +46,7 @@ interface CreateTaskFormProps {
   memberOptions: {
     id: Id<"users">;
     name: string | undefined;
+    imageUrl: string | undefined;
   }[];
   projectTaskStatus: IssueStatusTypes[] | null;
 }
@@ -200,6 +201,7 @@ export const CreateTaskForm = ({
                                 <MemberAvatar
                                   name={member?.name ?? ""}
                                   className="size-6"
+                                  imageUrl={member.imageUrl}
                                 />
                                 {member.name}
                               </div>
