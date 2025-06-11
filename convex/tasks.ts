@@ -352,11 +352,19 @@ export const edit = authenticatedUserMutation({
             .eq("status", taskStatus)
         )
         .collect();
+      console.log(statusTasks);
+
+      console.log(
+        statusTasks.sort((taskA, taskB) => taskA.position - taskB.position)
+      );
       const lowestPositionTask = statusTasks.sort(
         (taskA, taskB) => taskA.position - taskB.position
-      )[0].position;
-      console.log(lowestPositionTask);
-      ServerCalculatedPosition = lowestPositionTask / 2;
+      );
+      if (lowestPositionTask.length === 0) {
+        ServerCalculatedPosition = 1000;
+      } else {
+        ServerCalculatedPosition = lowestPositionTask[0].position / 2;
+      }
     }
 
     const member = await ensureUserIsMember({
