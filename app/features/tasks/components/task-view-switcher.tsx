@@ -19,6 +19,8 @@ import { StatusSchemaType, taskViewSearchType } from "../schema";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useStableTasks } from "../hooks/use-stable-get-task";
+import useGetWorkSpaceName from "@/features/workspaces/api/use-get-workspacename";
+import { useGetMember } from "@/features/members/api/use-get-member";
 
 export const tabSchema = z.union([
   z.literal("table"),
@@ -63,13 +65,21 @@ export const TaskViewSwitcher = ({
     dueDate,
   });
 
+  const {
+    data: memberInfo,
+    isLoading: loadingMemberInfo,
+    isError,
+  } = useGetMember(workspaceId);
+
+  // memberRole.data?.role;
+
   const { open } = useTaskModalStore();
 
-  if (tasks === undefined) {
+  if (tasks === undefined || memberInfo === undefined || loadingMemberInfo) {
     return <TaskViewSwitcherSkeleton />;
   }
 
-  if (tasks === null) {
+  if (tasks === null || isError || memberInfo === null) {
     return <p>Error fetching Tasks</p>;
   }
   return (
@@ -95,7 +105,7 @@ export const TaskViewSwitcher = ({
             <DataTable columns={columns} data={tasks} />
           </TabsContent>
           <TabsContent value="kanban" className="mt-0">
-            <DataKanban data={tasks} />
+            <DataKanban data={tasks} memberRole={memberInfo.role} />
           </TabsContent>
           {/* <TabsContent value="calendar" className="mt-0">
             <DataCalendar data={tasks} />

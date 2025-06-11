@@ -21,12 +21,13 @@ import KanbanCardExample from "./advanced-kanban-example";
 import { Id } from "convex/_generated/dataModel";
 
 interface DataKanbanProps {
+  memberRole: "admin" | "member";
   data: PaginatedTasksResponse[];
 }
 
 type TaskState = Record<string, PaginatedTasksResponse[]>;
 
-const DataKanban = ({ data }: DataKanbanProps) => {
+const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
   let kanbanTasks: TaskState = {};
   // grab the collapsed columns from the Global Store/Local Storage
   const collapsedColumns = useCollapsedColumn(
@@ -309,15 +310,7 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
   const canDragTask = useCallback(
     (assigneeId: Id<"users">) => {
-      // console.log(data[1].memberUser.member.role);
-      const memberTaskRole = data.find(
-        (task) => task.currentUser._id === task.memberUser.member.userId
-      );
-      if (!memberTaskRole) return;
-      return (
-        memberTaskRole.memberUser.member.role === "admin" ||
-        data[0].currentUser._id === assigneeId
-      );
+      return memberRole === "admin" || data[0].currentUser._id === assigneeId;
     },
     [data]
   );
@@ -380,7 +373,6 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                       );
                     }}
                   </Droppable>
-                  {/* <KanbanCardExample /> */}
                 </div>
               );
             })
