@@ -1,6 +1,7 @@
 import { DataModel } from "./_generated/dataModel.d";
 // import { taskStatusValidator } from "./schema";
 import {
+  authenticatedUserMutation,
   authenticatedUserQuery,
   authorizedWorkspaceMutation,
   authorizedWorkspaceQuery,
@@ -20,6 +21,9 @@ import {
   ensureTaskExists,
   validateTaskWorkspace,
 } from "./model/tasks";
+import { getCurrentUser } from "./users";
+import { ensureUserIsMember } from "./utils/helpers";
+import { EDIT_TASK_POSITION_ON_SERVER_SIGNAL } from "./constants";
 
 // --------------------------QUERIES------------------------
 export const get = authorizedWorkspaceQuery({
@@ -117,8 +121,10 @@ export const get = authorizedWorkspaceQuery({
 
       return {
         ...rest,
+        assigneeId,
         taskProject: project,
         memberUser: memberWithUser,
+        currentUser: ctx.user,
       };
     });
 
@@ -298,16 +304,19 @@ export const remove = mutation({
   },
 });
 
-export const edit = authorizedWorkspaceMutation({
+export const edit = authenticatedUserMutation({
   args: {
     taskId: v.id("tasks"),
     projectId: v.optional(v.id("projects")),
     taskDescription: v.optional(v.string()),
     taskName: v.optional(v.string()),
-    taskStatus: v.optional(v.string()),
     dueDate: v.optional(v.string()),
     assigneeId: v.optional(v.id("users")),
+    workspaceId: v.id("workspaces"),
+    // There must always be a Positional change attached to a Status Change
+    // These two must always be passed together
     taskPosition: v.optional(v.number()),
+    taskStatus: v.optional(v.string()),
   },
   async handler(ctx, args) {
     const {
@@ -321,8 +330,41 @@ export const edit = authorizedWorkspaceMutation({
       taskName,
       taskPosition,
     } = args;
+
+    if (taskStatus && !taskPosition)
+      throw new ConvexError(
+        "Task Position must always be passed along side TaskStatus"
+      );
+
     const task = await ensureTaskExists(ctx, taskId);
     if (!task) throw new ConvexError("Task does not exist");
+
+    let ServerCalculatedPosition: number | undefined;
+
+    if (taskStatus && taskPosition === EDIT_TASK_POSITION_ON_SERVER_SIGNAL) {
+      // grab the position of the first task in the new Status and add 1000
+      const statusTasks = await ctx.db
+        .query("tasks")
+        .withIndex("by_workspaceId_by_projectId_by_status", (q) =>
+          q
+            .eq("workspaceId", workspaceId)
+            .eq("projectId", projectId ?? task.projectId)
+            .eq("status", taskStatus)
+        )
+        .collect();
+      const lowestPositionTask = statusTasks.sort(
+        (taskA, taskB) => taskA.position - taskB.position
+      )[0].position;
+      console.log(lowestPositionTask);
+      ServerCalculatedPosition = lowestPositionTask / 2;
+    }
+
+    const member = await ensureUserIsMember({
+      ctx,
+      workspaceId,
+      userId: ctx.user._id,
+    });
+
     // if (taskStatus) {
     const projectTaskStatus = await ensureProjectTaskStatus({
       ctx,
@@ -332,25 +374,58 @@ export const edit = authorizedWorkspaceMutation({
     if (taskStatus && !projectTaskStatus)
       throw new ConvexError("Project Task Status does not exist");
 
-    //   await ctx.db.patch(task._id, {
-    //   status: projectTaskStatus ?? task.status,
-    //   position: taskPosition ?? task.position,
-    //   description: taskDescription ?? task.description,
-    //   assigneeId: assigneeId ?? task.assigneeId,
-    //   dueDate: dueDate ?? task.dueDate,
-    //   projectId: projectId ?? task.projectId,
-    //   taskName: taskName ?? task.taskName,
-    // });
-    // }
+    // check if the member is an admin
+    const isAdmin = member.role === "admin";
+    const isMember = member.role === "member";
 
-    await ctx.db.patch(task._id, {
-      status: projectTaskStatus ? projectTaskStatus.issueName : task.status,
-      position: taskPosition ?? task.position,
-      description: taskDescription ?? task.description,
-      assigneeId: assigneeId ?? task.assigneeId,
-      dueDate: dueDate ?? task.dueDate,
-      projectId: projectId ?? task.projectId,
-      taskName: taskName ?? task.taskName,
-    });
+    // if (taskPosition === EDIT_TASK_POSITION_ON_SERVER_SIGNAL) {
+
+    // } else {
+    // check if the user is trying to edit the status and allow members
+    // * A Position must always be associated with a TaskStatus Change
+    if (projectTaskStatus) {
+      //* Allow Members to edit tasks Status that is assigned to them
+      const memberCanEdit = isMember && task.assigneeId === member.userId;
+
+      if (memberCanEdit) {
+        return await ctx.db.patch(task._id, {
+          status: projectTaskStatus.issueName,
+          position:
+            taskPosition === EDIT_TASK_POSITION_ON_SERVER_SIGNAL
+              ? ServerCalculatedPosition
+              : taskPosition ?? task.position,
+        });
+      } else if (isAdmin) {
+        return await ctx.db.patch(task._id, {
+          status: projectTaskStatus ? projectTaskStatus.issueName : task.status,
+          position:
+            taskPosition === EDIT_TASK_POSITION_ON_SERVER_SIGNAL
+              ? ServerCalculatedPosition
+              : taskPosition ?? task.position,
+          description: taskDescription ?? task.description,
+          assigneeId: assigneeId ?? task.assigneeId,
+          dueDate: dueDate ?? task.dueDate,
+          projectId: projectId ?? task.projectId,
+          taskName: taskName ?? task.taskName,
+        });
+      }
+    }
+
+    // If the User is an admin, they can make edits, else do nothing
+    if (isAdmin) {
+      await ctx.db.patch(task._id, {
+        status: projectTaskStatus ? projectTaskStatus.issueName : task.status,
+        position:
+          taskPosition === EDIT_TASK_POSITION_ON_SERVER_SIGNAL
+            ? ServerCalculatedPosition
+            : taskPosition ?? task.position,
+        description: taskDescription ?? task.description,
+        assigneeId: assigneeId ?? task.assigneeId,
+        dueDate: dueDate ?? task.dueDate,
+        projectId: projectId ?? task.projectId,
+        taskName: taskName ?? task.taskName,
+      });
+    }
+    // }
   },
 });

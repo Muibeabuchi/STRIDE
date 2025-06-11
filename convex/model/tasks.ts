@@ -2,6 +2,7 @@ import { ConvexError } from "convex/values";
 import { Id } from "../_generated/dataModel";
 import { QueryCtx } from "../_generated/server";
 import { getCurrentUser } from "../users";
+import { ensureUserIsMember } from "../utils/helpers";
 
 export async function ensureTaskExists(ctx: QueryCtx, taskId: Id<"tasks">) {
   const task = await ctx.db.get(taskId);
@@ -38,14 +39,11 @@ export const validateTaskWorkspace = async (
 
   if (!user) throw new ConvexError("Unauthorized");
 
-  // check if the user is a member of the workspace
-  const member = await ctx.db
-    .query("members")
-    .withIndex("by_userId_by_workspaceId", (q) =>
-      q.eq("userId", user._id).eq("workspaceId", workspaceId)
-    )
-    .unique();
-  if (!member) throw new ConvexError("Unauthorized");
+  const member = await ensureUserIsMember({
+    ctx,
+    workspaceId,
+    userId: user._id,
+  });
 
   // check if the member is an admin
   const isAdmin = member.role === "admin";

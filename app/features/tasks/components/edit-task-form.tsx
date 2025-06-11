@@ -37,6 +37,7 @@ import { useEditTask } from "../api/use-edit-task";
 import { getTaskByIdResponse } from "convex/schema";
 import { useState } from "react";
 import { truncateString } from "@/utils/truncate-words";
+import { EDIT_TASK_POSITION_ON_SERVER_SIGNAL } from "convex/constants";
 
 interface EditTaskFormProps {
   onCancel?: () => void;
@@ -89,6 +90,10 @@ export const EditTaskForm = ({
         workspaceId,
         taskId,
         taskStatus: values.status,
+        taskPosition:
+          values.status === initialValues.status
+            ? initialValues.position
+            : EDIT_TASK_POSITION_ON_SERVER_SIGNAL,
         taskName: values.taskName,
         taskDescription: values.description,
         // ? INSPECT THIS DATE METHOD

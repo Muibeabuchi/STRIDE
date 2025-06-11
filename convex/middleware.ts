@@ -6,6 +6,7 @@ import {
 import { mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { getCurrentUser } from "./users";
+import { ensureUserIsMember } from "./utils/helpers";
 
 // !MIDDLEWARES
 
@@ -49,17 +50,13 @@ export const authorizedWorkspaceMutation = customMutation(mutation, {
 
     if (!user) throw new ConvexError("Unauthorized");
 
-    // TODO: check if the user is also an member and admin
+    const member = await ensureUserIsMember({
+      ctx,
+      workspaceId: args.workspaceId,
+      userId: user._id,
+    });
 
-    // check if the user is a member of the workspace
-    const member = await ctx.db
-      .query("members")
-      .withIndex("by_userId_by_workspaceId", (q) =>
-        q.eq("userId", user._id).eq("workspaceId", args.workspaceId)
-      )
-      .unique();
-    if (!member) throw new ConvexError("Unauthorized");
-
+    
     // check if the member is an admin
     const isAdmin = member.role === "admin";
 

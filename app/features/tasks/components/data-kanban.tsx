@@ -18,6 +18,7 @@ import { useCollapsedColumn } from "@/hooks/use-collapsed-column";
 import CollapsedKanbanBoard from "./collapsed-kanban-board";
 import AdvancedKanbanCard from "./advanced-kanban-task-card";
 import KanbanCardExample from "./advanced-kanban-example";
+import { Id } from "convex/_generated/dataModel";
 
 interface DataKanbanProps {
   data: PaginatedTasksResponse[];
@@ -306,10 +307,25 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
   const noBoards = nonCollapsedBoards.length > 0;
 
+  const canDragTask = useCallback(
+    (assigneeId: Id<"users">) => {
+      // console.log(data[1].memberUser.member.role);
+      const memberTaskRole = data.find(
+        (task) => task.currentUser._id === task.memberUser.member.userId
+      );
+      if (!memberTaskRole) return;
+      return (
+        memberTaskRole.memberUser.member.role === "admin" ||
+        data[0].currentUser._id === assigneeId
+      );
+    },
+    [data]
+  );
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="h-[calc(100svh-72px)]  overflow-x-auto">
-        <div className="flex w-full h-full ">
+        <div className="flex w-full ">
           {nonCollapsedBoards.length > 0 ? (
             nonCollapsedBoards.map((board) => {
               return (
@@ -337,11 +353,13 @@ const DataKanban = ({ data }: DataKanbanProps) => {
                           ref={prop.innerRef}
                         >
                           {tasks[board.issueName].map((task, index) => {
+                            console.log(canDragTask(task.assigneeId));
                             return (
                               <Draggable
                                 key={task._id}
                                 index={index}
                                 draggableId={task._id}
+                                isDragDisabled={!canDragTask(task.assigneeId)}
                               >
                                 {(prop) => {
                                   return (

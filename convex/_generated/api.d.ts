@@ -20,6 +20,7 @@ import type * as projects from "../projects.js";
 import type * as tasks from "../tasks.js";
 import type * as upload from "../upload.js";
 import type * as users from "../users.js";
+import type * as utils_helpers from "../utils/helpers.js";
 import type * as utils_index from "../utils/index.js";
 import type * as workspaces from "../workspaces.js";
 
@@ -50,6 +51,7 @@ declare const fullApi: ApiFromModules<{
   tasks: typeof tasks;
   upload: typeof upload;
   users: typeof users;
+  "utils/helpers": typeof utils_helpers;
   "utils/index": typeof utils_index;
   workspaces: typeof workspaces;
 }>;

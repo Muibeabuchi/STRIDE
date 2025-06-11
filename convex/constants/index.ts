@@ -10,6 +10,8 @@ export const DEFAULT_PROJECT_TASK_STATUS_NAME = [
   "SUSPENDED",
 ];
 
+export const EDIT_TASK_POSITION_ON_SERVER_SIGNAL = -1;
+
 export type TaskType =
   | (typeof DEFAULT_PROJECT_TASK_STATUS_NAME)[number]
   | string;
