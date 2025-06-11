@@ -19,7 +19,6 @@ import { cn } from "@/lib/utils";
 
 import { createTaskSchema } from "../schema";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
-import { useNavigate } from "@tanstack/react-router";
 import { useCreateTask } from "../api/use-create-task";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { Id } from "convex/_generated/dataModel";
@@ -72,7 +71,6 @@ export const EditTaskForm = ({
   initialValues,
   projectTaskStatus,
 }: EditTaskFormProps) => {
-  const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
   const [isEditingTask, setEditingTask] = useState(false);
   const editTask = useEditTask();
@@ -110,6 +108,8 @@ export const EditTaskForm = ({
 
         // priority:
       });
+
+      toast.success("Edit Successful");
       form.reset();
       onCancel?.();
     } catch (error) {

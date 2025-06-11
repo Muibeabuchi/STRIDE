@@ -418,6 +418,7 @@ export const edit = authenticatedUserMutation({
           assigneeId: assigneeId ?? task.assigneeId,
           dueDate: dueDate ?? task.dueDate,
           projectId: projectId ?? task.projectId,
+          priority,
           taskName: taskName ?? task.taskName,
         });
       }
