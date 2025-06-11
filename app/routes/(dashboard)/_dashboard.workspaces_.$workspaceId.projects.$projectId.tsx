@@ -278,7 +278,7 @@ function RouteComponent() {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </div>
-                {taskView === "kanban" && (
+                {/* {taskView === "kanban" && (
                   <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
                       <Button variant="outline" className="w-full">
@@ -286,7 +286,7 @@ function RouteComponent() {
                       </Button>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
-                )}
+                )} */}
               </DropdownMenuContent>
             </DropdownMenu>
 

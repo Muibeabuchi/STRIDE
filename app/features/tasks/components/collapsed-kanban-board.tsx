@@ -35,8 +35,8 @@ export default function CollapsedKanbanBoard({
 }: CollapsedKanbanBoardProps) {
   const [showHidden, setShowHidden] = useState(false);
 
-  const handleToggleShowHidden = (e) => {
-    e.target.preventDefault();
+  const handleToggleShowHidden = () => {
+    // e.target.preventDefault();
     setShowHidden((prev) => !prev);
   };
 
@@ -57,60 +57,25 @@ export default function CollapsedKanbanBoard({
   return (
     <>
       <div
-        className={cn(" justify-self-end ", {
+        className={cn(" justify-self-end min-w-[300px] ", {
           "ml-auto": noBoards,
         })}
       >
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              onClick={handleToggleShowHidden}
-              className="size-[40px] rounded-lg "
-            >
-              {/* <span className="text-xs">Collapsed Columns</span> */}
-              <EyeClosed />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-[250px]">
-            <DropdownMenuGroup>
-              <div className="flex w-full flex-col gap-y-1">
-                {!showHidden
-                  ? collapsedStatus.map((status) => {
-                      return (
-                        <DropdownMenuItem
-                          className={cn("w-full rounded-md")}
-                          key={status.statusName}
-                        >
-                          <CollapsedTaskStatusCard
-                            onRestore={() => handleRestore(status.statusName)}
-                            taskCount={status.length}
-                            taskStatusName={status.statusName}
-                          />
-                        </DropdownMenuItem>
-                      );
-                      // <div>collapsed-kanban-board : {status}</div>;
-                    })
-                  : null}
-              </div>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        {/* <div className="w-full mb-4">
-          <button
-            className="flex items-center justify-start gap-x-2"
-            onClick={handleToggleShowHidden}
-          >
-            {showHidden ? (
-              <CircleArrowDown className="size-4" />
-            ) : (
-              <CircleArrowRight className="size-4" />
-            )}
-            <span className="text-sm font-medium">Hidden Columns</span>
-          </button>
-        </div> */}
-        {/* <div className="flex w-full flex-col gap-y-2">
-          {showHidden
+        {/* <DropdownMenu> */}
+        {/* <DropdownMenuTrigger asChild> */}
+        {/* <Button
+          variant="outline"
+          onClick={handleToggleShowHidden}
+          className="size-[40px] rounded-lg "
+        >
+          <EyeClosed />
+        </Button> */}
+        {/* <span className="text-xs">Collapsed Columns</span> */}
+        {/* </DropdownMenuTrigger> */}
+        {/* <DropdownMenuContent align="center" className="w-[250px] p-0">
+            <DropdownMenuGroup> */}
+        {/* <div className="flex w-full flex-col gap-y-1 p-0">
+          {!showHidden
             ? collapsedStatus.map((status) => {
                 return (
                   <div
@@ -128,6 +93,41 @@ export default function CollapsedKanbanBoard({
               })
             : null}
         </div> */}
+        {/* </DropdownMenuGroup>
+          </DropdownMenuContent> */}
+        {/* </DropdownMenu> */}
+        <div className="w-full mb-4">
+          <button
+            className="flex items-center justify-start gap-x-2"
+            onClick={handleToggleShowHidden}
+          >
+            {showHidden ? (
+              <CircleArrowDown className="size-4" />
+            ) : (
+              <CircleArrowRight className="size-4" />
+            )}
+            <span className="text-sm font-medium">Hidden Columns</span>
+          </button>
+        </div>
+        <div className="flex w-full  flex-col gap-y-2">
+          {showHidden
+            ? collapsedStatus.map((status) => {
+                return (
+                  <div
+                    className={cn("w-full rounded-md")}
+                    key={status.statusName}
+                  >
+                    <CollapsedTaskStatusCard
+                      onRestore={() => handleRestore(status.statusName)}
+                      taskCount={status.length}
+                      taskStatusName={status.statusName}
+                    />
+                  </div>
+                );
+                // <div>collapsed-kanban-board : {status}</div>;
+              })
+            : null}
+        </div>
       </div>
     </>
   );
