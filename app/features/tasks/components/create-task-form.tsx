@@ -274,7 +274,7 @@ export const CreateTaskForm = ({
                           <SelectValue />
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select Status" />
+                              <SelectValue placeholder="Select Priority" />
                             </SelectTrigger>
                           </FormControl>
                           <FormMessage />

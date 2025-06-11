@@ -131,6 +131,8 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
           taskPosition: 1000,
           taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // TODO: CALCULATE NEW PRIORITY
+          priority: sourceTask.priority,
         });
         return;
       }
@@ -144,6 +146,8 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
           taskPosition: destTaskPosition / 2,
           taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // TODO: CALCULATE NEW PRIORITY
+          priority: sourceTask.priority,
         });
         return;
       }
@@ -159,6 +163,8 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
           taskPosition: newSourceTaskPosition,
           taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // todo: Calculate new priority
+          priority: sourceTask.priority,
         });
         return;
       }
@@ -197,6 +203,8 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
         taskPosition: newPosition,
         projectId: sourceTask.taskProject._id,
         taskStatus: destinationStatus,
+        // TODO: Calculate new priority
+        priority: sourceTask.priority,
         // taskStatus: destinationStatus,
       });
 
@@ -232,6 +240,8 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
           taskPosition: 1000,
           // taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // TODO: Calculate new priority
+          priority: sourceTask.priority,
         });
 
         return;
@@ -246,6 +256,8 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
           taskPosition: destTaskPosition / 2,
           // taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // TODO: Calculate new priority
+          priority: sourceTask.priority,
         });
         return;
       }
@@ -261,6 +273,8 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
           taskPosition: newSourceTaskPosition,
           // taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // TODO: Calculate new priority
+          priority: sourceTask.priority,
         });
         return;
       }
@@ -295,6 +309,8 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
           workspaceId: sourceTask.workspaceId,
           taskPosition: newPosition,
           projectId: sourceTask.taskProject._id,
+          // TODO: Calculate new priority
+          priority: sourceTask.priority,
 
           // taskStatus: destinationStatus,
         });

@@ -34,10 +34,15 @@ import {
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { useEditTask } from "../api/use-edit-task";
-import { getTaskByIdResponse } from "convex/schema";
+import { getTaskByIdResponse, TaskPriorityType } from "convex/schema";
 import { useState } from "react";
 import { truncateString } from "@/utils/truncate-words";
-import { EDIT_TASK_POSITION_ON_SERVER_SIGNAL } from "convex/constants";
+import {
+  EDIT_TASK_POSITION_ON_SERVER_SIGNAL,
+  TaskPriority,
+  TaskPriorityMapper,
+} from "convex/constants";
+import { TaskPriorityIconMapper } from "@/lib/constants";
 
 interface EditTaskFormProps {
   onCancel?: () => void;
@@ -80,6 +85,7 @@ export const EditTaskForm = ({
       //! Watch out for this typescript assertion
       status: initialValues.status,
       taskName: initialValues.taskName,
+      priority: initialValues.priority?.toLocaleString()!,
     },
   });
 
@@ -96,10 +102,13 @@ export const EditTaskForm = ({
             : EDIT_TASK_POSITION_ON_SERVER_SIGNAL,
         taskName: values.taskName,
         taskDescription: values.description,
+        priority: Number(values.priority) as TaskPriorityType,
         // ? INSPECT THIS DATE METHOD
         dueDate: values.dueDate.toISOString(),
         assigneeId: values.assigneeId as Id<"users">,
         projectId: values.projectId as Id<"projects">,
+
+        // priority:
       });
       form.reset();
       onCancel?.();
@@ -267,6 +276,53 @@ export const EditTaskForm = ({
                   }}
                 />
               )}
+
+              <FormField
+                control={form.control}
+                name="priority"
+                render={({ field }) => {
+                  console.log("priority", field.value);
+                  return (
+                    <FormItem>
+                      <FormLabel>Select Priority</FormLabel>
+                      <Select
+                        defaultValue={
+                          initialValues.priority?.toLocaleString()
+                          // ? initialValues.priority.toLocaleString()
+                          // : undefined
+                        }
+                        value={field.value?.toLocaleString()}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectValue />
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Priority" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <FormMessage />
+                        <SelectContent>
+                          {TaskPriority.map((priority) => {
+                            const PriorityIcon =
+                              TaskPriorityIconMapper[priority];
+                            return (
+                              <SelectItem
+                                value={priority.toLocaleString()}
+                                key={priority}
+                              >
+                                <PriorityIcon className="size-5" />
+                                {TaskPriorityMapper[priority]}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+
               <FormField
                 control={form.control}
                 name="projectId"

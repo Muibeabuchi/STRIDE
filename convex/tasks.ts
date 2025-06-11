@@ -319,6 +319,7 @@ export const edit = authenticatedUserMutation({
     dueDate: v.optional(v.string()),
     assigneeId: v.optional(v.id("users")),
     workspaceId: v.id("workspaces"),
+    priority: v.optional(TaskPriorityValidator),
     // There must always be a Positional change attached to a Status Change
     // These two must always be passed together
     taskPosition: v.optional(v.number()),
@@ -335,6 +336,7 @@ export const edit = authenticatedUserMutation({
       taskDescription,
       taskName,
       taskPosition,
+      priority,
     } = args;
 
     if (taskStatus && !taskPosition)
@@ -434,6 +436,7 @@ export const edit = authenticatedUserMutation({
         dueDate: dueDate ?? task.dueDate,
         projectId: projectId ?? task.projectId,
         taskName: taskName ?? task.taskName,
+        priority,
       });
     }
     // }
