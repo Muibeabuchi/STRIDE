@@ -42,15 +42,7 @@ export const get = authorizedWorkspaceQuery({
   },
   async handler(
     ctx,
-    {
-      workspaceId,
-      assigneeId,
-      projectId,
-      dueDate,
-      search,
-      status,
-      priority = DefaultPriority,
-    }
+    { workspaceId, assigneeId, projectId, dueDate, search, status, priority }
   ) {
     const tasksTable: QueryInitializer<DataModel["tasks"]> =
       ctx.db.query("tasks");
