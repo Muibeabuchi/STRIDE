@@ -1,4 +1,3 @@
-import { TaskPriorityType } from "./../../../convex/schema";
 import { z } from "zod";
 
 // export enum TaskStatus {
@@ -9,20 +8,6 @@ import { z } from "zod";
 //   DONE = "DONE",
 // }
 
-export const createTaskSchema = z.object({
-  taskName: z.string().trim().min(1, "required"),
-  status: z
-    .string({
-      required_error: "Select a Task Status",
-    })
-    .trim(),
-  //  z.nativeEnum(TaskStatus, { required_error: "Required" }),
-  projectId: z.string().trim().min(1, "required"),
-  dueDate: z.coerce.date(),
-  assigneeId: z.string().trim().min(1, "required"),
-  description: z.string().optional(),
-});
-
 export const StatusSchema = z.union([z.literal("ALL"), z.string()]);
 
 export const TaskPrioritySchema = z.union([
@@ -32,6 +17,21 @@ export const TaskPrioritySchema = z.union([
   z.literal(3),
   z.literal(4),
 ]);
+
+export const createTaskSchema = z.object({
+  taskName: z.string().trim().min(1, "required"),
+  status: z
+    .string({
+      required_error: "Select a Task Status",
+    })
+    .trim(),
+  //  z.nativeEnum(TaskStatus, { required_error: "Required" }),
+  projectId: z.string().trim().min(1, "required"),
+  priority: z.string().max(1),
+  dueDate: z.coerce.date(),
+  assigneeId: z.string().trim().min(1, "required"),
+  description: z.string().optional(),
+});
 
 export const taskViewSearchSchema = z.object({
   taskView: z

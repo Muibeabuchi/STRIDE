@@ -2,7 +2,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DottedSeparator } from "@/components/doted-separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -35,6 +34,8 @@ import { useTaskModalStore } from "@/store/store";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { IssueStatusTypes } from "convex/schema";
 import { truncateString } from "@/utils/truncate-words";
+import { TaskPriority, TaskPriorityMapper } from "convex/constants";
+import { TaskPriorityIconMapper } from "@/lib/constants";
 
 interface CreateTaskFormProps {
   onCancel?: () => void;
@@ -85,6 +86,7 @@ export const CreateTaskForm = ({
       status:
         taskStatus === "ALL" || taskStatus === null ? undefined : taskStatus,
       projectId: projectId ?? undefined,
+      priority: "0",
     },
   });
 
@@ -255,6 +257,48 @@ export const CreateTaskForm = ({
                   }}
                 />
               )}
+              {
+                <FormField
+                  control={form.control}
+                  name="priority"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormLabel>Select Priority</FormLabel>
+                        <Select
+                          defaultValue={"0"}
+                          value={field.value.toLocaleString()}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectValue />
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <FormMessage />
+                          <SelectContent>
+                            {TaskPriority.map((priority) => {
+                              const PriorityIcon =
+                                TaskPriorityIconMapper[priority];
+                              return (
+                                <SelectItem
+                                  value={priority.toLocaleString()}
+                                  key={priority}
+                                >
+                                  <PriorityIcon className="size-5" />
+                                  {TaskPriorityMapper[priority]}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              }
               <FormField
                 control={form.control}
                 name="projectId"

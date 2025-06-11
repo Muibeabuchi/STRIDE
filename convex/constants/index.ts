@@ -27,6 +27,13 @@ export const TaskPriorityMapper = {
   3: "High",
   4: "Urgent",
 } as const;
+// export const TaskPriorityIconMapper = {
+//   0: ,
+//   1: "Low",
+//   2: "Medium",
+//   3: "High",
+//   4: "Urgent",
+// } as const;
 
 export const TaskPriority = Object.keys(TaskPriorityMapper).map((priority) =>
   Number(priority)
