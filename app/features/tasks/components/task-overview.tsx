@@ -11,6 +11,8 @@ import { snakeCaseToTitleCase } from "@/lib/utils";
 // import { TaskStatus } from "../schema";
 import { useEditTask } from "../api/use-edit-task";
 import { useEditTaskModalStore } from "@/store/store";
+import { TaskPriorityMapper } from "convex/constants";
+import { TaskPriorityIconMapper } from "@/lib/constants";
 
 interface TaskOverviewProps {
   task: getTaskByIdResponse;
@@ -18,6 +20,11 @@ interface TaskOverviewProps {
 
 const TaskOverview = ({ task }: TaskOverviewProps) => {
   const { openEditTaskModal } = useEditTaskModalStore();
+  console.log(task.priority);
+  const priority = task.priority
+    ? TaskPriorityMapper[task.priority]
+    : TaskPriorityMapper[0];
+  const PriorityIcon = TaskPriorityIconMapper[task.priority ?? 0];
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-muted p-4 rounded-lg">
@@ -44,6 +51,12 @@ const TaskOverview = ({ task }: TaskOverviewProps) => {
           </OverviewProperty>
           <OverviewProperty label="Due Date">
             <TaskDate value={task.dueDate} className="text-sm font-medium" />
+          </OverviewProperty>
+          <OverviewProperty label="Priority">
+            <PriorityIcon className="size-4" />
+            <span className="text-sm font-semibold font-sans">{priority}</span>
+
+            {/* <TaskDate value={priority} className="text-sm font-medium" /> */}
           </OverviewProperty>
           <OverviewProperty label="Due Date">
             <Badge>{snakeCaseToTitleCase(task.status)}</Badge>

@@ -195,7 +195,7 @@ export const create = authorizedWorkspaceMutation({
     copy: v.optional(v.boolean()),
     priority: v.optional(TaskPriorityValidator),
   },
-  async handler(ctx, { priority = TaskPriorityValidator, ...args }) {
+  async handler(ctx, { priority = DefaultPriority, ...args }) {
     // check that the status is valid
     const projectTaskStatus = await ensureProjectTaskStatus({
       ctx,
@@ -235,6 +235,7 @@ export const create = authorizedWorkspaceMutation({
       dueDate: args.dueDate,
       assigneeId: args.assigneeId,
       position: newPosition,
+      priority,
     });
   },
 });

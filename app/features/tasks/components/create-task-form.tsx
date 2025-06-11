@@ -32,7 +32,7 @@ import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { useTaskModalStore } from "@/store/store";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
-import { IssueStatusTypes } from "convex/schema";
+import { IssueStatusTypes, TaskPriorityType } from "convex/schema";
 import { truncateString } from "@/utils/truncate-words";
 import { TaskPriority, TaskPriorityMapper } from "convex/constants";
 import { TaskPriorityIconMapper } from "@/lib/constants";
@@ -108,6 +108,7 @@ export const CreateTaskForm = ({
         dueDate: values.dueDate.toISOString(),
         assigneeId: values.assigneeId as Id<"users">,
         projectId: values.projectId as Id<"projects">,
+        priority: Number(values.priority) as TaskPriorityType,
       },
       {
         onSuccess(taskId) {
