@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { useGetTasks } from "./use-get-tasks";
 import { Id } from "convex/_generated/dataModel";
 import { StatusSchemaType } from "../schema";
+import { TaskPriorityType } from "convex/schema";
 
 export const useStableTasks = ({
   workspaceId,
@@ -10,7 +11,9 @@ export const useStableTasks = ({
   assigneeId,
   projectId,
   dueDate,
+  priority,
 }: {
+  priority: TaskPriorityType | undefined;
   workspaceId: Id<"workspaces">;
   status?: StatusSchemaType;
   assigneeId?: Id<"users">;
@@ -23,6 +26,7 @@ export const useStableTasks = ({
     assigneeId: assigneeId as Id<"users">,
     projectId: projectId as Id<"projects">,
     dueDate,
+    priority,
   });
 
   const stored = useRef(tasks);

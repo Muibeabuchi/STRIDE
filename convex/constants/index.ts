@@ -1,4 +1,4 @@
-import { IssueStatusTypes } from "../schema";
+import { IssueStatusTypes, TaskPriorityType } from "../schema";
 
 export const DEFAULT_PROJECT_TASK_STATUS_NAME = [
   "TODO",
@@ -9,6 +9,8 @@ export const DEFAULT_PROJECT_TASK_STATUS_NAME = [
   "CANCELLED",
   "SUSPENDED",
 ];
+
+// export const PRIORITY
 
 export const EDIT_TASK_POSITION_ON_SERVER_SIGNAL = -1;
 
@@ -25,6 +27,10 @@ export const TaskPriorityMapper = {
   3: "High",
   4: "Urgent",
 } as const;
+
+export const TaskPriority = Object.keys(TaskPriorityMapper).map((priority) =>
+  Number(priority)
+) as unknown as TaskPriorityType[];
 
 export type PriorityTypes =
   (typeof TaskPriorityMapper)[keyof typeof TaskPriorityMapper];

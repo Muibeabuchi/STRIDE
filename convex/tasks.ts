@@ -21,9 +21,12 @@ import {
   ensureTaskExists,
   validateTaskWorkspace,
 } from "./model/tasks";
-import { getCurrentUser } from "./users";
 import { ensureUserIsMember } from "./utils/helpers";
-import { EDIT_TASK_POSITION_ON_SERVER_SIGNAL } from "./constants";
+import {
+  DefaultPriority,
+  EDIT_TASK_POSITION_ON_SERVER_SIGNAL,
+} from "./constants";
+import { DefaultTaskPriority, TaskPriorityValidator } from "./schema";
 
 // --------------------------QUERIES------------------------
 export const get = authorizedWorkspaceQuery({
@@ -35,6 +38,7 @@ export const get = authorizedWorkspaceQuery({
     status: v.optional(v.string()),
     search: v.optional(v.string()),
     dueDate: v.optional(v.string()),
+    priority: v.optional(TaskPriorityValidator),
   },
   async handler(
     ctx,
@@ -45,7 +49,7 @@ export const get = authorizedWorkspaceQuery({
       dueDate,
       search,
       status,
-      // paginationOpts,
+      priority = DefaultPriority,
     }
   ) {
     const tasksTable: QueryInitializer<DataModel["tasks"]> =
@@ -88,6 +92,14 @@ export const get = authorizedWorkspaceQuery({
       );
     }
 
+    // ? THe default is to not filter by Priority unless the user passes an argument
+    if (priority !== undefined) {
+      orderedQuery = filter(
+        orderedQuery,
+        (tasks) => tasks.priority === priority
+      );
+    }
+
     const results = await orderedQuery.collect();
 
     // results.page[0].
@@ -98,14 +110,6 @@ export const get = authorizedWorkspaceQuery({
     // Populate the projects
     const projects = await populateProject({ ctx, projectIds });
 
-    // projects.map(async (project) => {
-    //   if (!project.projectImage) return project;
-    //   const image = await ctx.storage.getUrl(project.projectImage);
-    //   return {
-    //     ...project,
-    //     projectImage: image ?? "",
-    //   };
-    // });
     // populate the members
     const members = await populateMemberWithUser({
       ctx,
@@ -189,8 +193,9 @@ export const create = authorizedWorkspaceMutation({
     projectId: v.id("projects"),
     dueDate: v.string(),
     copy: v.optional(v.boolean()),
+    priority: v.optional(TaskPriorityValidator),
   },
-  async handler(ctx, args) {
+  async handler(ctx, { priority = TaskPriorityValidator, ...args }) {
     // check that the status is valid
     const projectTaskStatus = await ensureProjectTaskStatus({
       ctx,
@@ -352,11 +357,7 @@ export const edit = authenticatedUserMutation({
             .eq("status", taskStatus)
         )
         .collect();
-      console.log(statusTasks);
 
-      console.log(
-        statusTasks.sort((taskA, taskB) => taskA.position - taskB.position)
-      );
       const lowestPositionTask = statusTasks.sort(
         (taskA, taskB) => taskA.position - taskB.position
       );

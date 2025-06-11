@@ -360,6 +360,11 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
                                       {...prop.draggableProps}
                                       {...prop.dragHandleProps}
                                       ref={prop.innerRef}
+                                      // onClick={() =>
+                                      //   console.log(
+                                      //     `Clicking ${task.taskName} `
+                                      //   )
+                                      // }
                                     >
                                       <KanbanCard task={task} />
                                     </div>

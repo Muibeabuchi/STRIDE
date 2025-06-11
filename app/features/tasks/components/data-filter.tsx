@@ -12,6 +12,7 @@ import DatePicker from "@/components/date-picker";
 import {
   FolderArchiveIcon,
   ListChecksIcon,
+  ListOrdered,
   UserIcon,
   XIcon,
 } from "lucide-react";
@@ -26,6 +27,8 @@ import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-advanced-is-mobile";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
+import { TaskPriorityType } from "convex/schema";
+import { TaskPriority, TaskPriorityMapper } from "convex/constants";
 // import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DataFilterProps {
@@ -34,8 +37,10 @@ interface DataFilterProps {
   assigneeId: string | undefined;
   onAssigneeIdChange: (value: string | undefined) => void;
   onProjectIdChange: (value: string | undefined) => void;
+  onPriorityChange: (value: TaskPriorityType | undefined) => void;
   projectId: string | undefined;
   dueDate: string | undefined;
+  priority: TaskPriorityType | undefined;
   onDueDateChange: (value: string | undefined) => void;
   onStatusChange: (value: StatusSchemaType) => void;
 }
@@ -44,11 +49,13 @@ const DataFilter = ({
   hideProjectFilter,
   status,
   assigneeId,
+  priority,
   onAssigneeIdChange,
   onProjectIdChange,
   projectId,
   dueDate,
   onDueDateChange,
+  onPriorityChange,
   onStatusChange,
 }: DataFilterProps) => {
   const [projects, members] = useGetTaskFormData();
@@ -81,14 +88,12 @@ const DataFilter = ({
         defaultValue={status || "ALL"}
         value={status}
         onValueChange={(value) => {
-          // try {
-          const parsedStatus = StatusSchema.parse(value);
-          onStatusChange(parsedStatus);
-          // } catch (error) {
-          //   console.error(
-          //     "Error parsing the value of status from the select component"
-          //   );
-          // }
+          try {
+            const parsedStatus = StatusSchema.parse(value);
+            onStatusChange(parsedStatus);
+          } catch (error) {
+            return;
+          }
         }}
       >
         <SelectTrigger className="w-full lg:w-auto h-8">
@@ -142,6 +147,42 @@ const DataFilter = ({
                     imageUrl={member.imageUrl}
                   />
                   {member.name}
+                </div>
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
+
+      <Select
+        // defaultValue={assigneeId || "All"}
+        value={priority?.toLocaleString()}
+        onValueChange={(value) => {
+          onPriorityChange(Number(value) as unknown as TaskPriorityType);
+        }}
+      >
+        <SelectTrigger className="w-full lg:w-auto h-8">
+          <div className="flex pr-2 items-center">
+            <ListOrdered className="size-4 mr-2" />
+            {!isMobile && <SelectValue placeholder="Priority" />}
+            <SelectValue placeholder="Priority" />
+          </div>
+        </SelectTrigger>
+        <SelectContent>
+          {/* <SelectItem key={"All-Assignees"} value={"All"}>
+            All Assignees
+          </SelectItem> */}
+          {/* <SelectSeparator /> */}
+          {TaskPriority.map((priority) => {
+            return (
+              <SelectItem key={priority} value={priority.toLocaleString()}>
+                <div className="flex items-center gap-x-2">
+                  {/* <MemberAvatar
+                    name={priority.name}
+                    className="size-6"
+                    imageUrl={priority.imageUrl}
+                  /> */}
+                  {TaskPriorityMapper[priority]}
                 </div>
               </SelectItem>
             );

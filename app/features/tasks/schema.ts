@@ -1,3 +1,4 @@
+import { TaskPriorityType } from "./../../../convex/schema";
 import { z } from "zod";
 
 // export enum TaskStatus {
@@ -24,10 +25,19 @@ export const createTaskSchema = z.object({
 
 export const StatusSchema = z.union([z.literal("ALL"), z.string()]);
 
+export const TaskPrioritySchema = z.union([
+  z.literal(0),
+  z.literal(1),
+  z.literal(2),
+  z.literal(3),
+  z.literal(4),
+]);
+
 export const taskViewSearchSchema = z.object({
   taskView: z
     .union([z.literal("kanban"), z.literal("table"), z.literal("calendar")])
     .catch("table"),
+  priority: TaskPrioritySchema.catch(1).optional(),
   status: StatusSchema.catch("ALL"),
   assigneeId: z.string().optional(),
   projectId: z.string().optional(),

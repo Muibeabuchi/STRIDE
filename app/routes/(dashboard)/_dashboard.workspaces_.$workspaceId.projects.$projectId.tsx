@@ -49,6 +49,7 @@ import { CustomToolTip } from "@/components/custom-tooltip";
 import { cn } from "@/lib/utils";
 import { useCreateTask } from "@/features/tasks/api/use-create-task";
 import { useTaskModalStore } from "@/store/store";
+import { TaskPriorityType } from "convex/schema";
 // import { useIsMobile } from "@/hooks/use-mobile";
 // import { truncateWords } from "@/utils/truncate-words";
 
@@ -81,7 +82,7 @@ function ProjectInfoSkeleton() {
 
 function RouteComponent() {
   const { projectId: projId, workspaceId } = Route.useParams();
-  const { status, taskView, assigneeId, dueDate, projectId } =
+  const { status, taskView, assigneeId, dueDate, projectId, priority } =
     Route.useSearch();
   const navigate = Route.useNavigate();
   const {
@@ -148,6 +149,15 @@ function RouteComponent() {
       search: (search) => ({
         ...search,
         dueDate: value,
+      }),
+    });
+  };
+  const onPriorityChange = (value: TaskPriorityType | undefined) => {
+    navigate({
+      to: ".",
+      search: (search) => ({
+        ...search,
+        priority: value,
       }),
     });
   };
@@ -302,6 +312,8 @@ function RouteComponent() {
           assigneeId={assigneeId}
           dueDate={dueDate}
           taskView={taskView}
+          priority={priority}
+          onPriorityChange={onPriorityChange}
           onAssigneeIdChange={onAssigneeIdChange}
           onDueDateChange={onDueDateChange}
           onProjectIdChange={onProjectIdChange}

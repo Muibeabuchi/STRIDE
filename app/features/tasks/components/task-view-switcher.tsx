@@ -21,6 +21,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useStableTasks } from "../hooks/use-stable-get-task";
 import useGetWorkSpaceName from "@/features/workspaces/api/use-get-workspacename";
 import { useGetMember } from "@/features/members/api/use-get-member";
+import { TaskPriorityType } from "convex/schema";
 
 export const tabSchema = z.union([
   z.literal("table"),
@@ -36,11 +37,13 @@ interface TaskViewSwitcherProps {
   status: StatusSchemaType;
   assigneeId: string | undefined;
   dueDate: string | undefined;
+  priority: TaskPriorityType | undefined;
   onDueDateChange: (value: string | undefined) => void;
   onProjectIdChange: (value: string | undefined) => void;
   onAssigneeIdChange: (value: string | undefined) => void;
   onStatusChange: (value: StatusSchemaType) => void;
   handleTaskViewChange: (tab: string) => void;
+  onPriorityChange: (priority: TaskPriorityType | undefined) => void;
 }
 
 export const TaskViewSwitcher = ({
@@ -49,9 +52,11 @@ export const TaskViewSwitcher = ({
   workspaceId,
   hideProjectFilter = true,
   assigneeId,
+  priority,
   dueDate,
   status,
   taskView,
+  onPriorityChange,
   onAssigneeIdChange,
   onDueDateChange,
   onProjectIdChange,
@@ -63,6 +68,7 @@ export const TaskViewSwitcher = ({
     assigneeId: assigneeId as Id<"users">,
     projectId: projectId as Id<"projects">,
     dueDate,
+    priority,
   });
 
   const {
@@ -91,6 +97,8 @@ export const TaskViewSwitcher = ({
               hideProjectFilter={hideProjectFilter}
               assigneeId={assigneeId}
               dueDate={dueDate}
+              priority={priority}
+              onPriorityChange={onPriorityChange}
               onAssigneeIdChange={onAssigneeIdChange}
               onDueDateChange={onDueDateChange}
               onProjectIdChange={onProjectIdChange}

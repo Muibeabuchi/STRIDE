@@ -18,7 +18,7 @@ export const addNewTaskStatus = migrations.define({
   },
 });
 
-export const addDefaultTaskPriority = migrations.define({
+export const addDefaultPriority1 = migrations.define({
   table: "tasks",
   async migrateOne(ctx, doc) {
     if (!doc.priority) {
@@ -29,7 +29,9 @@ export const addDefaultTaskPriority = migrations.define({
   },
 });
 
+// export const addDefaultTask
+
 export const run = migrations.runner(internal.migrations.addNewTaskStatus);
-export const runAddDefaultTaskPriority = migrations.runner(
-  internal.migrations.addDefaultTaskPriority
+export const runAddTaskPriority = migrations.runner(
+  internal.migrations.addDefaultPriority1
 );

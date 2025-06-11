@@ -16,6 +16,9 @@ export const TaskPriorityValidator = v.union(
   v.literal(3),
   v.literal(4)
 );
+
+export const DefaultTaskPriority = TaskPriorityValidator.members[0];
+
 export type TaskPriorityType = Infer<typeof TaskPriorityValidator>;
 
 export type IssueStatusTypes = Infer<typeof IssueStatusValidator>;
