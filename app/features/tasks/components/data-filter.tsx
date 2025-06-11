@@ -31,6 +31,8 @@ import { TaskPriorityType } from "convex/schema";
 import { TaskPriority, TaskPriorityMapper } from "convex/constants";
 // import { useIsMobile } from "@/hooks/use-mobile";
 
+export const NO_FILTER_CONSTANT = "no-filter";
+
 interface DataFilterProps {
   hideProjectFilter?: boolean;
   status: StatusSchemaType;
@@ -155,10 +157,14 @@ const DataFilter = ({
       </Select>
 
       <Select
-        // defaultValue={assigneeId || "All"}
+        defaultValue={NO_FILTER_CONSTANT}
         value={priority?.toLocaleString()}
         onValueChange={(value) => {
-          onPriorityChange(Number(value) as unknown as TaskPriorityType);
+          const priority =
+            value === NO_FILTER_CONSTANT
+              ? undefined
+              : (Number(value) as TaskPriorityType);
+          onPriorityChange(priority);
         }}
       >
         <SelectTrigger className="w-full lg:w-auto h-8">
@@ -169,6 +175,10 @@ const DataFilter = ({
           </div>
         </SelectTrigger>
         <SelectContent>
+          <SelectItem key={NO_FILTER_CONSTANT} value={NO_FILTER_CONSTANT}>
+            NO FILTERS
+          </SelectItem>
+          <SelectSeparator />
           {/* <SelectItem key={"All-Assignees"} value={"All"}>
             All Assignees
           </SelectItem> */}

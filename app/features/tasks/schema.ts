@@ -27,7 +27,7 @@ export const createTaskSchema = z.object({
     .trim(),
   //  z.nativeEnum(TaskStatus, { required_error: "Required" }),
   projectId: z.string().trim().min(1, "required"),
-  priority: z.string().max(1),
+  priority: z.string(),
   dueDate: z.coerce.date(),
   assigneeId: z.string().trim().min(1, "required"),
   description: z.string().optional(),
@@ -37,7 +37,7 @@ export const taskViewSearchSchema = z.object({
   taskView: z
     .union([z.literal("kanban"), z.literal("table"), z.literal("calendar")])
     .catch("table"),
-  priority: TaskPrioritySchema.catch(1).optional(),
+  priority: TaskPrioritySchema.optional(),
   status: StatusSchema.catch("ALL"),
   assigneeId: z.string().optional(),
   projectId: z.string().optional(),
