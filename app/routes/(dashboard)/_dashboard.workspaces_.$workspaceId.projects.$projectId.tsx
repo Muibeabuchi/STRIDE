@@ -215,7 +215,10 @@ function RouteComponent() {
                   </Button>
                 </DropdownMenuTrigger>
               </CustomToolTip>
-              <DropdownMenuContent className="w-auto p-3" align="end">
+              <DropdownMenuContent
+                className="w-auto p-3 flex gap-y-2 flex-col"
+                align="end"
+              >
                 <div className="flex gap-x-3 items-center">
                   <DropdownMenuGroup className="flex gap-x-3 items-center">
                     <DropdownMenuItem asChild className="!focus:bg-none">
@@ -244,7 +247,6 @@ function RouteComponent() {
                       </Button>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
-
                   <DropdownMenuGroup className="flex gap-x-3 items-center">
                     <DropdownMenuItem className="!focus:bg-none" asChild>
                       <Button
@@ -276,6 +278,15 @@ function RouteComponent() {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </div>
+                {taskView === "kanban" && (
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <Button variant="outline" className="w-full">
+                        <span className="text-xs">Collapsed Columns</span>
+                      </Button>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

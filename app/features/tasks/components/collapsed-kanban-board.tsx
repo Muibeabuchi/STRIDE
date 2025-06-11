@@ -3,12 +3,21 @@ import {
   CircleArrowDown,
   CircleArrowRight,
   CircleChevronRight,
+  EyeClosed,
 } from "lucide-react";
 import { useState } from "react";
 import CollapsedTaskStatusCard from "./collapsed-task-status-card";
 import { useCollapsedColumn } from "@/hooks/use-collapsed-column";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { Id } from "convex/_generated/dataModel";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 type CollapsedKanbanBoardProps = {
   collapsedStatus: {
@@ -26,7 +35,8 @@ export default function CollapsedKanbanBoard({
 }: CollapsedKanbanBoardProps) {
   const [showHidden, setShowHidden] = useState(false);
 
-  const handleToggleShowHidden = () => {
+  const handleToggleShowHidden = (e) => {
+    e.target.preventDefault();
     setShowHidden((prev) => !prev);
   };
 
@@ -42,14 +52,51 @@ export default function CollapsedKanbanBoard({
       columnName: statusName,
     });
   };
+
+  console.log(collapsedStatus);
   return (
     <>
       <div
-        className={cn(" justify-self-end min-w-[300px]  h-full", {
+        className={cn(" justify-self-end ", {
           "ml-auto": noBoards,
         })}
       >
-        <div className="w-full mb-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              onClick={handleToggleShowHidden}
+              className="size-[40px] rounded-lg "
+            >
+              {/* <span className="text-xs">Collapsed Columns</span> */}
+              <EyeClosed />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-[250px]">
+            <DropdownMenuGroup>
+              <div className="flex w-full flex-col gap-y-1">
+                {!showHidden
+                  ? collapsedStatus.map((status) => {
+                      return (
+                        <DropdownMenuItem
+                          className={cn("w-full rounded-md")}
+                          key={status.statusName}
+                        >
+                          <CollapsedTaskStatusCard
+                            onRestore={() => handleRestore(status.statusName)}
+                            taskCount={status.length}
+                            taskStatusName={status.statusName}
+                          />
+                        </DropdownMenuItem>
+                      );
+                      // <div>collapsed-kanban-board : {status}</div>;
+                    })
+                  : null}
+              </div>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        {/* <div className="w-full mb-4">
           <button
             className="flex items-center justify-start gap-x-2"
             onClick={handleToggleShowHidden}
@@ -61,8 +108,8 @@ export default function CollapsedKanbanBoard({
             )}
             <span className="text-sm font-medium">Hidden Columns</span>
           </button>
-        </div>
-        <div className="flex w-full flex-col gap-y-2">
+        </div> */}
+        {/* <div className="flex w-full flex-col gap-y-2">
           {showHidden
             ? collapsedStatus.map((status) => {
                 return (
@@ -80,7 +127,7 @@ export default function CollapsedKanbanBoard({
                 // <div>collapsed-kanban-board : {status}</div>;
               })
             : null}
-        </div>
+        </div> */}
       </div>
     </>
   );

@@ -19,7 +19,7 @@ const CollapsedTaskStatusCard = ({
   taskStatusName,
 }: CollapsedTaskStatusCardProps) => {
   return (
-    <div className=" shadow-xs p-1.5 rounded-lg ">
+    <div className=" shadow-xs p-1.5 rounded-lg w-full ">
       <div className="flex items-center justify-between px-4">
         <div className="flex items-center gap-x-2">
           {/* icon */}
