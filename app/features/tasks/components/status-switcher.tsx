@@ -24,7 +24,13 @@ import {
   X,
   Copy,
 } from "lucide-react";
-import { TaskTypeStrict } from "convex/constants";
+import {
+  EDIT_TASK_POSITION_ON_SERVER_SIGNAL,
+  TaskTypeStrict,
+} from "convex/constants";
+import { useEditTask } from "../api/use-edit-task";
+import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
+import { Id } from "convex/_generated/dataModel";
 
 interface StatusOption {
   value: TaskTypeStrict;
@@ -36,9 +42,11 @@ interface StatusOption {
 
 interface StatusComboboxProps {
   value?: string;
-  onValueChange?: (value: string) => void;
   placeholder?: string;
   className?: string;
+  taskId: Id<"tasks">;
+  workspaceId: Id<"workspaces">;
+  projectId: Id<"projects">;
 }
 
 const statusOptions: StatusOption[] = [
@@ -86,18 +94,35 @@ const statusOptions: StatusOption[] = [
   },
 ];
 
-export const StatusCombobox: React.FC<StatusComboboxProps> = ({
+export const StatusCombobox = ({
   value,
-  onValueChange,
   placeholder = "Search status...",
   className,
-}) => {
+  taskId,
+  workspaceId,
+  projectId,
+}: StatusComboboxProps) => {
   const [open, setOpen] = React.useState(false);
 
   const selectedOption = statusOptions.find((option) => option.value === value);
-  console.log(value);
-  console.log(selectedOption?.value);
+  // const taskStatus = selectedOption ?  value
 
+  const editTask = useEditTask();
+
+  const handleEditTaskStatus = async (status: string) => {
+    // console.log(status);
+    await editTask({
+      workspaceId,
+      taskId,
+      taskStatus: status,
+      taskPosition: EDIT_TASK_POSITION_ON_SERVER_SIGNAL,
+      projectId,
+      //   values.status === initialValues.status
+      //     ? initialValues.position
+      //     : EDIT_TASK_POSITION_ON_SERVER_SIGNAL,
+    });
+    setOpen(false);
+  };
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -149,9 +174,12 @@ export const StatusCombobox: React.FC<StatusComboboxProps> = ({
                   key={option.value}
                   value={option.value}
                   onSelect={(currentValue) => {
-                    const newValue = currentValue === value ? "" : currentValue;
-                    onValueChange?.(newValue);
-                    setOpen(false);
+                    if (currentValue === value) return;
+                    if (!currentValue) return;
+                    // const newValue = currentValue === value
+                    handleEditTaskStatus(currentValue);
+                    // onValueChange?.(newValue);
+                    // setOpen(false);
                   }}
                   className="flex items-center justify-between px-3 py-2 hover:bg-gray-50 cursor-pointer aria-selected:bg-gray-50"
                 >

@@ -17,7 +17,6 @@ import EmptyKanbanState from "@/components/empty-kanban";
 import { useCollapsedColumn } from "@/hooks/use-collapsed-column";
 import CollapsedKanbanBoard from "./collapsed-kanban-board";
 import AdvancedKanbanCard from "./advanced-kanban-task-card";
-import KanbanCardExample from "./advanced-kanban-example";
 import { Id } from "convex/_generated/dataModel";
 
 interface DataKanbanProps {
@@ -374,7 +373,6 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
                           ref={prop.innerRef}
                         >
                           {tasks[board.issueName].map((task, index) => {
-                            console.log(canDragTask(task.assigneeId));
                             return (
                               <Draggable
                                 key={task._id}

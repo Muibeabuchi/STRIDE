@@ -20,7 +20,6 @@ interface TaskOverviewProps {
 
 const TaskOverview = ({ task }: TaskOverviewProps) => {
   const { openEditTaskModal } = useEditTaskModalStore();
-  console.log(task.priority);
   const priority = task.priority
     ? TaskPriorityMapper[task.priority]
     : TaskPriorityMapper[0];

@@ -284,7 +284,6 @@ export const EditTaskForm = ({
                 control={form.control}
                 name="priority"
                 render={({ field }) => {
-                  console.log("priority", field.value);
                   return (
                     <FormItem>
                       <FormLabel>Select Priority</FormLabel>

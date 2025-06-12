@@ -282,7 +282,7 @@ export const copy = authorizedWorkspaceMutation({
     await ctx.db.insert("tasks", {
       ...rest,
       position: newPosition,
-      taskName: `${taskToBeCopied.taskName}-Copy`,
+      taskName: `${taskToBeCopied.taskName}-(Copy)`,
     });
   },
 });

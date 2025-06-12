@@ -53,7 +53,7 @@ export default function CollapsedKanbanBoard({
     });
   };
 
-  console.log(collapsedStatus);
+  // console.log(collapsedStatus);
   return (
     <>
       <div
