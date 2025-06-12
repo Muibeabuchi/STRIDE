@@ -18,7 +18,7 @@ interface KanbanCardProps {
 }
 
 const KanbanCard = ({ task, canEditStatus }: KanbanCardProps) => {
-  // const Icon = task.priority && TaskPriorityIconMapper[task.priority];
+  const Icon = TaskPriorityIconMapper[task.priority ?? 0];
 
   const showStatus = canEditStatus(task.memberUser.user._id);
   return (
@@ -65,7 +65,7 @@ const KanbanCard = ({ task, canEditStatus }: KanbanCardProps) => {
         <div className="rounded-full bg-neutral-300 size-1 " />
         <div className="flex items-center gap-x-1.5">
           <span className="text-xs truncate  font-medium">{}</span>
-          {/* <Icon className="size-4" /> */}
+          <Icon className="size-4" />
         </div>
       </div>
     </div>
