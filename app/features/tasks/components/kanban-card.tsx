@@ -9,24 +9,32 @@ import { truncateString } from "@/utils/truncate-words";
 import { Card } from "@/components/ui/card";
 import { TaskPriorityMapper } from "convex/constants";
 import { TaskPriorityIconMapper } from "@/lib/constants";
+import { StatusCombobox } from "./status-switcher";
+import { Id } from "convex/_generated/dataModel";
 
 interface KanbanCardProps {
   task: PaginatedTasksResponse;
+  canEditStatus: (assigneeId: Id<"users">) => boolean;
 }
 
-const KanbanCard = ({ task }: KanbanCardProps) => {
+const KanbanCard = ({ task, canEditStatus }: KanbanCardProps) => {
   const Icon = TaskPriorityIconMapper[task.priority!];
+
+  const showStatus = canEditStatus(task.memberUser.user._id);
   return (
     <div className="p-2.5 rounded mb-1.5 border border-accent w-full dark:bg-card mr-1.5 bg-[#FAFAFA] shadow-sm space-y-3">
       <div className="flex items-start justify-between gap-x-2">
         <p>{truncateString(task.taskName, 15, 40)}</p>
-        <TaskActions
-          id={task._id}
-          workspaceId={task.workspaceId}
-          projectId={task.taskProject._id}
-        >
-          <MoreHorizontalIcon className="size-[18px] stroke-1 shrink-0 text-neutral-700 hover:opacity-75 transition" />
-        </TaskActions>
+        <div className="flex gap-x-2 items-center ">
+          {showStatus && <StatusCombobox value={task.status} />}
+          <TaskActions
+            id={task._id}
+            workspaceId={task.workspaceId}
+            projectId={task.taskProject._id}
+          >
+            <MoreHorizontalIcon className="size-[18px] stroke-1 shrink-0 text-neutral-700 hover:opacity-75 transition" />
+          </TaskActions>
+        </div>
       </div>
       <DottedSeparator />
       <div className="flex items-center gap-x-1.5">

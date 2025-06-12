@@ -10,6 +10,16 @@ export const DEFAULT_PROJECT_TASK_STATUS_NAME = [
   "SUSPENDED",
 ];
 
+export const DEFAULT_PROJECT_TASK_STATUS_NAME_STRICT = [
+  "TODO",
+  "DONE",
+  "IN_REVIEW",
+  "BACKLOG",
+  "IN_PROGRESS",
+  "CANCELLED",
+  "SUSPENDED",
+] as const;
+
 // export const PRIORITY
 
 export const EDIT_TASK_POSITION_ON_SERVER_SIGNAL = -1;
@@ -17,6 +27,8 @@ export const EDIT_TASK_POSITION_ON_SERVER_SIGNAL = -1;
 export type TaskType =
   | (typeof DEFAULT_PROJECT_TASK_STATUS_NAME)[number]
   | string;
+export type TaskTypeStrict =
+  (typeof DEFAULT_PROJECT_TASK_STATUS_NAME_STRICT)[number];
 
 // const taskValue: TaskType = "";
 

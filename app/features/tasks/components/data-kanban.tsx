@@ -98,7 +98,11 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
   }, kanbanTasks);
 
   Object.keys(tasks).map((status) => {
-    return tasks[status].sort((a, b) => a.position - b.position);
+    return (
+      tasks[status]
+        // .sort((a, b) => -(a.priority ?? 0) + (b.priority ?? 0))
+        .sort((a, b) => a.position - b.position)
+    );
   });
 
   const editTask = useEditTask();
@@ -326,10 +330,18 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
 
   const canDragTask = useCallback(
     (assigneeId: Id<"users">) => {
+      return memberRole === "admin";
+    },
+    [data]
+  );
+  const canEditStatus = useCallback(
+    (assigneeId: Id<"users">) => {
       return memberRole === "admin" || data[0].currentUser._id === assigneeId;
     },
     [data]
   );
+
+  // || data[0].currentUser._id === assigneeId;
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -382,7 +394,10 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
                                       //   )
                                       // }
                                     >
-                                      <KanbanCard task={task} />
+                                      <KanbanCard
+                                        task={task}
+                                        canEditStatus={canEditStatus}
+                                      />
                                     </div>
                                   );
                                 }}
