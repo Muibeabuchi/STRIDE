@@ -10,8 +10,11 @@ import {
 } from "@/components/ui/select";
 import DatePicker from "@/components/date-picker";
 import {
+  AlertCircle,
+  Bug,
   FolderArchiveIcon,
   ListChecksIcon,
+  ListFilter,
   ListOrdered,
   UserIcon,
   XIcon,
@@ -169,9 +172,9 @@ const DataFilter = ({
       >
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex pr-2 items-center">
-            <ListOrdered className="size-4 mr-2" />
+            <ListFilter className="size-4 mr-2" />
             {!isMobile && <SelectValue placeholder="Priority" />}
-            <SelectValue placeholder="Priority" />
+            {/* <SelectValue placeholder="Priority" /> */}
           </div>
         </SelectTrigger>
         <SelectContent>

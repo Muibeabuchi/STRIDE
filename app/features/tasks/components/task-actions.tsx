@@ -26,6 +26,7 @@ import {
   useLocation,
   useMatchRoute,
 } from "@tanstack/react-router";
+import { useGetMember } from "@/features/members/api/use-get-member";
 
 interface TaskActionProps {
   id: Id<"tasks">;
@@ -51,6 +52,9 @@ const TaskActions = ({
 
   const { mutate: removeTask, isPending: deletingTask } = useDeleteTask();
   const { mutate: CopyTask, isPending: CopyingTask } = useCopyTask();
+
+  // * Grab the current users role in the current Workspace
+  const { data: currentUserMemberInfo } = useGetMember(workspaceId);
 
   const matchRoute = useMatchRoute();
   const params = matchRoute({
@@ -103,6 +107,9 @@ const TaskActions = ({
     });
   };
 
+  const hideOptionsForMembers =
+    currentUserMemberInfo && currentUserMemberInfo.role === "member";
+
   return (
     <div className="flex justify-end">
       <ConfirmDialog />
@@ -125,29 +132,38 @@ const TaskActions = ({
             <InfoIcon className="size-4 mr-w stroke-2" />
             Task Details
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={handleOpenEditTaskModal}
-            className="font-medium p-[10px] hover:bg-muted"
-          >
-            <PencilIcon className="size-4 mr-w stroke-2" />
-            Edit Task
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={handleCopyTask}
-            disabled={CopyingTask}
-            className="font-medium hover:bg-muted p-[10px]"
-          >
-            <CopyIcon className="size-4 mr-w stroke-2" />
-            Copy Task
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={onDeleteTask}
-            disabled={deletingTask}
-            className="text-amber-700 focus:text-amber-700 hover:bg-muted font-medium p-[10px]"
-          >
-            <TrashIcon className="size-4 mr-w stroke-2" />
-            Delete Task
-          </DropdownMenuItem>
+
+          {!hideOptionsForMembers && (
+            <DropdownMenuItem
+              onClick={handleOpenEditTaskModal}
+              className="font-medium p-[10px] hover:bg-muted"
+            >
+              <PencilIcon className="size-4 mr-w stroke-2" />
+              Edit Task
+            </DropdownMenuItem>
+          )}
+
+          {!hideOptionsForMembers && (
+            <DropdownMenuItem
+              onClick={handleCopyTask}
+              disabled={CopyingTask}
+              className="font-medium hover:bg-muted p-[10px]"
+            >
+              <CopyIcon className="size-4 mr-w stroke-2" />
+              Copy Task
+            </DropdownMenuItem>
+          )}
+
+          {!hideOptionsForMembers && (
+            <DropdownMenuItem
+              onClick={onDeleteTask}
+              disabled={deletingTask}
+              className="text-amber-700 focus:text-amber-700 hover:bg-muted font-medium p-[10px]"
+            >
+              <TrashIcon className="size-4 mr-w stroke-2" />
+              Delete Task
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

@@ -7,12 +7,15 @@ import TaskDate from "./task-date";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { truncateString } from "@/utils/truncate-words";
 import { Card } from "@/components/ui/card";
+import { TaskPriorityMapper } from "convex/constants";
+import { TaskPriorityIconMapper } from "@/lib/constants";
 
 interface KanbanCardProps {
   task: PaginatedTasksResponse;
 }
 
 const KanbanCard = ({ task }: KanbanCardProps) => {
+  const Icon = TaskPriorityIconMapper[task.priority!];
   return (
     <div className="p-2.5 rounded mb-1.5 border border-accent w-full dark:bg-card mr-1.5 bg-[#FAFAFA] shadow-sm space-y-3">
       <div className="flex items-start justify-between gap-x-2">
@@ -44,6 +47,11 @@ const KanbanCard = ({ task }: KanbanCardProps) => {
         <span className="text-xs truncate font-medium">
           {truncateString(task.taskProject.projectName, 3, 15)}
         </span>
+        <div className="rounded-full bg-neutral-300 size-1 " />
+        <div className="flex items-center gap-x-1.5">
+          <span className="text-xs truncate  font-medium">{}</span>
+          <Icon className="size-4" />
+        </div>
       </div>
     </div>
   );

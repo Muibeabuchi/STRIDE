@@ -264,7 +264,10 @@ export const EditTaskForm = ({
                           <FormMessage />
                           <SelectContent>
                             {projectTaskStatus.map((task) => (
-                              <SelectItem value={task.issueName}>
+                              <SelectItem
+                                key={task.issueName}
+                                value={task.issueName}
+                              >
                                 {task.issueName.toLocaleUpperCase()}
                               </SelectItem>
                             ))}
