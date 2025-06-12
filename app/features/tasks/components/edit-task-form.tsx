@@ -121,12 +121,12 @@ export const EditTaskForm = ({
   };
 
   return (
-    <Card className="w-full h-full border-none shadow-none gap-4">
-      <CardHeader className="flex p-4">
+    <Card className="w-full h-full border-none p-1 shadow-none gap-4">
+      <CardHeader className="flex p-2 px-4">
         <CardTitle className="text-lg font-bold">Edit Task</CardTitle>
       </CardHeader>
 
-      <CardContent className="p-4 -my-2">
+      <CardContent className="p-4 py-1">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-4">
@@ -366,8 +366,8 @@ export const EditTaskForm = ({
                 }}
               />
             </div>
-            <DottedSeparator className="py-7" />
-            <div className="flex items-center justify-between">
+            <DottedSeparator className="py-4" />
+            <div className="flex items-center justify-between ">
               <Button
                 type="button"
                 size="lg"
