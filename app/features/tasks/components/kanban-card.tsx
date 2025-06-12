@@ -18,7 +18,7 @@ interface KanbanCardProps {
 }
 
 const KanbanCard = ({ task, canEditStatus }: KanbanCardProps) => {
-  const Icon = task.priority && TaskPriorityIconMapper[task.priority];
+  // const Icon = task.priority && TaskPriorityIconMapper[task.priority];
 
   const showStatus = canEditStatus(task.memberUser.user._id);
   return (

@@ -410,7 +410,7 @@ export const edit = authenticatedUserMutation({
           assigneeId: assigneeId ?? task.assigneeId,
           dueDate: dueDate ?? task.dueDate,
           projectId: projectId ?? task.projectId,
-          priority,
+          priority: priority ?? task.priority,
           taskName: taskName ?? task.taskName,
         });
       }
@@ -429,7 +429,7 @@ export const edit = authenticatedUserMutation({
         dueDate: dueDate ?? task.dueDate,
         projectId: projectId ?? task.projectId,
         taskName: taskName ?? task.taskName,
-        priority,
+        priority: priority ?? task.priority,
       });
     }
     // }

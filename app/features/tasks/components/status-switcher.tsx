@@ -110,7 +110,7 @@ export const StatusCombobox = ({
   const editTask = useEditTask();
 
   const handleEditTaskStatus = async (status: string) => {
-    // console.log(status);
+    console.log(status);
     await editTask({
       workspaceId,
       taskId,
