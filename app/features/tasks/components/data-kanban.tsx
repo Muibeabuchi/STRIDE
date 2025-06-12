@@ -327,12 +327,9 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
 
   const noBoards = nonCollapsedBoards.length > 0;
 
-  const canDragTask = useCallback(
-    (assigneeId: Id<"users">) => {
-      return memberRole === "admin";
-    },
-    [data]
-  );
+  const canDragTask = useCallback(() => {
+    return memberRole === "admin";
+  }, [data, memberRole]);
   const canEditStatus = useCallback(
     (assigneeId: Id<"users">) => {
       return memberRole === "admin" || data[0].currentUser._id === assigneeId;
@@ -340,90 +337,93 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
     [data]
   );
 
+  console.log(projectColumns);
+
   // || data[0].currentUser._id === assigneeId;
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="h-[calc(100svh-72px)]  overflow-x-auto">
-        <div className="flex w-full ">
-          {nonCollapsedBoards.length > 0 ? (
-            nonCollapsedBoards.map((board) => {
-              return (
-                <div
-                  className={cn(
-                    ` ${
-                      tasks[board.issueName].length === 0 && "p-0"
-                    } flex-1 mx-2 bg-muted p-1.5 h-full min-w-[280px] max-w-[280px] lg:max-w-[400px] lg:min-w-[400px] rounded-md`
-                  )}
-                  key={board.issueName}
-                >
-                  <KanbanColumnHeader
-                    taskCount={tasks[board.issueName].length}
-                    board={board.issueName}
-                    projectId={data[0].taskProject._id}
-                  />
-                  <Droppable droppableId={board.issueName}>
-                    {(prop) => {
-                      return (
-                        <div
-                          className={cn(
-                            `max-h-[calc(100svh-135px)] scrollbar-hide  w-full overflow-x-hidden overflow-y-auto py-1.5`
-                          )}
-                          {...prop.droppableProps}
-                          ref={prop.innerRef}
-                        >
-                          {tasks[board.issueName].map((task, index) => {
-                            return (
-                              <Draggable
-                                key={task._id}
-                                index={index}
-                                draggableId={task._id}
-                                isDragDisabled={!canDragTask(task.assigneeId)}
-                              >
-                                {(prop) => {
-                                  return (
-                                    <div
-                                      {...prop.draggableProps}
-                                      {...prop.dragHandleProps}
-                                      ref={prop.innerRef}
-                                      // onClick={() =>
-                                      //   console.log(
-                                      //     `Clicking ${task.taskName} `
-                                      //   )
-                                      // }
-                                    >
-                                      <KanbanCard
-                                        task={task}
-                                        canEditStatus={canEditStatus}
-                                      />
-                                    </div>
-                                  );
-                                }}
-                              </Draggable>
-                            );
-                          })}
-                          {prop.placeholder}
-                        </div>
-                      );
-                    }}
-                  </Droppable>
-                </div>
-              );
-            })
-          ) : (
-            <EmptyKanbanState
-              message={data?.[0] ? "All Columns are Hidden" : undefined}
-            />
-          )}
-          {projectColumns !== null && (
+      {/* <div className=""> */}
+      <div className="flex w-full h-[calc(100svh-72px)]  overflow-x-auto ">
+        {nonCollapsedBoards.length > 0 ? (
+          nonCollapsedBoards.map((board) => {
+            return (
+              <div
+                className={cn(
+                  ` ${
+                    tasks[board.issueName].length === 0 && "p-0"
+                  } flex-1 mx-2 bg-muted p-1.5 h-full min-w-[280px] max-w-[280px] lg:max-w-[400px] lg:min-w-[400px] rounded-md`
+                )}
+                key={board.issueName}
+              >
+                <KanbanColumnHeader
+                  taskCount={tasks[board.issueName].length}
+                  board={board.issueName}
+                  projectId={data[0].taskProject._id}
+                />
+                <Droppable droppableId={board.issueName}>
+                  {(prop) => {
+                    return (
+                      <div
+                        className={cn(
+                          `max-h-[calc(100svh-135px)] scrollbar-hide h-full  w-full overflow-x-hidden overflow-y-auto py-1.5`
+                        )}
+                        {...prop.droppableProps}
+                        ref={prop.innerRef}
+                      >
+                        {tasks[board.issueName].map((task, index) => {
+                          return (
+                            <Draggable
+                              key={task._id}
+                              index={index}
+                              draggableId={task._id}
+                              isDragDisabled={!canDragTask()}
+                            >
+                              {(prop) => {
+                                return (
+                                  <div
+                                    {...prop.draggableProps}
+                                    {...prop.dragHandleProps}
+                                    ref={prop.innerRef}
+                                    // onClick={() =>
+                                    //   console.log(
+                                    //     `Clicking ${task.taskName} `
+                                    //   )
+                                    // }
+                                  >
+                                    <KanbanCard
+                                      task={task}
+                                      canEditStatus={canEditStatus}
+                                    />
+                                  </div>
+                                );
+                              }}
+                            </Draggable>
+                          );
+                        })}
+                        {prop.placeholder}
+                      </div>
+                    );
+                  }}
+                </Droppable>
+              </div>
+            );
+          })
+        ) : (
+          <EmptyKanbanState
+            message={data?.[0] ? "All Columns are Hidden" : undefined}
+          />
+        )}
+        {projectColumns !== null &&
+          projectColumns.collapsedColumnName.length !== 0 && (
             <CollapsedKanbanBoard
               collapsedStatus={collapsedColumnData}
               noBoards={noBoards}
               projectId={data[0].taskProject._id}
             />
           )}
-        </div>
       </div>
+      {/* </div> */}
       {/* </div> */}
     </DragDropContext>
   );
