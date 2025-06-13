@@ -27,6 +27,7 @@ import {
   useMatchRoute,
 } from "@tanstack/react-router";
 import { useGetMember } from "@/features/members/api/use-get-member";
+import { toast } from "sonner";
 
 interface TaskActionProps {
   id: Id<"tasks">;
@@ -51,7 +52,7 @@ const TaskActions = ({
   const navigate = useNavigate();
 
   const { mutate: removeTask, isPending: deletingTask } = useDeleteTask();
-  const { mutate: CopyTask, isPending: CopyingTask } = useCopyTask();
+  const { mutateAsync: CopyTask, isPending: CopyingTask } = useCopyTask();
 
   // * Grab the current users role in the current Workspace
   const { data: currentUserMemberInfo } = useGetMember(workspaceId);
@@ -100,10 +101,18 @@ const TaskActions = ({
     openEditTaskModal(id);
   };
 
-  const handleCopyTask = () => {
-    CopyTask({
+  const handleCopyTask = async () => {
+    const myPromise = CopyTask({
       taskId: id,
       workspaceId,
+    });
+
+    toast.promise(myPromise as unknown as Promise<{ name: string }>, {
+      loading: "Loading...",
+      success: () => {
+        return ` Task Copied Successfully`;
+      },
+      error: "Error",
     });
   };
 
