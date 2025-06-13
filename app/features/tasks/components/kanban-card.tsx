@@ -22,7 +22,7 @@ const KanbanCard = ({ task, canEditStatus }: KanbanCardProps) => {
 
   const showStatus = canEditStatus(task.memberUser.user._id);
   return (
-    <div className="p-2.5 rounded mb-1.5 border border-accent w-full dark:bg-card mr-1.5 bg-[#FAFAFA] shadow-sm space-y-3">
+    <div className="p-2.5 rounded-lg pb-3  mb-1.5 border border-accent w-full dark:bg-card mr-1.5 bg-[#FAFAFA] shadow-sm space-y-3">
       <div className="flex items-start justify-between gap-x-2">
         <p>{truncateString(task.taskName, 15, 40)}</p>
         <div className="flex gap-x-2 items-center ">
@@ -43,8 +43,8 @@ const KanbanCard = ({ task, canEditStatus }: KanbanCardProps) => {
           </TaskActions>
         </div>
       </div>
-      <DottedSeparator />
-      <div className="flex items-center gap-x-1.5">
+      {/* <DottedSeparator /> */}
+      <div className=" items-center gap-x-1.5">
         <MemberAvatar
           name={task.memberUser.user.name}
           fallbackClassname="text-[10px]"

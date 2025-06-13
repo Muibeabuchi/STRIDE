@@ -8,6 +8,8 @@ import {
   PlusIcon,
   Eclipse,
   Ellipsis,
+  X,
+  TriangleAlert,
 } from "lucide-react";
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,8 @@ import {
 import { Id } from "convex/_generated/dataModel";
 import { useCollapsedColumn } from "@/hooks/use-collapsed-column";
 import { toast } from "sonner";
+import { TaskPriorityType } from "convex/schema";
+import { TaskType, TaskTypeStrict } from "convex/constants";
 
 interface KanbanColumnHeaderProps {
   board: string;
@@ -28,28 +32,22 @@ interface KanbanColumnHeaderProps {
   projectId: Id<"projects">;
 }
 
-// const StatusIconMap: Record<TaskStatus, ReactNode> = {
-//   [TaskStatus.BACKLOG]: (
-//     <CircleDashedIcon className="size-[18px] text-pink-400 " />
-//   ),
-//   [TaskStatus.TODO]: <CircleIcon className="size-[18px] text-red-400 " />,
-//   [TaskStatus.IN_PROGRESS]: (
-//     <CircleDotDashedIcon className="size-[18px] text-yellow-400 " />
-//   ),
-//   [TaskStatus.IN_REVIEW]: (
-//     <CircleDotIcon className="size-[18px] text-blue-400 " />
-//   ),
-//   [TaskStatus.DONE]: (
-//     <CircleCheckIcon className="size-[18px] text-emerald-400 " />
-//   ),
-// };
+const StatusIconMap: Record<TaskTypeStrict, ReactNode> = {
+  BACKLOG: <CircleDashedIcon className="size-[18px] text-pink-400 " />,
+  TODO: <CircleIcon className="size-[18px] text-red-400 " />,
+  IN_REVIEW: <CircleDotDashedIcon className="size-[18px] text-yellow-400 " />,
+  DONE: <CircleCheckIcon className="size-[18px] text-emerald-400 " />,
+  IN_PROGRESS: <CircleDotIcon className="size-[18px] text-blue-400 " />,
+  SUSPENDED: <TriangleAlert className="size-[18px] text-emerald-400 " />,
+  CANCELLED: <X className="size-[18px] " />,
+};
 
 const KanbanColumnHeader = ({
   projectId,
   taskCount,
   board,
 }: KanbanColumnHeaderProps) => {
-  // const icon = StatusIconMap[board];
+  const Icon = StatusIconMap[board as TaskTypeStrict];
   const { open } = useTaskModalStore();
   const addCollapsedColumn = useCollapsedColumn(
     (state) => state.addCollapsedColumn
@@ -75,7 +73,7 @@ const KanbanColumnHeader = ({
   return (
     <div className="flex px-2 py-1.5 items-center justify-between ">
       <div className="flex items-center gap-x-2">
-        {/* {icon} */}
+        {Icon}
         <h2 className="text-sm font-medium">{snakeCaseToTitleCase(board)}</h2>
         <div className="size-5 flex items-center justify-center border-foreground text-xs border rounded-full font-medium   ">
           {taskCount}
