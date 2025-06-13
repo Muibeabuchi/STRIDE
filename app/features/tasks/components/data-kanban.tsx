@@ -362,12 +362,18 @@ const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
                     projectId={data[0].taskProject._id}
                   />
                   <Droppable droppableId={board.issueName}>
-                    {(prop) => {
+                    {(prop, snapshot) => {
                       return (
                         <div
                           {...prop.droppableProps}
                           ref={prop.innerRef}
-                          className="min-h-[calc(100svh-135px)]"
+                          className={cn(
+                            "min-h-[calc(100svh-135px)] rounded-lg",
+                            {
+                              "bg-[#f5f5f5] transition-color duration-500  dark:bg-[#333]":
+                                snapshot.isDraggingOver,
+                            }
+                          )}
                         >
                           <div
                             className={cn(
