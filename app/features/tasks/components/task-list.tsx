@@ -10,14 +10,19 @@ import { Id } from "convex/_generated/dataModel";
 import { useTaskModalStore } from "@/store/store";
 import { useGetTasks } from "../hooks/use-get-tasks";
 import TasksLoadingSkeleton from "./task-list-skeleton";
+import { useStableTasks } from "../hooks/use-stable-get-task";
 interface TaskListProps {
   workspaceId: Id<"workspaces">;
 }
 
 const TaskList = ({ workspaceId }: TaskListProps) => {
-  const { tasks: homeTasks } = useGetTasks({
+  const homeTasks = useStableTasks({
     workspaceId,
     projectId: undefined,
+    priority: undefined,
+    assigneeId: undefined,
+    dueDate: undefined,
+    status: undefined,
   });
   const { open } = useTaskModalStore();
 

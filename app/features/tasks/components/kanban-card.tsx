@@ -44,7 +44,7 @@ const KanbanCard = ({ task, canEditStatus }: KanbanCardProps) => {
         </div>
       </div>
       {/* <DottedSeparator /> */}
-      <div className=" items-center gap-x-1.5">
+      <div className="flex  items-center gap-x-1.5">
         <MemberAvatar
           name={task.memberUser.user.name}
           fallbackClassname="text-[10px]"
@@ -62,7 +62,7 @@ const KanbanCard = ({ task, canEditStatus }: KanbanCardProps) => {
         <span className="text-xs truncate font-medium">
           {truncateString(task.taskProject.projectName, 3, 15)}
         </span>
-        <div className="rounded-full bg-neutral-300 size-1 " />
+        {/* <div className="rounded-full bg-neutral-300 size-1 " /> */}
         <div className="flex items-center gap-x-1.5">
           <span className="text-xs truncate  font-medium">{}</span>
           <Icon className="size-4" />

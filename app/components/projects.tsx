@@ -90,7 +90,7 @@ const Projects = () => {
               </PopoverTrigger>
             </CustomToolTip>
 
-            <PopoverContent className="p-0 w-[280px]" side="top" align="end">
+            <PopoverContent className="p-0 w-[280px]" side="top" align="start">
               <Command>
                 <CommandInput placeholder="Search Your Projects" />
                 <CommandList>
