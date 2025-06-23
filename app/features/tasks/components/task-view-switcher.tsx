@@ -18,6 +18,10 @@ import DataCalendar from "./data-calendar";
 import { StatusSchemaType, taskViewSearchType } from "../schema";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useStableTasks } from "../hooks/use-stable-get-task";
+import useGetWorkSpaceName from "@/features/workspaces/api/use-get-workspacename";
+import { useGetMember } from "@/features/members/api/use-get-member";
+import { TaskPriorityType } from "convex/schema";
 
 export const tabSchema = z.union([
   z.literal("table"),
@@ -33,11 +37,13 @@ interface TaskViewSwitcherProps {
   status: StatusSchemaType;
   assigneeId: string | undefined;
   dueDate: string | undefined;
+  priority: TaskPriorityType | undefined;
   onDueDateChange: (value: string | undefined) => void;
   onProjectIdChange: (value: string | undefined) => void;
   onAssigneeIdChange: (value: string | undefined) => void;
   onStatusChange: (value: StatusSchemaType) => void;
   handleTaskViewChange: (tab: string) => void;
+  onPriorityChange: (priority: TaskPriorityType | undefined) => void;
 }
 
 export const TaskViewSwitcher = ({
@@ -46,67 +52,53 @@ export const TaskViewSwitcher = ({
   workspaceId,
   hideProjectFilter = true,
   assigneeId,
+  priority,
   dueDate,
   status,
   taskView,
+  onPriorityChange,
   onAssigneeIdChange,
   onDueDateChange,
   onProjectIdChange,
   onStatusChange,
 }: TaskViewSwitcherProps) => {
-  const { tasks } = useGetTasks({
+  const tasks = useStableTasks({
     workspaceId,
     status,
     assigneeId: assigneeId as Id<"users">,
     projectId: projectId as Id<"projects">,
     dueDate,
+    priority,
   });
+
+  const {
+    data: memberInfo,
+    isLoading: loadingMemberInfo,
+    isError,
+  } = useGetMember(workspaceId);
+
+  // memberRole.data?.role;
 
   const { open } = useTaskModalStore();
 
-  if (tasks === undefined) {
+  if (tasks === undefined || memberInfo === undefined || loadingMemberInfo) {
     return <TaskViewSwitcherSkeleton />;
   }
 
-  if (tasks === null) {
-    return <p>Task Errored out</p>;
+  if (tasks === null || isError || memberInfo === null) {
+    return <p>Error fetching Tasks</p>;
   }
   return (
-    <Tabs
-      className="flex-1 w-full border rounded-lg"
-      defaultValue={taskView}
-      value={taskView}
-      onValueChange={handleTaskViewChange}
-    >
-      <div className="h-full flex flex-col overflow-auto p-4">
-        <div className="flex flex-col lg:flex-row gap-y-2 justify-between items-center">
-          <TabsList className="w-full lg:w-auto ">
-            <TabsTrigger className="h-8 w-full lg:w-auto" value="table">
-              Table
-            </TabsTrigger>
-            <TabsTrigger className="h-8 w-full lg:w-auto" value="kanban">
-              Kanban
-            </TabsTrigger>
-            <TabsTrigger className="h-8 w-full lg:w-auto" value="calendar">
-              Calendar
-            </TabsTrigger>
-          </TabsList>
-          <Button
-            size="sm"
-            className="w-full lg:w-auto"
-            onClick={() => open("ALL")}
-          >
-            <PlusIcon className="size-4 mr-2" />
-            New
-          </Button>
-        </div>
-        <DottedSeparator className="my-4" />
+    <div className="flex-1 w-full h-full  rounded-lg">
+      <div className="  h-full  flex flex-col  ">
         {taskView !== "kanban" && (
           <>
             <DataFilter
               hideProjectFilter={hideProjectFilter}
               assigneeId={assigneeId}
               dueDate={dueDate}
+              priority={priority}
+              onPriorityChange={onPriorityChange}
               onAssigneeIdChange={onAssigneeIdChange}
               onDueDateChange={onDueDateChange}
               onProjectIdChange={onProjectIdChange}
@@ -114,22 +106,21 @@ export const TaskViewSwitcher = ({
               projectId={projectId}
               status={status}
             />
-            <DottedSeparator className="my-4" />
           </>
         )}
         <>
-          <TabsContent value="table" className="mt-0">
+          <TabsContent value="table" className="mt-0  pb-6">
             <DataTable columns={columns} data={tasks} />
           </TabsContent>
           <TabsContent value="kanban" className="mt-0">
-            <DataKanban data={tasks} />
+            <DataKanban data={tasks} memberRole={memberInfo.role} />
           </TabsContent>
-          <TabsContent value="calendar" className="mt-0">
+          {/* <TabsContent value="calendar" className="mt-0">
             <DataCalendar data={tasks} />
-          </TabsContent>
+          </TabsContent> */}
         </>
       </div>
-    </Tabs>
+    </div>
   );
 };
 
@@ -138,12 +129,6 @@ export const TaskViewSwitcherSkeleton = () => {
     <Tabs className="flex-1 w-full border rounded-lg">
       <div className="h-full flex flex-col overflow-auto p-4">
         <div className="flex flex-col lg:flex-row gap-y-2  justify-between items-center">
-          {/* Tabs skeleton */}
-          {/* <div className="flex gap-x-2 bg-muted rounded-md p-1 w-full lg:w-auto">
-            <Skeleton className="h-8 w-full lg:w-24 rounded-md mx-1" />
-            <Skeleton className="h-8 w-full lg:w-24 rounded-md mx-1" />
-            <Skeleton className="h-8 w-full lg:w-24 rounded-md mx-1" />
-          </div> */}
           <div className="flex bg-transparent rounded-md justify-between p-1 w-full lg:w-auto gap-x-4">
             <Skeleton className="h-8 w-[65px]  lg:w-[65px] rounded-md" />
             <Skeleton className="h-8 w-[65px]  lg:w-[65px] rounded-md" />
@@ -162,8 +147,9 @@ export const TaskViewSwitcherSkeleton = () => {
         <DottedSeparator className="my-4" />
 
         {/* Tab content - using DataTableSkeleton as default */}
+
         {/* <TabsContent value="table" className="mt-0"> */}
-        <DataTableSkeleton columnCount={5} rowCount={5} />
+        {/* <DataTableSkeleton columnCount={5} rowCount={5} /> */}
         {/* </TabsContent> */}
       </div>
     </Tabs>

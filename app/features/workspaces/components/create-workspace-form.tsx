@@ -91,15 +91,12 @@ export const CreateWorkspaceForm = ({ onCancel }: createWorkspaceFormProps) => {
 
   return (
     <Card className="w-full h-full border-none shadow-none gap-2">
-      <CardHeader className="flex p-4">
+      <CardHeader className="flex pb-3 px-7 ">
         <CardTitle className="text-lg font-bold">
           Create a new Workspace
         </CardTitle>
       </CardHeader>
-      <div className="px-7">
-        <DottedSeparator />
-      </div>
-      <CardContent className="p-7">
+      <CardContent className="p-7 py-0">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-4">
@@ -165,7 +162,7 @@ export const CreateWorkspaceForm = ({ onCancel }: createWorkspaceFormProps) => {
                               type="button"
                               disabled={form.formState.isSubmitting}
                               variant="destructive"
-                              size="xs"
+                              // size="xs"
                               className="w-fit mt-2"
                               onClick={() => {
                                 field.onChange(null);
@@ -185,8 +182,8 @@ export const CreateWorkspaceForm = ({ onCancel }: createWorkspaceFormProps) => {
                             <Button
                               type="button"
                               disabled={form.formState.isSubmitting}
-                              variant="territory"
-                              size="xs"
+                              // variant="territory"
+                              // size="xs"
                               className="w-fit mt-2"
                               onClick={() => inputRef.current?.click?.()}
                             >

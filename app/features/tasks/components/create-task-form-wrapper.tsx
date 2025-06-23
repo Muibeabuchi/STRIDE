@@ -47,13 +47,17 @@ export function CreateTaskFormWrapper() {
   const memberOptions = members.data.map((member) => ({
     id: member.userId,
     name: member.userName,
+    imageUrl: member.userImage,
   }));
+
+  const projectTaskStatus = projects?.data[0]?.projectTaskStatus ?? null;
 
   return (
     <CreateTaskForm
       memberOptions={memberOptions}
       projectOptions={projectOptions}
       onCancel={close}
+      projectTaskStatus={projectTaskStatus}
     />
   );
 }

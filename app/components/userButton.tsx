@@ -13,6 +13,7 @@ import { Authenticated, AuthLoading } from "convex/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useCurrentUser } from "@/features/auth/api/get-current-user";
+import { AdvancedThemeToggle } from "./theme-toggle";
 
 export const UserButton = () => {
   const { signOut } = useAuthActions();
@@ -52,9 +53,9 @@ export const UserButton = () => {
       <Authenticated>
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger className="outline-none relative">
-            <Avatar className="size-10 hover:opacity-75 border border-neutral-300 transition">
+            <Avatar className="size-10 hover:opacity-75 border rounded-md border-neutral-300 transition">
               <AvatarImage src={user?.image} />
-              <AvatarFallback className="font-medium flex items-center justify-center bg-neutral-200 text-neutral-500">
+              <AvatarFallback className="font-medium flex items-center rounded-md justify-center ">
                 {avatarCallback}
               </AvatarFallback>
               <AvatarImage />
@@ -83,6 +84,8 @@ export const UserButton = () => {
                 </p>
               </div>
             </div>
+            <DottedSeparator className="mb-1" />
+            <AdvancedThemeToggle />
             <DottedSeparator className="mb-1" />
             <DropdownMenuItem
               className="h-10 items-center justify-center flex text-amber-700 font-medium cursor-pointer"

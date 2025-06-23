@@ -1,6 +1,7 @@
 import { useRouterState } from "@tanstack/react-router";
 import { MobileSidebar } from "./mobile-sidebar";
 import { UserButton } from "./userButton";
+import { SidebarTrigger } from "./ui/sidebar";
 
 const pathnameMap = {
   tasks: {
@@ -26,20 +27,25 @@ function Navbar() {
     : null;
 
   return (
-    <nav className="pt-4 w-full px-6 flex items-center justify-between">
-      <div className="lg:flex hidden flex-col">
-        <h1 className="text-2xl font-semibold">
-          {pathnameData ? pathnameData.title : "Home"}
-        </h1>
-        <p className="text-muted-foreground">
-          {pathnameData
-            ? pathnameData.description
-            : "Monitor all of your Tasks and Projects here"}
-        </p>
-      </div>
-      <MobileSidebar />
-      <UserButton />
-    </nav>
+    <div className="w-full items-center flex justify-between">
+      <SidebarTrigger className="ml-5.5 p-4 z-50 mt-4" />
+      <nav className="pt-4 w-full px-6 flex items-center justify-between">
+        <div className="lg:flex hidden flex-col">
+          <h1 className="text-2xl font-semibold">
+            {pathnameData ? pathnameData.title : "Home"}
+          </h1>
+          <p className="text-muted-foreground">
+            {pathnameData
+              ? pathnameData.description
+              : "Monitor all of your Tasks and Projects here"}
+          </p>
+        </div>
+        {/* <MobileSidebar /> */}
+        <div className="ml-auto lg:ml-0">
+          <UserButton />
+        </div>
+      </nav>
+    </div>
   );
 }
 

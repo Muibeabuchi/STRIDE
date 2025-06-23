@@ -16,6 +16,8 @@ import appCss from "@/styles/app.css?url";
 import { ConvexReactClient } from "convex/react";
 import { ConvexQueryClient } from "@convex-dev/react-query";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/providers/theme-provider";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -151,14 +153,16 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <div className="flex-grow  h-full flex flex-col">
             {loading && (
               <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
-                <div className="animate-spin h-8 w-8 border-[3px] border-primary border-dashed rounded-full"></div>
+                <div className="animate-spin h-8 w-8 border-[3px] dark:text-gray-200 border-primary border-dashed rounded-full"></div>
               </div>
             )}
-            {children}
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <SidebarProvider>{children}</SidebarProvider>
+            </ThemeProvider>
           </div>
         </div>
         <ReactQueryDevtools position="bottom" />
-        <TanStackRouterDevtools position="bottom-left" />
+        <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
       </body>
     </html>

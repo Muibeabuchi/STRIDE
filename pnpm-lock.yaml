@@ -14,6 +14,9 @@ importers:
       '@convex-dev/auth':
         specifier: ^0.0.82
         version: 0.0.82(@auth/core@0.37.0)(convex@1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+      '@convex-dev/migrations':
+        specifier: ^0.2.8
+        version: 0.2.8(convex@1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@convex-dev/react-query':
         specifier: 0.0.0-alpha.8
         version: 0.0.0-alpha.8(@tanstack/react-query@5.74.4(react@19.1.0))(convex@1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
@@ -149,6 +152,9 @@ importers:
       embla-carousel-react:
         specifier: ^8.5.2
         version: 8.5.2(react@19.1.0)
+      framer-motion:
+        specifier: ^12.16.0
+        version: 12.16.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -197,6 +203,9 @@ importers:
       tailwind-merge:
         specifier: ^2.6.0
         version: 2.6.0
+      tailwind-scrollbar-hide:
+        specifier: ^4.0.0
+        version: 4.0.0(tailwindcss@4.0.17)
       tiny-invariant:
         specifier: ^1.3.3
         version: 1.3.3
@@ -406,6 +415,11 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
+
+  '@convex-dev/migrations@0.2.8':
+    resolution: {integrity: sha512-Hf/UNzbhEG0QOt2O08eshN+reQ/TsZLS3QUq+wwKK+KimmqFJ+NPHxlCkTZelITFVYeJtRKGwyXcAfp+zFdc8g==}
+    peerDependencies:
+      convex: ~1.16.5 || >=1.17.0 <1.35.0
 
   '@convex-dev/react-query@0.0.0-alpha.8':
     resolution: {integrity: sha512-Rv/q7/CplU75f7ckBd2vh+HoeeQ0tOrjwMl14Hk7D/03e55oUIU0TV5JYYzC79ZQyyAtoj7CmCo5ZxcmtKNv1Q==}
@@ -3506,6 +3520,20 @@ packages:
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
 
+  framer-motion@12.16.0:
+    resolution: {integrity: sha512-xryrmD4jSBQrS2IkMdcTmiS4aSKckbS7kLDCuhUn9110SQKG1w3zlq1RTqCblewg+ZYe+m3sdtzQA6cRwo5g8Q==}
+    peerDependencies:
+      '@emotion/is-prop-valid': '*'
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/is-prop-valid':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
   fresh@0.5.2:
     resolution: {integrity: sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==}
     engines: {node: '>= 0.6'}
@@ -4010,6 +4038,12 @@ packages:
 
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
+
+  motion-dom@12.16.0:
+    resolution: {integrity: sha512-Z2nGwWrrdH4egLEtgYMCEN4V2qQt1qxlKy/uV7w691ztyA41Q5Rbn0KNGbsNVDZr9E8PD2IOQ3hSccRnB6xWzw==}
+
+  motion-utils@12.12.1:
+    resolution: {integrity: sha512-f9qiqUHm7hWSLlNW8gS9pisnsN7CRFRD58vNjptKdsqFLpkVnX00TNeD6Q0d27V9KzT7ySFyK1TZ/DShfVOv6w==}
 
   ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
@@ -4649,6 +4683,11 @@ packages:
 
   tailwind-merge@2.6.0:
     resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
+
+  tailwind-scrollbar-hide@4.0.0:
+    resolution: {integrity: sha512-gobtvVcThB2Dxhy0EeYSS1RKQJ5baDFkamkhwBvzvevwX6L4XQfpZ3me9s25Ss1ecFVT5jPYJ50n+7xTBJG9WQ==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || >= 4.0.0 || >= 4.0.0-beta.8 || >= 4.0.0-alpha.20'
 
   tailwindcss@4.0.17:
     resolution: {integrity: sha512-OErSiGzRa6rLiOvaipsDZvLMSpsBZ4ysB4f0VKGXUrjw2jfkJRd6kjRKV2+ZmTCNvwtvgdDam5D7w6WXsdLJZw==}
@@ -5293,6 +5332,10 @@ snapshots:
       server-only: 0.0.1
     optionalDependencies:
       react: 19.1.0
+
+  '@convex-dev/migrations@0.2.8(convex@1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
+    dependencies:
+      convex: 1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
 
   '@convex-dev/react-query@0.0.0-alpha.8(@tanstack/react-query@5.74.4(react@19.1.0))(convex@1.21.0(@clerk/clerk-react@5.25.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
     dependencies:
@@ -8481,6 +8524,15 @@ snapshots:
 
   fraction.js@4.3.7: {}
 
+  framer-motion@12.16.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      motion-dom: 12.16.0
+      motion-utils: 12.12.1
+      tslib: 2.8.1
+    optionalDependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
   fresh@0.5.2: {}
 
   fs-monkey@1.0.6:
@@ -8942,6 +8994,12 @@ snapshots:
       moment: 2.30.1
 
   moment@2.30.1: {}
+
+  motion-dom@12.16.0:
+    dependencies:
+      motion-utils: 12.12.1
+
+  motion-utils@12.12.1: {}
 
   ms@2.0.0: {}
 
@@ -9651,6 +9709,10 @@ snapshots:
   system-architecture@0.1.0: {}
 
   tailwind-merge@2.6.0: {}
+
+  tailwind-scrollbar-hide@4.0.0(tailwindcss@4.0.17):
+    dependencies:
+      tailwindcss: 4.0.17
 
   tailwindcss@4.0.17: {}
 

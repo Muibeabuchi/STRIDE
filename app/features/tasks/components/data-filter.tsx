@@ -10,20 +10,31 @@ import {
 } from "@/components/ui/select";
 import DatePicker from "@/components/date-picker";
 import {
+  AlertCircle,
+  Bug,
   FolderArchiveIcon,
   ListChecksIcon,
+  ListFilter,
+  ListOrdered,
   UserIcon,
   XIcon,
 } from "lucide-react";
 import {
   StatusSchema,
   StatusSchemaType,
-  TaskStatus,
+  // TaskStatus,
   taskViewSearchType,
 } from "../schema";
 import useTaskFilters from "../hooks/use-task-filters";
 import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIsMobile } from "@/hooks/use-advanced-is-mobile";
+import { ProjectAvatar } from "@/features/projects/components/project-avatar";
+import { TaskPriorityType } from "convex/schema";
+import { TaskPriority, TaskPriorityMapper } from "convex/constants";
+// import { useIsMobile } from "@/hooks/use-mobile";
+
+export const NO_FILTER_CONSTANT = "no-filter";
 
 interface DataFilterProps {
   hideProjectFilter?: boolean;
@@ -31,8 +42,10 @@ interface DataFilterProps {
   assigneeId: string | undefined;
   onAssigneeIdChange: (value: string | undefined) => void;
   onProjectIdChange: (value: string | undefined) => void;
+  onPriorityChange: (value: TaskPriorityType | undefined) => void;
   projectId: string | undefined;
   dueDate: string | undefined;
+  priority: TaskPriorityType | undefined;
   onDueDateChange: (value: string | undefined) => void;
   onStatusChange: (value: StatusSchemaType) => void;
 }
@@ -41,14 +54,18 @@ const DataFilter = ({
   hideProjectFilter,
   status,
   assigneeId,
+  priority,
   onAssigneeIdChange,
   onProjectIdChange,
   projectId,
   dueDate,
   onDueDateChange,
+  onPriorityChange,
   onStatusChange,
 }: DataFilterProps) => {
   const [projects, members] = useGetTaskFormData();
+
+  const isMobile = useIsMobile(534);
 
   const isLoading = projects.isPending || members.isPending;
 
@@ -65,10 +82,13 @@ const DataFilter = ({
   const memberOptions = members.data.map((member) => ({
     id: member.userId,
     name: member.userName,
+    imageUrl: member.userImage,
   }));
 
+  const projectTaskStatus = projects.data[0]?.projectTaskStatus;
+
   return (
-    <div className="flex flex-col lg:flex-row gap-2">
+    <div className="flex flex-row gap-2 w-fit items-center">
       <Select
         defaultValue={status || "ALL"}
         value={status}
@@ -77,27 +97,33 @@ const DataFilter = ({
             const parsedStatus = StatusSchema.parse(value);
             onStatusChange(parsedStatus);
           } catch (error) {
-            console.error(
-              "Error parsing the value of status from the select component"
-            );
+            return;
           }
         }}
       >
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex pr-2 items-center">
             <ListChecksIcon className="size-4 mr-2" />
-            <SelectValue placeholder="All Statuses" />
+            {isMobile && (
+              <SelectValue
+                placeholder="All Status"
+                className="hidden lg:flex"
+              />
+            )}
           </div>
         </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ALL">All Statuses</SelectItem>
-          <SelectSeparator />
-          <SelectItem value={TaskStatus.BACKLOG}>BACKLOG</SelectItem>
-          <SelectItem value={TaskStatus.DONE}>DONE</SelectItem>
-          <SelectItem value={TaskStatus.IN_PROGRESS}>IN PROGRESS</SelectItem>
-          <SelectItem value={TaskStatus.IN_REVIEW}>IN REVIEW</SelectItem>
-          <SelectItem value={TaskStatus.TODO}>TODO</SelectItem>
-        </SelectContent>
+        {projectTaskStatus === null ? null : (
+          <SelectContent>
+            <SelectItem value={"ALL"}>ALL</SelectItem>
+            <SelectSeparator />
+            {/*TODO: Fix this Later after migrations */}
+            {projectTaskStatus?.map((status) => (
+              <SelectItem key={status.issueName} value={status.issueName}>
+                {status.issueName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        )}
       </Select>
 
       <Select
@@ -108,7 +134,7 @@ const DataFilter = ({
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex pr-2 items-center">
             <UserIcon className="size-4 mr-2" />
-            <SelectValue placeholder="All Assignees" />
+            {isMobile && <SelectValue placeholder="All Assignees" />}
           </div>
         </SelectTrigger>
         <SelectContent>
@@ -120,8 +146,56 @@ const DataFilter = ({
             return (
               <SelectItem key={member.id} value={member.id}>
                 <div className="flex items-center gap-x-2">
-                  <MemberAvatar name={member.name} className="size-6" />
+                  <MemberAvatar
+                    name={member.name}
+                    className="size-6"
+                    imageUrl={member.imageUrl}
+                  />
                   {member.name}
+                </div>
+              </SelectItem>
+            );
+          })}
+        </SelectContent>
+      </Select>
+
+      <Select
+        defaultValue={NO_FILTER_CONSTANT}
+        value={priority?.toLocaleString()}
+        onValueChange={(value) => {
+          const priority =
+            value === NO_FILTER_CONSTANT
+              ? undefined
+              : (Number(value) as TaskPriorityType);
+          onPriorityChange(priority);
+        }}
+      >
+        <SelectTrigger className="w-full lg:w-auto h-8">
+          <div className="flex pr-2 items-center">
+            <ListFilter className="size-4 mr-2" />
+            {!isMobile && <SelectValue placeholder="Priority" />}
+            {/* <SelectValue placeholder="Priority" /> */}
+          </div>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem key={NO_FILTER_CONSTANT} value={NO_FILTER_CONSTANT}>
+            NO FILTERS
+          </SelectItem>
+          <SelectSeparator />
+          {/* <SelectItem key={"All-Assignees"} value={"All"}>
+            All Assignees
+          </SelectItem> */}
+          {/* <SelectSeparator /> */}
+          {TaskPriority.map((priority) => {
+            return (
+              <SelectItem key={priority} value={priority.toLocaleString()}>
+                <div className="flex items-center gap-x-2">
+                  {/* <MemberAvatar
+                    name={priority.name}
+                    className="size-6"
+                    imageUrl={priority.imageUrl}
+                  /> */}
+                  {TaskPriorityMapper[priority]}
                 </div>
               </SelectItem>
             );
@@ -135,10 +209,10 @@ const DataFilter = ({
           value={projectId || "All"}
           onValueChange={onProjectIdChange}
         >
-          <SelectTrigger className="w-full lg:w-auto h-8">
-            <div className="flex pr-2 items-center">
+          <SelectTrigger className=" lg:w-auto w-fit h-8">
+            <div className="flex pr-2 items-center w-auto">
               <FolderArchiveIcon className="size-4 mr-2" />
-              <SelectValue placeholder="All Projects" />
+              {isMobile && <SelectValue placeholder="All Projects" />}
             </div>
           </SelectTrigger>
           <SelectContent>
@@ -150,7 +224,7 @@ const DataFilter = ({
               return (
                 <SelectItem key={project.id} value={project.id}>
                   <div className="flex items-center gap-x-2">
-                    <MemberAvatar name={project.name} className="size-6" />
+                    <ProjectAvatar name={project.name} className="size-6" />
                     {project.name}
                   </div>
                 </SelectItem>

@@ -1,48 +1,107 @@
-import { PaginatedTasksResponse, taskStatus } from "convex/schema";
+import { PaginatedTasksResponse } from "convex/schema";
 import {
   DragDropContext,
   Draggable,
   Droppable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { TaskStatus } from "../schema";
+// import { TaskStatus } from "../schema";
 import KanbanColumnHeader from "./kanban-column-header";
 import KanbanCard from "./kanban-card";
 import { useCallback } from "react";
 import { useEditTask } from "../api/use-edit-task";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import EmptyKanbanState from "@/components/empty-kanban";
+import { useCollapsedColumn } from "@/hooks/use-collapsed-column";
+import CollapsedKanbanBoard from "./collapsed-kanban-board";
+import AdvancedKanbanCard from "./advanced-kanban-task-card";
+import { Id } from "convex/_generated/dataModel";
 
 interface DataKanbanProps {
+  memberRole: "admin" | "member";
   data: PaginatedTasksResponse[];
 }
-const boards = [
-  TaskStatus.BACKLOG,
-  TaskStatus.DONE,
-  TaskStatus.IN_PROGRESS,
-  TaskStatus.IN_REVIEW,
-  TaskStatus.TODO,
-] as const;
 
-type TaskState = {
-  [key in taskStatus]: PaginatedTasksResponse[];
-};
+type TaskState = Record<string, PaginatedTasksResponse[]>;
 
-const DataKanban = ({ data }: DataKanbanProps) => {
-  const kanbanTasks: TaskState = {
-    [TaskStatus.BACKLOG]: [],
-    [TaskStatus.DONE]: [],
-    [TaskStatus.IN_PROGRESS]: [],
-    [TaskStatus.IN_REVIEW]: [],
-    [TaskStatus.TODO]: [],
-  };
+const DataKanban = ({ data, memberRole }: DataKanbanProps) => {
+  let kanbanTasks: TaskState = {};
+  // grab the collapsed columns from the Global Store/Local Storage
+  const collapsedColumns = useCollapsedColumn(
+    (state) => state.collapsedColumns
+  );
+
+  const projectColumns = useCollapsedColumn((state) =>
+    state.getProjectCollapsedColumn(data?.[0]?.taskProject._id)
+  );
+
+  const boards = data[0]?.taskProject?.projectTaskStatus ?? [];
+
+  // filter the boards to only show the non-collapsed boards
+  const nonCollapsedBoards = boards.filter((board) => {
+    if (collapsedColumns === null) {
+      return true;
+    } else {
+      const projectCollapsedColumns = collapsedColumns.find(
+        (col) => col.projectId === data[0].taskProject._id
+      );
+      if (!projectCollapsedColumns) return true;
+      const projectCollapsedColumnNames =
+        projectCollapsedColumns.collapsedColumnName;
+      const isCollapsedBoard = !!projectCollapsedColumnNames.find(
+        (status) => status === board.issueName
+      );
+      if (!isCollapsedBoard) {
+        return true;
+      } else return false;
+    }
+  });
+
+  const collapsedBoards = boards
+    .map((board) => {
+      const colBoard = nonCollapsedBoards.find(
+        (col) => col.issueName === board.issueName
+      );
+      if (colBoard) {
+        return null;
+      } else return board.issueName;
+    })
+    .filter((board) => board !== null);
+
+  const collapsedColumnData = collapsedBoards.map((board) => {
+    const boardData = data.filter((data) => data.status === board);
+
+    return {
+      statusName: board,
+      length: boardData.length,
+    };
+  });
+
+  nonCollapsedBoards.map((task) => {
+    kanbanTasks[task.issueName] = [];
+  });
+
   const tasks = data.reduce((acc, currentTask) => {
-    acc[currentTask.status as TaskStatus].push(currentTask);
+    // check if the status of task is equal to key of the board
+    const status = currentTask.status;
+
+    const taskKey = nonCollapsedBoards.find((key) => key.issueName === status);
+    // if (!taskKey) throw new Error("Key does not match");
+    if (!taskKey) return acc;
+    if (taskKey.issueName === status) {
+      acc[taskKey.issueName].push(currentTask);
+    }
     return acc;
   }, kanbanTasks);
 
   Object.keys(tasks).map((status) => {
-    return tasks[status as TaskStatus].sort((a, b) => a.position - b.position);
+    return (
+      tasks[status]
+        // .sort((a, b) => -(a.priority ?? 0) + (b.priority ?? 0))
+        .sort((a, b) => a.position - b.position)
+    );
   });
 
   const editTask = useEditTask();
@@ -52,8 +111,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
 
     const { source, destination } = result;
 
-    const sourceStatus = source.droppableId as taskStatus;
-    const destinationStatus = destination.droppableId as taskStatus;
+    const sourceStatus = source.droppableId;
+    const destinationStatus = destination.droppableId;
 
     const sourceColumn = tasks[sourceStatus];
     const destinationColumn = tasks[destinationStatus];
@@ -75,6 +134,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           taskPosition: 1000,
           taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // TODO: CALCULATE NEW PRIORITY
+          priority: sourceTask.priority,
         });
         return;
       }
@@ -88,6 +149,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           taskPosition: destTaskPosition / 2,
           taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // TODO: CALCULATE NEW PRIORITY
+          priority: sourceTask.priority,
         });
         return;
       }
@@ -103,6 +166,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           taskPosition: newSourceTaskPosition,
           taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // todo: Calculate new priority
+          priority: sourceTask.priority,
         });
         return;
       }
@@ -141,6 +206,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
         taskPosition: newPosition,
         projectId: sourceTask.taskProject._id,
         taskStatus: destinationStatus,
+        // TODO: Calculate new priority
+        priority: sourceTask.priority,
         // taskStatus: destinationStatus,
       });
 
@@ -176,6 +243,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           taskPosition: 1000,
           // taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // TODO: Calculate new priority
+          priority: sourceTask.priority,
         });
 
         return;
@@ -190,6 +259,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           taskPosition: destTaskPosition / 2,
           // taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // TODO: Calculate new priority
+          priority: sourceTask.priority,
         });
         return;
       }
@@ -205,6 +276,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           taskPosition: newSourceTaskPosition,
           // taskStatus: destinationStatus,
           projectId: sourceTask.taskProject._id,
+          // TODO: Calculate new priority
+          priority: sourceTask.priority,
         });
         return;
       }
@@ -239,6 +312,8 @@ const DataKanban = ({ data }: DataKanbanProps) => {
           workspaceId: sourceTask.workspaceId,
           taskPosition: newPosition,
           projectId: sourceTask.taskProject._id,
+          // TODO: Calculate new priority
+          priority: sourceTask.priority,
 
           // taskStatus: destinationStatus,
         });
@@ -247,74 +322,120 @@ const DataKanban = ({ data }: DataKanbanProps) => {
       }
 
       //   ? set the  position of the source card to the average of the top card and bottom card(destination card) minus the destination card position
-
-      // const newPosition =
-      //   destTask.position -
-      //   (topDestinationCard.position - destTask.position) / 2;
-
-      // await editTask({
-      //   taskId: sourceTask._id,
-      //   workspaceId: sourceTask.workspaceId,
-      //   taskPosition: newPosition,
-      //   projectId: sourceTask.taskProject._id,
-
-      //   // taskStatus: destinationStatus,
-      // });
     }
   };
 
+  const noBoards = nonCollapsedBoards.length > 0;
+
+  const canDragTask = useCallback(() => {
+    return memberRole === "admin";
+  }, [data, memberRole]);
+  const canEditStatus = useCallback(
+    (assigneeId: Id<"users">) => {
+      return memberRole === "admin" || data[0].currentUser._id === assigneeId;
+    },
+    [data]
+  );
+
+  console.log(projectColumns);
+
+  // || data[0].currentUser._id === assigneeId;
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex overflow-x-auto">
-        {boards.map((board) => {
-          return (
-            <div
-              className="flex-1 mx-2 bg-muted p-1.5 rounded-md min-w-[200px] "
-              key={board}
-            >
-              <KanbanColumnHeader
-                taskCount={kanbanTasks[board].length}
-                board={board}
-              />
-              <Droppable droppableId={board}>
-                {(prop) => {
-                  return (
-                    <div
-                      className="min-h-[200px] py-1.5"
-                      {...prop.droppableProps}
-                      ref={prop.innerRef}
-                    >
-                      {kanbanTasks[board].map((task, index) => {
-                        return (
-                          <Draggable
-                            key={task._id}
-                            index={index}
-                            draggableId={task._id}
+      <div className="">
+        <div className="flex w-full h-[calc(100svh-72px)]  overflow-x-auto ">
+          {nonCollapsedBoards.length > 0 ? (
+            nonCollapsedBoards.map((board) => {
+              return (
+                <div
+                  className={cn(
+                    ` ${
+                      tasks[board.issueName].length === 0 && "p-0"
+                    }  flex-1 mx-2 p-1.5 h-full min-w-[280px] max-w-[280px]  lg:max-w-[400px] lg:min-w-[400px] rounded-md`
+                  )}
+                  key={board.issueName}
+                >
+                  <KanbanColumnHeader
+                    taskCount={tasks[board.issueName].length}
+                    board={board.issueName}
+                    projectId={data[0].taskProject._id}
+                  />
+                  <Droppable droppableId={board.issueName}>
+                    {(prop, snapshot) => {
+                      return (
+                        <div
+                          {...prop.droppableProps}
+                          ref={prop.innerRef}
+                          className={cn(
+                            "min-h-[calc(100svh-135px)] rounded-lg",
+                            {
+                              "bg-[#f5f5f5] transition-color duration-500  dark:bg-[#333]":
+                                snapshot.isDraggingOver,
+                            }
+                          )}
+                        >
+                          <div
+                            className={cn(
+                              `max-h-[calc(100svh-135px)] overflow-y-auto scrollbar-hide h-full    py-1.5 `
+                            )}
                           >
-                            {(prop) => {
+                            {tasks[board.issueName].map((task, index) => {
                               return (
-                                <div
-                                  {...prop.draggableProps}
-                                  {...prop.dragHandleProps}
-                                  ref={prop.innerRef}
-                                  className=""
+                                <Draggable
+                                  key={task._id}
+                                  index={index}
+                                  draggableId={task._id}
+                                  isDragDisabled={!canDragTask()}
                                 >
-                                  <KanbanCard task={task} />
-                                </div>
+                                  {(prop) => {
+                                    return (
+                                      <div
+                                        {...prop.draggableProps}
+                                        {...prop.dragHandleProps}
+                                        ref={prop.innerRef}
+                                        // onClick={() =>
+                                        //   console.log(
+                                        //     `Clicking ${task.taskName} `
+                                        //   )
+                                        // }
+                                      >
+                                        <KanbanCard
+                                          task={task}
+                                          canEditStatus={canEditStatus}
+                                        />
+                                      </div>
+                                    );
+                                  }}
+                                </Draggable>
                               );
-                            }}
-                          </Draggable>
-                        );
-                      })}
-                      {prop.placeholder}
-                    </div>
-                  );
-                }}
-              </Droppable>
-            </div>
-          );
-        })}
+                            })}
+                            {prop.placeholder}
+                          </div>
+                        </div>
+                      );
+                    }}
+                  </Droppable>
+                </div>
+              );
+            })
+          ) : (
+            <EmptyKanbanState
+              message={data?.[0] ? "All Columns are Hidden" : undefined}
+            />
+          )}
+          {projectColumns !== null &&
+            projectColumns.collapsedColumnName.length !== 0 && (
+              <CollapsedKanbanBoard
+                collapsedStatus={collapsedColumnData}
+                noBoards={noBoards}
+                projectId={data[0].taskProject._id}
+              />
+            )}
+        </div>
       </div>
+      {/* </div> */}
+      {/* </div> */}
     </DragDropContext>
   );
 };

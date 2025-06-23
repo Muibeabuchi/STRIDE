@@ -1,3 +1,5 @@
+import { useTheme } from "next-themes";
+
 export function Loader() {
   return (
     <div className="flex h-full">
@@ -7,9 +9,18 @@ export function Loader() {
 }
 
 export function LogoLoader() {
+  const { theme } = useTheme();
   return (
-    <div className="flex items-center justify-center h-screen w-ful animate-pulse">
-      <img src="/logo.svg" width={270} height={270} />
+    <div className="flex items-center justify-center h-screen w-full animate-pulse">
+      {theme === "light" ? (
+        <img
+          src="/public/ChatGPT Image May 26, 2025, 01_40_32 AM.png"
+          width={270}
+          height={270}
+        />
+      ) : (
+        <img src="/stride_dark_mode_512x512.png" width={270} height={270} />
+      )}
     </div>
   );
 }

@@ -26,20 +26,6 @@ export const useGetTaskFormData = () => {
 
   // TODO: Talk about this typescript fix for tuples
   return [projects, members] as const;
-  // return useSuspenseQueries({
-  //   queries: [
-  //     {
-  //       queryKey: convexQuery(api.projects.get, { workspaceId }).queryKey,
-  //       queryFn: convexQuery(api.projects.get, { workspaceId }).queryFn,
-  //       staleTime: Infinity,
-  //     },
-  //     {
-  //       queryKey: convexQuery(api.members.get, { workspaceId }).queryKey,
-  //       queryFn: convexQuery(api.members.get, { workspaceId }).queryFn,
-  //       staleTime: Infinity,
-  //     },
-  //   ],
-  // });
 };
 
 export function EditTaskFormWrapperSkeleton() {
@@ -75,7 +61,9 @@ export function EditTaskFormWrapper({
   const memberOptions = members.data.map((member) => ({
     id: member.userId,
     name: member.userName,
+    imageUrl: member.userImage,
   }));
+  const projectTaskStatus = projects.data[0].projectTaskStatus;
 
   return (
     <EditTaskForm
@@ -84,6 +72,7 @@ export function EditTaskFormWrapper({
       taskId={taskId}
       initialValues={initialValues}
       onCancel={onCancel}
+      projectTaskStatus={projectTaskStatus}
     />
   );
 }

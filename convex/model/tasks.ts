@@ -2,6 +2,7 @@ import { ConvexError } from "convex/values";
 import { Id } from "../_generated/dataModel";
 import { QueryCtx } from "../_generated/server";
 import { getCurrentUser } from "../users";
+import { ensureUserIsMember } from "../utils/helpers";
 
 export async function ensureTaskExists(ctx: QueryCtx, taskId: Id<"tasks">) {
   const task = await ctx.db.get(taskId);
@@ -9,6 +10,26 @@ export async function ensureTaskExists(ctx: QueryCtx, taskId: Id<"tasks">) {
 
   return task;
 }
+
+export const ensureProjectTaskStatus = async ({
+  ctx,
+  status,
+  projectId,
+}: {
+  ctx: QueryCtx;
+  status: string | undefined;
+  projectId: Id<"projects">;
+}) => {
+  if (!status) return undefined;
+
+  const project = await ctx.db.get(projectId);
+  if (!project) throw new ConvexError("Project does not exist");
+  if (!project.projectTaskStatus)
+    throw new ConvexError("ProjectTaskStatus does not exist");
+
+  // check if the status is defined in  the project
+  return project.projectTaskStatus.find((s) => s.issueName === status);
+};
 
 export const validateTaskWorkspace = async (
   ctx: QueryCtx,
@@ -18,14 +39,11 @@ export const validateTaskWorkspace = async (
 
   if (!user) throw new ConvexError("Unauthorized");
 
-  // check if the user is a member of the workspace
-  const member = await ctx.db
-    .query("members")
-    .withIndex("by_userId_by_workspaceId", (q) =>
-      q.eq("userId", user._id).eq("workspaceId", workspaceId)
-    )
-    .unique();
-  if (!member) throw new ConvexError("Unauthorized");
+  const member = await ensureUserIsMember({
+    ctx,
+    workspaceId,
+    userId: user._id,
+  });
 
   // check if the member is an admin
   const isAdmin = member.role === "admin";

@@ -17,14 +17,12 @@ export const useDeleteTask = () => {
             projectId,
           });
 
-          console.log(tasksFromProjects);
 
           if (!tasksFromProjects) return;
 
           const filteredTasks = tasksFromProjects.filter(
             (task) => task._id !== taskId
           );
-          console.log(filteredTasks);
 
           localStore.setQuery(
             api.tasks.get,

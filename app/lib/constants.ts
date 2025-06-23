@@ -1,6 +1,22 @@
-import { SettingsIcon, UsersIcon } from "lucide-react";
+import {
+  CircleDashed,
+  SettingsIcon,
+  Shield,
+  SignalHigh,
+  SignalLow,
+  SignalMedium,
+  UsersIcon,
+} from "lucide-react";
 
-import { CheckCircle, CheckCircle2, Home, HomeIcon } from "lucide-react";
+import { Home, HomeIcon } from "lucide-react";
+
+export const TaskPriorityIconMapper = {
+  0: CircleDashed,
+  1: SignalLow,
+  2: SignalMedium,
+  3: SignalHigh,
+  4: Shield,
+} as const;
 
 export const Routes = [
   {
@@ -9,12 +25,12 @@ export const Routes = [
     FilledIcon: HomeIcon,
     Icon: Home,
   },
-  {
-    label: "My Tasks",
-    to: "/tasks",
-    Icon: CheckCircle,
-    FilledIcon: CheckCircle2,
-  },
+  // {
+  //   label: "My Tasks",
+  //   to: "/tasks",
+  //   Icon: CheckCircle,
+  //   FilledIcon: CheckCircle2,
+  // },
   {
     label: "Settings",
     to: "/settings",

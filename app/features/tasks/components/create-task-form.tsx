@@ -2,7 +2,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DottedSeparator } from "@/components/doted-separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 
-import { createTaskSchema, TaskStatus } from "../schema";
+import { createTaskSchema } from "../schema";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useMatchRoute, useNavigate } from "@tanstack/react-router";
 import { useCreateTask } from "../api/use-create-task";
@@ -33,6 +32,10 @@ import { MemberAvatar } from "@/features/members/components/member-avatar";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
 import { useTaskModalStore } from "@/store/store";
 import { useProjectId } from "@/features/projects/hooks/use-project-id";
+import { IssueStatusTypes, TaskPriorityType } from "convex/schema";
+import { truncateString } from "@/utils/truncate-words";
+import { TaskPriority, TaskPriorityMapper } from "convex/constants";
+import { TaskPriorityIconMapper } from "@/lib/constants";
 
 interface CreateTaskFormProps {
   onCancel?: () => void;
@@ -44,23 +47,26 @@ interface CreateTaskFormProps {
   memberOptions: {
     id: Id<"users">;
     name: string | undefined;
+    imageUrl: string | undefined;
   }[];
+  projectTaskStatus: IssueStatusTypes[] | null;
 }
 
 export const CreateTaskForm = ({
   onCancel,
   memberOptions,
   projectOptions,
+  projectTaskStatus,
 }: CreateTaskFormProps) => {
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
   const matchRoute = useMatchRoute();
-  const isTaskPage = matchRoute({
-    to: "/workspaces/$workspaceId/tasks",
-    params: {
-      workspaceId: workspaceId,
-    },
-  });
+  // const isTaskPage = matchRoute({
+  //   to: "/workspaces/$workspaceId/tasks",
+  //   params: {
+  //     workspaceId: workspaceId,
+  //   },
+  // });
   const isHomePage = matchRoute({
     to: "/workspaces/$workspaceId",
     params: {
@@ -69,7 +75,7 @@ export const CreateTaskForm = ({
   });
 
   // pass true if the route is /workspaces/$workspaceId/tasks
-  const projectId = useProjectId(!!isTaskPage || !!isHomePage);
+  const projectId = useProjectId(!!isHomePage);
 
   const { taskStatus } = useTaskModalStore();
   const { mutate: createTask, isPending: isCreatingTask } = useCreateTask();
@@ -80,6 +86,7 @@ export const CreateTaskForm = ({
       status:
         taskStatus === "ALL" || taskStatus === null ? undefined : taskStatus,
       projectId: projectId ?? undefined,
+      priority: "0",
     },
   });
 
@@ -101,6 +108,7 @@ export const CreateTaskForm = ({
         dueDate: values.dueDate.toISOString(),
         assigneeId: values.assigneeId as Id<"users">,
         projectId: values.projectId as Id<"projects">,
+        priority: Number(values.priority) as TaskPriorityType,
       },
       {
         onSuccess(taskId) {
@@ -130,14 +138,12 @@ export const CreateTaskForm = ({
   };
 
   return (
-    <Card className="w-full h-full border-none shadow-none gap-4">
-      <CardHeader className="flex p-4">
+    <Card className="w-full h-full border-none p-0 py-2 shadow-none gap-1">
+      <CardHeader className="flex p-2 px-4">
         <CardTitle className="text-lg font-bold">Create a new Task</CardTitle>
       </CardHeader>
-      <div className="px-7">
-        <DottedSeparator />
-      </div>
-      <CardContent className="p-4">
+
+      <CardContent className="p-4 py-2">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-4">
@@ -198,6 +204,7 @@ export const CreateTaskForm = ({
                                 <MemberAvatar
                                   name={member?.name ?? ""}
                                   className="size-6"
+                                  imageUrl={member.imageUrl}
                                 />
                                 {member.name}
                               </div>
@@ -211,47 +218,88 @@ export const CreateTaskForm = ({
                 }}
               />
 
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>Select Status</FormLabel>
-                      <Select
-                        defaultValue={
-                          taskStatus === "ALL" || taskStatus === null
-                            ? undefined
-                            : taskStatus
-                        }
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Status" />
-                          </SelectTrigger>
-                        </FormControl>
+              {projectTaskStatus && (
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormLabel>Select Status</FormLabel>
+                        <Select
+                          defaultValue={
+                            taskStatus === "ALL" || taskStatus === null
+                              ? undefined
+                              : taskStatus
+                          }
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <FormMessage />
+                          <SelectContent>
+                            {projectTaskStatus.map((task) => (
+                              <SelectItem
+                                value={task.issueName}
+                                key={task.issueName}
+                              >
+                                {task.issueName.toLocaleUpperCase()}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
-                        <SelectContent>
-                          <SelectItem value={TaskStatus.BACKLOG}>
-                            BACKLOG
-                          </SelectItem>
-                          <SelectItem value={TaskStatus.DONE}>DONE</SelectItem>
-                          <SelectItem value={TaskStatus.IN_PROGRESS}>
-                            IN PROGRESS
-                          </SelectItem>
-                          <SelectItem value={TaskStatus.IN_REVIEW}>
-                            IN REVIEW
-                          </SelectItem>
-                          <SelectItem value={TaskStatus.TODO}>TODO</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
+                      </FormItem>
+                    );
+                  }}
+                />
+              )}
+              {
+                <FormField
+                  control={form.control}
+                  name="priority"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormLabel>Select Priority</FormLabel>
+                        <Select
+                          defaultValue={"0"}
+                          value={field.value.toLocaleString()}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectValue />
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select Priority" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <FormMessage />
+                          <SelectContent>
+                            {TaskPriority.map((priority) => {
+                              const PriorityIcon =
+                                TaskPriorityIconMapper[priority];
+                              return (
+                                <SelectItem
+                                  value={priority.toLocaleString()}
+                                  key={priority}
+                                >
+                                  <PriorityIcon className="size-5" />
+                                  {TaskPriorityMapper[priority]}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              }
               <FormField
                 control={form.control}
                 name="projectId"
@@ -283,7 +331,9 @@ export const CreateTaskForm = ({
                                       className="size-6"
                                       image={project.imageUrl}
                                     />
-                                    {project.name}
+                                    <p className="truncate">
+                                      {truncateString(project.name, 3, 20)}
+                                    </p>
                                   </div>
                                 </SelectItem>
                               );
@@ -301,8 +351,8 @@ export const CreateTaskForm = ({
                 }}
               />
             </div>
-            <DottedSeparator className="py-7" />
-            <div className="flex items-center justify-between">
+            {/* <DottedSeparator className="py-7" /> */}
+            <div className="flex items-center mt-4 justify-between">
               <Button
                 type="button"
                 size="lg"

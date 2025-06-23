@@ -21,18 +21,18 @@ const WorkspaceAnalytics = ({ workspaceId }: WorkspaceAnalyticsProps) => {
   }
 
   return (
-    <ScrollArea className="border rounded-lg w-full whitespace-nowrap shrink-0">
-      <div className="w-full flex flex-row">
-        <div className="flex w-full items-center flex-1 shrink-0 ">
+    <ScrollArea className="rounded-lg w-full whitespace-nowrap shrink-0">
+      <div className="w-full gap-x-2 flex flex-row">
+        <div className="flex border rounded-xl w-full items-center flex-1 shrink-0 ">
           <AnalyticsCard
             title="Total Tasks"
             value={workspaceAnalyticsData.taskCount}
             variant={workspaceAnalyticsData.taskDifference > 0 ? "up" : "down"}
             increaseValue={workspaceAnalyticsData.taskDifference}
           />
-          <DottedSeparator direction="vertical" />
         </div>
-        <div className="flex w-full items-center flex-1">
+        <DottedSeparator direction="vertical" />
+        <div className="flex w-full items-center rounded-xl border flex-1">
           <AnalyticsCard
             title="Assigned Tasks"
             value={workspaceAnalyticsData.assignedTaskCount}
@@ -41,10 +41,10 @@ const WorkspaceAnalytics = ({ workspaceId }: WorkspaceAnalyticsProps) => {
             }
             increaseValue={workspaceAnalyticsData.assignedTaskDifference}
           />
-          <DottedSeparator direction="vertical" />
+          {/* <DottedSeparator direction="vertical" /> */}
         </div>
 
-        <div className="flex w-full items-center flex-1">
+        {/* <div className="flex w-full items-center flex-1">
           <AnalyticsCard
             title="Completed Tasks"
             value={workspaceAnalyticsData.completedTaskCount}
@@ -67,8 +67,8 @@ const WorkspaceAnalytics = ({ workspaceId }: WorkspaceAnalyticsProps) => {
             increaseValue={workspaceAnalyticsData.incompleteTaskDifference}
           />
           <DottedSeparator direction="vertical" />
-        </div>
-        <div className="flex items-center flex-1">
+        </div> */}
+        {/* <div className="flex items-center flex-1">
           <AnalyticsCard
             title="OverDue Tasks"
             value={workspaceAnalyticsData.overDueTaskCount}
@@ -77,7 +77,7 @@ const WorkspaceAnalytics = ({ workspaceId }: WorkspaceAnalyticsProps) => {
             }
             increaseValue={workspaceAnalyticsData.overdueTaskDifference}
           />
-        </div>
+        </div> */}
       </div>
       <ScrollBar orientation="horizontal" />
     </ScrollArea>

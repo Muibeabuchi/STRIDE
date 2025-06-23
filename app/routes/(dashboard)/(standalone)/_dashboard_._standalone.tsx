@@ -22,7 +22,7 @@ function StandaloneLayout() {
   const { showAuthContent } = useProtectAuthPage();
   if (!showAuthContent) return null;
   return (
-    <main className="bg-neutral-100 min-h-screen ">
+    <main className=" min-h-screen w-full">
       <div className="mx-auto max-w-screen-2xl p-4">
         <nav className="flex items-center justify-between h-[73px]">
           <Link to="/">
@@ -30,7 +30,7 @@ function StandaloneLayout() {
           </Link>
           <UserButton />
         </nav>
-        <div className="flex py-4 flex-col justify-center h-full items-center">
+        <div className="flex w-full py-4 flex-col justify-center h-full items-center">
           <Outlet />
         </div>
       </div>

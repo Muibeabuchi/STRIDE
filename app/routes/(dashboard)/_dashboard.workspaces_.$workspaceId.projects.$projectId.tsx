@@ -11,7 +11,16 @@ import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
-import { PencilIcon } from "lucide-react";
+import {
+  CalendarDays,
+  Cog,
+  Columns3,
+  Kanban,
+  PencilIcon,
+  PlusIcon,
+  SlidersHorizontal,
+  Table,
+} from "lucide-react";
 import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
 import {
@@ -19,9 +28,30 @@ import {
   taskViewSearchSchema,
 } from "../../features/tasks/schema";
 import { Suspense } from "react";
-import Analytics from "@/features/projects/components/project-analytics";
 import ProjectAnalytics from "@/features/projects/components/project-analytics";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useGetMember } from "@/features/members/api/use-get-member";
+import { truncateString } from "@/utils/truncate-words";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useIsMobile } from "@/hooks/use-advanced-is-mobile";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { FcDisplay } from "react-icons/fc";
+import { CustomToolTip } from "@/components/custom-tooltip";
+import { cn } from "@/lib/utils";
+import { useCreateTask } from "@/features/tasks/api/use-create-task";
+import { useTaskModalStore } from "@/store/store";
+import { TaskPriorityType } from "convex/schema";
+// import { useIsMobile } from "@/hooks/use-mobile";
+// import { truncateWords } from "@/utils/truncate-words";
 
 export const Route = createFileRoute(
   "/(dashboard)/_dashboard/workspaces_/$workspaceId/projects/$projectId"
@@ -52,7 +82,7 @@ function ProjectInfoSkeleton() {
 
 function RouteComponent() {
   const { projectId: projId, workspaceId } = Route.useParams();
-  const { status, taskView, assigneeId, dueDate, projectId } =
+  const { status, taskView, assigneeId, dueDate, projectId, priority } =
     Route.useSearch();
   const navigate = Route.useNavigate();
   const {
@@ -64,12 +94,20 @@ function RouteComponent() {
     workspaceId,
   });
 
+  const { open } = useTaskModalStore();
+  // const isMobile = useIsMobile();
+
+  const { data: workspaceMember, isLoading: isLoadingWorkspaceMember } =
+    useGetMember(workspaceId);
+
   const handleTaskViewChange = (tab: string) => {
     navigate({
       to: ".",
       search: {
         taskView: tabSchema.parse(tab),
-        projectId,
+
+        //? What does this change
+        projectId: projId,
         // projectId,
       },
     });
@@ -114,54 +152,187 @@ function RouteComponent() {
       }),
     });
   };
+  const onPriorityChange = (value: TaskPriorityType | undefined) => {
+    navigate({
+      to: ".",
+      search: (search) => ({
+        ...search,
+        priority: value,
+      }),
+    });
+  };
+
+  const handleOpenCreateTaskModal = () => {
+    open("ALL");
+  };
 
   return (
-    <div className="flex flex-col gap-y-4">
-      <div className="flex items-center justify-between">
-        {project === undefined || isLoading || isPending ? (
-          <ProjectInfoSkeleton />
-        ) : (
-          <div className="flex items-center gap-x-2">
-            <ProjectAvatar
-              name={project.projectName}
-              image={project.projectImage}
-              className="size-8"
-            />
-            <p className="text-lg font-semibold">{project.projectName}</p>
-          </div>
-        )}
-        <div className="">
-          <Button size="sm" asChild variant={"secondary"}>
-            <Link
-              to={"/workspaces/$workspaceId/projects/$projectId/settings"}
-              params={{
-                projectId: projId,
-                workspaceId,
-              }}
+    <div className="flex flex-col h-full gap-y-4 ">
+      <Tabs
+        // className="flex-1 w-full h-full border rounded-lg"
+        defaultValue={taskView}
+        value={taskView}
+        onValueChange={handleTaskViewChange}
+        className="h-full"
+      >
+        <div className="flex items-center  pb-4 justify-between  ml-10">
+          {project === undefined ||
+          isLoading ||
+          isPending ||
+          workspaceMember === undefined ||
+          isLoadingWorkspaceMember ? (
+            <ProjectInfoSkeleton />
+          ) : (
+            <div className="flex items-center gap-x-2 ">
+              <ProjectAvatar
+                name={project.projectName}
+                image={project.projectImage}
+                className="size-8"
+              />
+              <p className="text-lg font-semibold">
+                {truncateString(project.projectName)}
+              </p>
+            </div>
+          )}
+
+          <div className="flex gap-x-2 lg:gap-x-4 h-full items-center">
+            {/* CreateN ew Project Button */}
+
+            <Button
+              className="lg:mr-3 mr-0 "
+              onClick={handleOpenCreateTaskModal}
             >
-              <PencilIcon className="size-4 mr-2" />
-              Edit Project
-            </Link>
-          </Button>
+              <PlusIcon className="size-4 " />
+
+              <span className="hidden lg:block">New Task</span>
+            </Button>
+            {/* dropdown */}
+            <DropdownMenu>
+              <CustomToolTip content="Display">
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost">
+                    <SlidersHorizontal className="size-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+              </CustomToolTip>
+              <DropdownMenuContent
+                className="w-auto p-3 flex gap-y-2 flex-col"
+                align="end"
+              >
+                <div className="flex gap-x-3 items-center">
+                  <DropdownMenuGroup className="flex gap-x-3 items-center">
+                    <DropdownMenuItem asChild className="!focus:bg-none">
+                      <Button
+                        className={cn(
+                          " flex-col bg-sidebar-primary !hover:bg-sidebar-primary/70  border   w-40 h-15",
+                          {
+                            "bg-muted hover:bg-muted-foreground/70":
+                              taskView !== "table",
+                          }
+                        )}
+                        onClick={() => handleTaskViewChange("table")}
+                      >
+                        <Table
+                          className={cn("size-5 text-foreground", {
+                            "text-white/60 ": taskView !== "kanban",
+                          })}
+                        />
+                        <p
+                          className={cn("text-[10px] text-foreground ", {
+                            "text-white/60 ": taskView !== "kanban",
+                          })}
+                        >
+                          Table
+                        </p>
+                      </Button>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuGroup className="flex gap-x-3 items-center">
+                    <DropdownMenuItem className="!focus:bg-none" asChild>
+                      <Button
+                        className={cn(
+                          " flex-col  border bg-sidebar-primary hover:bg-sidebar-primary/70 w-40 h-15",
+                          {
+                            "bg-muted  hover:bg-muted-foreground/70":
+                              taskView !== "kanban",
+                          }
+                        )}
+                        onClick={() => handleTaskViewChange("kanban")}
+                      >
+                        <Kanban
+                          className={cn("size-5  text-foreground", {
+                            "text-white/60 ": taskView !== "table",
+                          })}
+                        />
+                        <p
+                          className={cn("text-[10px] text-foreground ", {
+                            "text-white/60 ": taskView !== "table",
+                          })}
+                        >
+                          Kanban
+                        </p>
+                        {/* <p className="text-[10px]  dark:text-foreground text-white">
+                      
+                    </p> */}
+                      </Button>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </div>
+                {/* {taskView === "kanban" && (
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <Button variant="outline" className="w-full">
+                        <span className="text-xs">Collapsed Columns</span>
+                      </Button>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                )} */}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Todo: Hide this buttonLink for non-admin users */}
+            {workspaceMember?.role === "admin" && (
+              <CustomToolTip content="Settings">
+                <Button size="sm" className="p-0" asChild>
+                  <Link
+                    to={"/workspaces/$workspaceId/projects/$projectId/settings"}
+                    params={{
+                      projectId: projId,
+                      workspaceId,
+                    }}
+                    className="flex items-center justify-center "
+                  >
+                    <Cog className="size-4 " />
+                  </Link>
+                </Button>
+              </CustomToolTip>
+            )}
+          </div>
         </div>
-      </div>
-      {/* Analytics component */}
-      <ProjectAnalytics workspaceId={workspaceId} projectId={projId} />
-      <TaskViewSwitcher
-        projectId={projectId}
-        workspaceId={workspaceId}
-        hideProjectFilter={true}
-        status={status}
-        assigneeId={assigneeId}
-        dueDate={dueDate}
-        taskView={taskView}
-        onAssigneeIdChange={onAssigneeIdChange}
-        onDueDateChange={onDueDateChange}
-        onProjectIdChange={onProjectIdChange}
-        onStatusChange={onStatusChange}
-        handleTaskViewChange={handleTaskViewChange}
-      />
-      <Outlet />
+        {/* Analytics component */}
+        {/* <ProjectAnalytics workspaceId={workspaceId} projectId={projId} /> */}
+
+        {/* TabList */}
+
+        <TaskViewSwitcher
+          // ? Changing this has what effect?
+          projectId={projId}
+          workspaceId={workspaceId}
+          hideProjectFilter={true}
+          status={status}
+          assigneeId={assigneeId}
+          dueDate={dueDate}
+          taskView={taskView}
+          priority={priority}
+          onPriorityChange={onPriorityChange}
+          onAssigneeIdChange={onAssigneeIdChange}
+          onDueDateChange={onDueDateChange}
+          onProjectIdChange={onProjectIdChange}
+          onStatusChange={onStatusChange}
+          handleTaskViewChange={handleTaskViewChange}
+        />
+        <Outlet />
+      </Tabs>
     </div>
   );
 }

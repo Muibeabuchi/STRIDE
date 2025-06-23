@@ -1,5 +1,6 @@
 import React from "react";
 import { Shield, Home, ArrowLeft } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
 
 interface UnauthorizedProps {
   title?: string;
@@ -18,6 +19,7 @@ const Unauthorized = ({
   onHomeClick,
   onBackClick,
 }: UnauthorizedProps) => {
+  const navigate = useNavigate();
   const handleHomeClick = () => {
     if (onHomeClick) {
       onHomeClick();

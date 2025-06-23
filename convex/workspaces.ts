@@ -135,6 +135,8 @@ export const getWorkspaceAnalytics = authorizedWorkspaceQuery({
 
     const taskDifference = thisMonthTasks.length - lastMonthTasks.length;
 
+    // find the total tasks in th
+
     const thisMonthAssignedTasks = await filter(
       ctx.db
         .query("tasks")
@@ -157,85 +159,85 @@ export const getWorkspaceAnalytics = authorizedWorkspaceQuery({
 
     const assignedTaskDifference =
       thisMonthAssignedTasks.length - lastMonthAssignedTasks.length;
+    // TODO:: Remove the completed and uncompleted analytics
+    // const thisMonthIncompleteTasks = await filter(
+    //   ctx.db
+    //     .query("tasks")
+    //     .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
+    //   (q) =>
+    //     q._creationTime <= thisMonthEnd.getTime() &&
+    //     q._creationTime >= thisMonthStart.getTime() &&
+    //     q.status !== "DONE"
+    // ).collect();
 
-    const thisMonthIncompleteTasks = await filter(
-      ctx.db
-        .query("tasks")
-        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
-      (q) =>
-        q._creationTime <= thisMonthEnd.getTime() &&
-        q._creationTime >= thisMonthStart.getTime() &&
-        q.status !== "DONE"
-    ).collect();
+    // const lastMonthIncompleteTasks = await filter(
+    //   ctx.db
+    //     .query("tasks")
+    //     .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
+    //   (q) =>
+    //     q._creationTime <= previousMonthEnd.getTime() &&
+    //     q._creationTime >= previousMonthStart.getTime() &&
+    //     q.status !== "DONE"
+    // ).collect();
 
-    const lastMonthIncompleteTasks = await filter(
-      ctx.db
-        .query("tasks")
-        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
-      (q) =>
-        q._creationTime <= previousMonthEnd.getTime() &&
-        q._creationTime >= previousMonthStart.getTime() &&
-        q.status !== "DONE"
-    ).collect();
+    // const incompleteTaskDifference =
+    //   thisMonthIncompleteTasks.length - lastMonthIncompleteTasks.length;
 
-    const incompleteTaskDifference =
-      thisMonthIncompleteTasks.length - lastMonthIncompleteTasks.length;
+    // const thisMonthCompleteTasks = await filter(
+    //   ctx.db
+    //     .query("tasks")
+    //     .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
+    //   (q) =>
+    //     q._creationTime <= thisMonthEnd.getTime() &&
+    //     q._creationTime >= thisMonthStart.getTime() &&
+    //     q.status === "DONE"
+    // ).collect();
 
-    const thisMonthCompleteTasks = await filter(
-      ctx.db
-        .query("tasks")
-        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
-      (q) =>
-        q._creationTime <= thisMonthEnd.getTime() &&
-        q._creationTime >= thisMonthStart.getTime() &&
-        q.status === "DONE"
-    ).collect();
+    // const lastMonthCompleteTasks = await filter(
+    //   ctx.db
+    //     .query("tasks")
+    //     .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
+    //   (q) =>
+    //     q._creationTime <= previousMonthEnd.getTime() &&
+    //     q._creationTime >= previousMonthStart.getTime() &&
+    //     q.status === "DONE"
+    // ).collect();
 
-    const lastMonthCompleteTasks = await filter(
-      ctx.db
-        .query("tasks")
-        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
-      (q) =>
-        q._creationTime <= previousMonthEnd.getTime() &&
-        q._creationTime >= previousMonthStart.getTime() &&
-        q.status === "DONE"
-    ).collect();
+    // const completedTaskDifference =
+    //   thisMonthCompleteTasks.length - lastMonthCompleteTasks.length;
 
-    const completedTaskDifference =
-      thisMonthCompleteTasks.length - lastMonthCompleteTasks.length;
+    // const thisMonthOverdueTasks = await filter(
+    //   ctx.db
+    //     .query("tasks")
+    //     .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
+    //   (q) =>
+    //     q._creationTime <= thisMonthEnd.getTime() &&
+    //     q._creationTime >= thisMonthStart.getTime() &&
+    //     q.status !== "DONE" &&
+    //     new Date(q.dueDate) <= now
+    // ).collect();
 
-    const thisMonthOverdueTasks = await filter(
-      ctx.db
-        .query("tasks")
-        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
-      (q) =>
-        q._creationTime <= thisMonthEnd.getTime() &&
-        q._creationTime >= thisMonthStart.getTime() &&
-        q.status !== "DONE" &&
-        new Date(q.dueDate) <= now
-    ).collect();
+    // const lastMonthOverdueTasks = await filter(
+    //   ctx.db
+    //     .query("tasks")
+    //     .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
+    //   (q) =>
+    //     q._creationTime <= previousMonthEnd.getTime() &&
+    //     q._creationTime >= previousMonthStart.getTime() &&
+    //     q.status !== "DONE" &&
+    //     new Date(q.dueDate) <= now
+    // ).collect();
 
-    const lastMonthOverdueTasks = await filter(
-      ctx.db
-        .query("tasks")
-        .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId)),
-      (q) =>
-        q._creationTime <= previousMonthEnd.getTime() &&
-        q._creationTime >= previousMonthStart.getTime() &&
-        q.status !== "DONE" &&
-        new Date(q.dueDate) <= now
-    ).collect();
-
-    const overdueTaskDifference =
-      thisMonthOverdueTasks.length - lastMonthOverdueTasks.length;
+    // const overdueTaskDifference =
+    //   thisMonthOverdueTasks.length - lastMonthOverdueTasks.length;
 
     return {
-      completedTaskDifference,
-      completedTaskCount: thisMonthCompleteTasks.length,
-      overdueTaskDifference,
-      overDueTaskCount: thisMonthOverdueTasks.length,
-      incompleteTaskDifference,
-      incompleteTaskCount: thisMonthIncompleteTasks.length,
+      // completedTaskDifference,
+      // completedTaskCount: thisMonthCompleteTasks.length,
+      // overdueTaskDifference,
+      // overDueTaskCount: thisMonthOverdueTasks.length,
+      // incompleteTaskDifference,
+      // incompleteTaskCount: thisMonthIncompleteTasks.length,
       assignedTaskDifference,
       assignedTaskCount: thisMonthAssignedTasks.length,
       taskDifference,

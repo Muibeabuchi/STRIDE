@@ -8,9 +8,11 @@ import { getTaskByIdResponse } from "convex/schema";
 import TaskDate from "./task-date";
 import { Badge } from "@/components/ui/badge";
 import { snakeCaseToTitleCase } from "@/lib/utils";
-import { TaskStatus } from "../schema";
+// import { TaskStatus } from "../schema";
 import { useEditTask } from "../api/use-edit-task";
 import { useEditTaskModalStore } from "@/store/store";
+import { TaskPriorityMapper } from "convex/constants";
+import { TaskPriorityIconMapper } from "@/lib/constants";
 
 interface TaskOverviewProps {
   task: getTaskByIdResponse;
@@ -18,6 +20,10 @@ interface TaskOverviewProps {
 
 const TaskOverview = ({ task }: TaskOverviewProps) => {
   const { openEditTaskModal } = useEditTaskModalStore();
+  const priority = task.priority
+    ? TaskPriorityMapper[task.priority]
+    : TaskPriorityMapper[0];
+  const PriorityIcon = TaskPriorityIconMapper[task.priority ?? 0];
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
       <div className="bg-muted p-4 rounded-lg">
@@ -35,16 +41,24 @@ const TaskOverview = ({ task }: TaskOverviewProps) => {
         <DottedSeparator className="my-4 " />
         <div className="flex flex-col gap-y-4">
           <OverviewProperty label="Assignee">
-            <MemberAvatar name={task.assignee.name} className="size-6" />
+            <MemberAvatar
+              name={task.assignee.name}
+              className="size-6"
+              imageUrl={task.assignee.imageUrl}
+            />
             <p className="text-sm font-medium">{task.assignee.name}</p>
           </OverviewProperty>
           <OverviewProperty label="Due Date">
             <TaskDate value={task.dueDate} className="text-sm font-medium" />
           </OverviewProperty>
+          <OverviewProperty label="Priority">
+            <PriorityIcon className="size-4" />
+            <span className="text-sm font-semibold font-sans">{priority}</span>
+
+            {/* <TaskDate value={priority} className="text-sm font-medium" /> */}
+          </OverviewProperty>
           <OverviewProperty label="Due Date">
-            <Badge variant={TaskStatus[task.status]}>
-              {snakeCaseToTitleCase(task.status)}
-            </Badge>
+            <Badge>{snakeCaseToTitleCase(task.status)}</Badge>
           </OverviewProperty>
         </div>
       </div>

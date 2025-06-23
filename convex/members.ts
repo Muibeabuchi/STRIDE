@@ -27,12 +27,15 @@ export const get = authenticatedUserQuery({
 
     return await Promise.all(
       members.map(async (member) => {
-        const userData = await ctx.db.get(member.userId);
-        if (!userData) throw new ConvexError("Error while fetching userData");
+        const memberData = await ctx.db.get(member.userId);
+
+        if (!memberData)
+          throw new ConvexError("Error while fetching memberData");
         return {
           ...member,
-          userName: userData.name,
-          userEmail: userData.email,
+          userName: memberData.name,
+          userEmail: memberData.email,
+          userImage: memberData.image,
         };
       })
     );

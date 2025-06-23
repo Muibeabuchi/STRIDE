@@ -26,7 +26,7 @@ export const WorkspaceAvatar = ({
   return (
     <Avatar className={cn("size-7 rounded-md", className)}>
       {/* not using the avatar image component due to noticeable flickering effect */}
-      <AvatarFallback className="text-white rounded-md  bg-blue-600 font-semibold text-lg uppercase">
+      <AvatarFallback className=" rounded-md font-semibold text-lg uppercase">
         {avatarFallback}
       </AvatarFallback>
     </Avatar>

@@ -34,10 +34,10 @@ const MemberList = ({ workspaceId }: MemberListProps) => {
 
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-white border rounded-lg p-4">
+      <div className="space-y-5  border rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">People ({members.length})</p>
-          <Button variant="secondary" size="icon">
+          <Button variant="outline" size="icon">
             <Link
               to="/workspaces/$workspaceId/members"
               params={{
@@ -49,8 +49,6 @@ const MemberList = ({ workspaceId }: MemberListProps) => {
           </Button>
         </div>
 
-        <DottedSeparator className="my-4" />
-
         <ul className="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 gap-4">
           {members.map((member) => (
             <li key={member._id}>
@@ -59,6 +57,7 @@ const MemberList = ({ workspaceId }: MemberListProps) => {
                   <MemberAvatar
                     className="size-12"
                     name={member.userName ?? ""}
+                    imageUrl={member.userImage}
                   />
                   <div className="flex items-center overflow-hidden flex-col">
                     <p className="font-medium text-[9px] truncate line-clamp-1 sm:hidden lg:block">

@@ -23,19 +23,19 @@ const ProjectList = ({ workspaceId }: ProjectListProps) => {
   const { open } = useProjectModalStore();
 
   if (isLoading || isPending || projects === undefined) {
-  return <ProjectListSkeleton />;
+    return <ProjectListSkeleton />;
   }
   return (
     <div className="flex flex-col gap-y-4 col-span-1">
-      <div className="bg-white border rounded-lg p-4">
+      <div className="space-y-5  border rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Projects ({projects.length})</p>
-          <Button variant={"secondary"} size="icon" onClick={open}>
+          <Button variant={"outline"} size="icon" onClick={open}>
             <PlusIcon className="size-4 text-neutral-400" />
           </Button>
         </div>
 
-        <DottedSeparator className="my-4" />
+        {/* <DottedSeparator className="my-4" /> */}
 
         <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {projects.map((project) => (
@@ -64,8 +64,8 @@ const ProjectList = ({ workspaceId }: ProjectListProps) => {
             </li>
           ))}
 
-          <li className="text-sm  text-muted-foreground text-center hidden first-of-type:block">
-            No Project Found
+          <li className="text-sm w-full text-muted-foreground  hidden first-of-type:block">
+            You Currently have no Projects
           </li>
         </ul>
       </div>

@@ -19,6 +19,11 @@ const TaskDescription = ({ task }: TaskDescriptionProps) => {
   const textAreRef = useRef<HTMLTextAreaElement | null>(null);
 
   const handleEditDescription = async () => {
+    // if (description && description.trim().length === 0) return;
+    if (!descriptionLengthIsValid) return;
+
+    if (!description) return;
+    if (descriptionHasChanged) return;
     try {
       setIsSavingDescription(true);
       await editTaskDescription({
@@ -48,6 +53,14 @@ const TaskDescription = ({ task }: TaskDescriptionProps) => {
     [isEditingDescription]
   );
 
+  const descriptionHasChanged =
+    task.description && description
+      ? task.description.trim() === description.trim()
+      : false;
+
+  const descriptionLengthIsValid =
+    description && description.trim().length !== 0;
+
   return (
     <div className="p-4 border rounded-lg">
       <div className="flex items-center justify-between">
@@ -71,24 +84,28 @@ const TaskDescription = ({ task }: TaskDescriptionProps) => {
       </div>
       <DottedSeparator className="my-4" />
       {isEditingDescription ? (
-        <div className="flex flex-col gap-y-4">
+        <div className="flex flex-col  gap-y-4 max-h-[100px]">
           <Textarea
             value={description}
             ref={textAreRef}
-            className="resize-none"
-            rows={4}
+            className="resize-none h-full scrollbar-hide overflow-y-auto"
+            rows={8}
             placeholder="Add a description to this task"
             onChange={(e) => setDescription(e.target.value)}
             disabled={isSavingDescription}
           />
-          <Button
-            size="sm"
-            className="w-fit ml-auto"
-            onClick={handleEditDescription}
-            disabled={isSavingDescription}
-          >
-            {isSavingDescription ? "Saving..." : "Save"}
-          </Button>
+          {description &&
+            !descriptionHasChanged &&
+            descriptionLengthIsValid && (
+              <Button
+                size="sm"
+                className="w-fit ml-auto"
+                onClick={handleEditDescription}
+                disabled={isSavingDescription}
+              >
+                {isSavingDescription ? "Saving..." : "Save"}
+              </Button>
+            )}
         </div>
       ) : (
         <div className="">

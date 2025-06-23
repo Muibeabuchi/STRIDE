@@ -15,7 +15,7 @@ export function useProjectId(createTask: boolean) {
   const projectId = (params?.projectId || params1?.projectId) ?? null;
 
   if (!projectId && createTask) return null;
-  if (!projectId) throw new Error("projectId does not exist");
+  // if (!projectId) throw new Error("projectId does not exist");
 
   return projectId;
 }
