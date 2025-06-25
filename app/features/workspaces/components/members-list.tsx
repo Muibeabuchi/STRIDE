@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useGetMember } from "@/features/members/api/use-get-member";
 import { useLeaveWorkspace } from "../api/use-leave-workspace";
+import { truncateString } from "@/utils/truncate-words";
 
 type MemberType = {
   userName: string | undefined;
@@ -215,22 +216,21 @@ export const MembersList = ({
                 <div className={"flex flex-col"}>
                   <p className={"text-sm font-medium"}>{member.userName}</p>
                   <p className={"text-xs text-muted-foreground"}>
-                    {member.userEmail}
+                    {truncateString(member.userEmail || "")}
                   </p>
+                  <Badge
+                    variant={"outline"}
+                    className={cn(
+                      "mt-2",
+                      member.role === "admin" && "bg-green-500",
+                      member.role === "member" && "bg-gray-500"
+                    )}
+                  >
+                    {member.role}
+                  </Badge>
                 </div>
 
                 {/* create a badge for displaying the members role */}
-                <Badge
-                  variant={"outline"}
-                  className={cn(
-                    "ml-3 self-end",
-                    member.role === "admin" && "bg-green-500",
-                    member.role === "member" && "bg-gray-500"
-                  )}
-                >
-                  {member.role}
-                </Badge>
-
                 {memberRole === "member" &&
                   member._id === workspaceMember._id && (
                     <DropdownMenu>
