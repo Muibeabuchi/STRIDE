@@ -18,7 +18,6 @@ import { Route as dashboardDashboardImport } from './routes/(dashboard)/_dashboa
 import { Route as authAuthImport } from './routes/(auth)/_auth'
 import { Route as dashboardDashboardWorkspacesWorkspaceIdImport } from './routes/(dashboard)/_dashboard.workspaces.$workspaceId'
 import { Route as dashboardstandaloneDashboardstandaloneImport } from './routes/(dashboard)/(standalone)/_dashboard_._standalone'
-import { Route as authAuthSignUpSplatImport } from './routes/(auth)/_auth.sign-up.$'
 import { Route as authAuthSignInSplatImport } from './routes/(auth)/_auth.sign-in.$'
 import { Route as dashboardDashboardWorkspacesWorkspaceIdTasksTaskIdImport } from './routes/(dashboard)/_dashboard.workspaces_.$workspaceId_.tasks_.$taskId'
 import { Route as dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdImport } from './routes/(dashboard)/_dashboard.workspaces_.$workspaceId.projects.$projectId'
@@ -82,12 +81,6 @@ const dashboardstandaloneDashboardstandaloneRoute =
     id: '/_standalone',
     getParentRoute: () => dashboardstandaloneDashboardRoute,
   } as any)
-
-const authAuthSignUpSplatRoute = authAuthSignUpSplatImport.update({
-  id: '/sign-up/$',
-  path: '/sign-up/$',
-  getParentRoute: () => authAuthRoute,
-} as any)
 
 const authAuthSignInSplatRoute = authAuthSignInSplatImport.update({
   id: '/sign-in/$',
@@ -198,13 +191,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authAuthSignInSplatImport
       parentRoute: typeof authAuthImport
     }
-    '/(auth)/_auth/sign-up/$': {
-      id: '/(auth)/_auth/sign-up/$'
-      path: '/sign-up/$'
-      fullPath: '/sign-up/$'
-      preLoaderRoute: typeof authAuthSignUpSplatImport
-      parentRoute: typeof authAuthImport
-    }
     '/(dashboard)/(standalone)/_dashboard_': {
       id: '/(dashboard)/(standalone)/_dashboard_'
       path: '/'
@@ -282,12 +268,10 @@ declare module '@tanstack/react-router' {
 
 interface authAuthRouteChildren {
   authAuthSignInSplatRoute: typeof authAuthSignInSplatRoute
-  authAuthSignUpSplatRoute: typeof authAuthSignUpSplatRoute
 }
 
 const authAuthRouteChildren: authAuthRouteChildren = {
   authAuthSignInSplatRoute: authAuthSignInSplatRoute,
-  authAuthSignUpSplatRoute: authAuthSignUpSplatRoute,
 }
 
 const authAuthRouteWithChildren = authAuthRoute._addFileChildren(
@@ -382,7 +366,6 @@ const dashboardRouteWithChildren = dashboardRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof dashboardstandaloneDashboardstandaloneRouteWithChildren
   '/sign-in/$': typeof authAuthSignInSplatRoute
-  '/sign-up/$': typeof authAuthSignUpSplatRoute
   '/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRoute
   '/workspaces/create': typeof dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute
   '/workspaces/$workspaceId/projects/$projectId': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute
@@ -396,7 +379,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof dashboardstandaloneDashboardstandaloneRouteWithChildren
   '/sign-in/$': typeof authAuthSignInSplatRoute
-  '/sign-up/$': typeof authAuthSignUpSplatRoute
   '/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRoute
   '/workspaces/create': typeof dashboardstandaloneDashboardstandaloneWorkspacesCreateRoute
   '/workspaces/$workspaceId/projects/$projectId': typeof dashboardDashboardWorkspacesWorkspaceIdProjectsProjectIdRoute
@@ -415,7 +397,6 @@ export interface FileRoutesById {
   '/(dashboard)': typeof dashboardRouteWithChildren
   '/(dashboard)/_dashboard': typeof dashboardDashboardRouteWithChildren
   '/(auth)/_auth/sign-in/$': typeof authAuthSignInSplatRoute
-  '/(auth)/_auth/sign-up/$': typeof authAuthSignUpSplatRoute
   '/(dashboard)/(standalone)/_dashboard_': typeof dashboardstandaloneDashboardRouteWithChildren
   '/(dashboard)/(standalone)/_dashboard_/_standalone': typeof dashboardstandaloneDashboardstandaloneRouteWithChildren
   '/(dashboard)/_dashboard/workspaces/$workspaceId': typeof dashboardDashboardWorkspacesWorkspaceIdRoute
@@ -433,7 +414,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/sign-in/$'
-    | '/sign-up/$'
     | '/workspaces/$workspaceId'
     | '/workspaces/create'
     | '/workspaces/$workspaceId/projects/$projectId'
@@ -446,7 +426,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/sign-in/$'
-    | '/sign-up/$'
     | '/workspaces/$workspaceId'
     | '/workspaces/create'
     | '/workspaces/$workspaceId/projects/$projectId'
@@ -463,7 +442,6 @@ export interface FileRouteTypes {
     | '/(dashboard)'
     | '/(dashboard)/_dashboard'
     | '/(auth)/_auth/sign-in/$'
-    | '/(auth)/_auth/sign-up/$'
     | '/(dashboard)/(standalone)/_dashboard_'
     | '/(dashboard)/(standalone)/_dashboard_/_standalone'
     | '/(dashboard)/_dashboard/workspaces/$workspaceId'
@@ -517,8 +495,7 @@ export const routeTree = rootRoute
       "filePath": "(auth)/_auth.tsx",
       "parent": "/(auth)",
       "children": [
-        "/(auth)/_auth/sign-in/$",
-        "/(auth)/_auth/sign-up/$"
+        "/(auth)/_auth/sign-in/$"
       ]
     },
     "/(dashboard)": {
@@ -539,10 +516,6 @@ export const routeTree = rootRoute
     },
     "/(auth)/_auth/sign-in/$": {
       "filePath": "(auth)/_auth.sign-in.$.tsx",
-      "parent": "/(auth)/_auth"
-    },
-    "/(auth)/_auth/sign-up/$": {
-      "filePath": "(auth)/_auth.sign-up.$.tsx",
       "parent": "/(auth)/_auth"
     },
     "/(dashboard)/(standalone)/_dashboard_": {

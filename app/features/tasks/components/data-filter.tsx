@@ -66,6 +66,7 @@ const DataFilter = ({
   const [projects, members] = useGetTaskFormData();
 
   const isMobile = useIsMobile(534);
+  const hidePriority = useIsMobile(720);
 
   const isLoading = projects.isPending || members.isPending;
 
@@ -88,7 +89,7 @@ const DataFilter = ({
   const projectTaskStatus = projects.data[0]?.projectTaskStatus;
 
   return (
-    <div className="flex flex-row gap-2 w-fit items-center">
+    <div className="flex flex-row gap-2 flex-wrap md:flex-nowrap w-full  md:w-fit items-center">
       <Select
         defaultValue={status || "ALL"}
         value={status}
@@ -104,12 +105,12 @@ const DataFilter = ({
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex pr-2 items-center">
             <ListChecksIcon className="size-4 mr-2" />
-            {isMobile && (
+            {
               <SelectValue
                 placeholder="All Status"
                 className="hidden lg:flex"
               />
-            )}
+            }
           </div>
         </SelectTrigger>
         {projectTaskStatus === null ? null : (
@@ -134,7 +135,7 @@ const DataFilter = ({
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex pr-2 items-center">
             <UserIcon className="size-4 mr-2" />
-            {isMobile && <SelectValue placeholder="All Assignees" />}
+            {<SelectValue placeholder="All Assignees" />}
           </div>
         </SelectTrigger>
         <SelectContent>
@@ -173,7 +174,7 @@ const DataFilter = ({
         <SelectTrigger className="w-full lg:w-auto h-8">
           <div className="flex pr-2 items-center">
             <ListFilter className="size-4 mr-2" />
-            {!isMobile && <SelectValue placeholder="Priority" />}
+            {<SelectValue placeholder="Priority" />}
             {/* <SelectValue placeholder="Priority" /> */}
           </div>
         </SelectTrigger>
@@ -245,7 +246,7 @@ const DataFilter = ({
         />
         {dueDate && (
           <XIcon
-            className="size-4 p-0.5 absolute -top-1 -right-2 border border-muted-foreground   rounded-full"
+            className="size-4 p-0.5 absolute -top-1 -right-2 border border-muted-foreground    rounded-full"
             onClick={() => onDueDateChange(undefined)}
           />
         )}

@@ -53,13 +53,13 @@ export function SignInCard() {
   return (
     <Card className="w-full h-full md:w-[486px] border-none shadow-none ">
       <CardHeader className="flex items-center justify-center text-center p-7">
-        <CardTitle className="text-2xl">Welcome back!</CardTitle>
+        <CardTitle className="text-2xl">Welcome back to Stride!</CardTitle>
       </CardHeader>
-      <div className="px-7 ">
+      {/* <div className="px-7 ">
         <DottedSeparator />
-      </div>
+      </div> */}
 
-      <CardContent className="flex flex-col p-7 gap-y-4">
+      <CardContent className="flex h-full flex-col p-7 gap-y-4">
         <Button
           variant="outline"
           size="lg"
@@ -87,9 +87,7 @@ export function SignInCard() {
           Log In with Github
         </Button>
       </CardContent>
-      <div className="px-7">
-        <DottedSeparator />
-      </div>
+      <div className="px-7">{/* <DottedSeparator /> */}</div>
       {/* <CardContent className="p-7">
         <Form {...form}>
           <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
@@ -141,14 +139,14 @@ export function SignInCard() {
       {/* <div className="px-7">
         <DottedSeparator />
       </div> */}
-      <CardContent className="p-7 flex items-center justify-center">
+      {/* <CardContent className="p-7 flex items-center justify-center">
         <p className="">
           Don&apos;t have an account?
           <Link to="/sign-up/$">
             <span className="text-blue-700">Sign Up</span>
           </Link>
         </p>
-      </CardContent>
+      </CardContent> */}
     </Card>
   );
 }

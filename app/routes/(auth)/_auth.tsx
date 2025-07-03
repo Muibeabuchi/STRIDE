@@ -23,10 +23,10 @@ function RouteComponent() {
     from: "/(auth)/_auth/sign-in/$",
     shouldThrow: false,
   });
-  const signUpPageMatch = useMatch({
-    from: "/(auth)/_auth/sign-up/$",
-    shouldThrow: false,
-  });
+  // const signUpPageMatch = useMatch({
+  //   from: "/(auth)/_auth/sign-up/$",
+  //   shouldThrow: false,
+  // });
 
   // Todo: Write logic that redirects the user to the index page if they are authenticated
   useEffect(
@@ -52,18 +52,6 @@ function RouteComponent() {
         <div className="mx-auto max-w-screen-2xl p-4 h-full">
           <nav className="flex justify-between items-center ">
             <img src="/logo.svg" alt="logo" width={50} height={50} />
-            <>
-              {signInPageMatch && (
-                <Link to="/sign-up/$" className="font-semibold">
-                  Sign Up
-                </Link>
-              )}
-              {signUpPageMatch && (
-                <Link to="/sign-in/$" className="font-semibold  ">
-                  Sign In
-                </Link>
-              )}
-            </>
           </nav>
           <div className="flex flex-col items-center justify-center pt-4 md:pt-10">
             <Outlet />
