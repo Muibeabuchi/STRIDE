@@ -24,7 +24,7 @@ const KanbanCard = ({ task, canEditStatus }: KanbanCardProps) => {
   return (
     <div className="p-2.5 rounded-lg pb-3  mb-1.5 border border-accent w-full dark:bg-card mr-1.5 bg-[#FAFAFA] shadow-sm space-y-3">
       <div className="flex items-start justify-between gap-x-2">
-        <p>{truncateString(task.taskName, 15, 40)}</p>
+        <p className="text-sm font-medium line-clamp-3">{task.taskName}</p>
         <div className="flex gap-x-2 items-center ">
           {showStatus && (
             <StatusCombobox
